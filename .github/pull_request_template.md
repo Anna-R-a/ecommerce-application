@@ -1,31 +1,29 @@
-# Description
-
+### Description
 	*Please add a summary of the changes.*
 
-# Link to issue(task) [link](https://github.com/)
+### Link to issue(task) [link](https://github.com/)
 
-# Score: 75 / 110 : 
-	1.  **Acceptance Criteria:**
-	+  *For Issue RSS-ECOMM-1_01: Set up GitHub repository (10 points):* 
+### Score: 75 / 110 : 
+	 **Acceptance Criteria:**
+	 *For Issue RSS-ECOMM-1_01: Set up GitHub repository (10 points):* 
 - [ x ] A new GitHub repository is created with the project name
 - [ ] A README file is initialized with a brief description of the project
 - [ ] A .gitignore file is added to exclude unnecessary files and directories
 
 
-# Checklist:
-
+### Checklist:
 - [ ] **Link this pull requests to reviewers (AciaKr, Anna-R-a, SergeyVolkov03) and to the issue on the project board**
 - [ ] I have created a pull request into **develop** branch
 - [ ] My changes generate no new warnings 
 
 
-# Your comment:
+## Your comment:
 
 
 > [!NOTE]
 > **PLEASE DON`T MERGE THIS PULL REQUEST**
 
-# Required PR for deploy
+### Required PR for deploy
 1. Task: [link](https://github.com/)
 2. Screenshot:
 3. Deploy: [link](https://github.com/)
