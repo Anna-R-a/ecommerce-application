@@ -1,3 +1,14 @@
+> [!NOTE]
+> **PLEASE DON`T MERGE THIS PULL REQUEST**
+
+### Type of change
+- [ ] New feature 
+- [ ] Bug fix 
+- [ ] Test case 
+- [ ] Refactoring
+- [ x ] Documentation update
+- [ ] Other
+
 ### Description
 	*Please add a summary of the changes.*
 
@@ -19,9 +30,6 @@
 
 ## Your comment:
 
-
-> [!NOTE]
-> **PLEASE DON`T MERGE THIS PULL REQUEST**
 
 ### Required PR for deploy
 1. Task: [link](https://github.com/)
