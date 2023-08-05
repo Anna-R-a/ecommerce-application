@@ -6,7 +6,7 @@
 - [ ] Bug fix 
 - [ ] Test case 
 - [ ] Refactoring
-- [ x ] Documentation update
+- [x] Documentation update
 - [ ] Other
 
 ### Description
@@ -17,9 +17,9 @@
 ### Score: 75 / 110 : 
 	 **Acceptance Criteria:**
 	 *For Issue RSS-ECOMM-1_01: Set up GitHub repository (10 points):* 
-- [ x ] A new GitHub repository is created with the project name
-- [ ] A README file is initialized with a brief description of the project
-- [ ] A .gitignore file is added to exclude unnecessary files and directories
+- [x] A new GitHub repository is created with the project name
+- [x] A README file is initialized with a brief description of the project
+- [x] A .gitignore file is added to exclude unnecessary files and directories
 
 
 ### Checklist:
