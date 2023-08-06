@@ -5,17 +5,23 @@ The store gives an opportunity to register a new user, choose healthy GMO-free p
 Since a healthy lifestyle is now an integral part of modern people, farm products are in great demand.
 
 ## The Technology Stack
-The front-end: HTML5, CSS 3, TypeScript, React 18.2.
-The back-end: commercetools.com
+The front-end: 
+- HTML5, 
+- CSS 3,
+- TypeScript, 
+- React 18.2.
+
+The back-end: 
+- commercetools.com
 
 ## Getting Started with App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Clone our project with the command `git clone  https://github.com/Anna-R-a/ecommerce-application.git`
-Go to the *ecommerce-application folder* by executing `cd ecommerce-application`
-Install all dependencies by running `npm i`
-Start running the build by executing `npm run start`
+1. Clone our project with the command `git clone  https://github.com/Anna-R-a/ecommerce-application.git`
+2. Go to the *ecommerce-application folder* by executing `cd ecommerce-application`
+3. Install all dependencies by running `npm i`
+4. Start running the build by executing `npm run start`\
 The browser bar will display the localhost:3000 main page.
 
 ## Available Scripts
@@ -30,13 +36,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
+Launches the test runner in the interactive watch mode.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
-The build is minified and the filenames include the hashes.\
+The build is minified and the filenames include the hashes.
 
 
 ### `npm run eject`
