@@ -33,7 +33,7 @@
 ### Your comment:
 
 
-### Required PR for deploy
+### Required PR for deploy or final PR of Sprint
 1. Task: [link](https://github.com/)
 2. Screenshot:
 3. Deploy: [link](https://github.com/)
