@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
+import { RuleObject } from "antd/es/form";
 import "./Login.css";
 
 const LoginPage: React.FC = () => {
@@ -9,11 +10,25 @@ const LoginPage: React.FC = () => {
         console.log("Received values of form: ", values);
     };
 
+    function validatePassword(
+        _: RuleObject,
+        value: string
+    ): Promise<void> | void {
+        const regexp =
+            /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        const valueTrimming = value?.trim();
+        return valueTrimming && regexp.test(valueTrimming)
+            ? Promise.resolve()
+            : Promise.reject(
+                  "Make sure it's at least 8 characters, one uppercase and lowercase letter, one digit and one special character"
+              );
+    }
+
     return (
         <Fragment>
             <h1>Log In</h1>
             <Form
-                name="normal_login"
+                name="login-form"
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -33,7 +48,7 @@ const LoginPage: React.FC = () => {
                 >
                     <Input
                         prefix={
-                            <MailOutlined className="site-form-item-icon" />
+                            <MailOutlined className="form-item-icon" />
                         }
                         placeholder="Email"
                     />
@@ -45,20 +60,12 @@ const LoginPage: React.FC = () => {
                             required: true,
                             message: "Please input your Password!",
                         },
-                        { min: 6 },
-                        {
-                            validator: (_, value) =>
-                                value && value.includes("A")
-                                    ? Promise.resolve()
-                                    : Promise.reject(
-                                          "Password does not match criteria."
-                                      ),
-                        },
+                        { validator: validatePassword },
                     ]}
                 >
                     <Input.Password
                         prefix={
-                            <LockOutlined className="site-form-item-icon" />
+                            <LockOutlined className="form-item-icon" />
                         }
                         type="password"
                         placeholder="Password"
@@ -69,11 +76,11 @@ const LoginPage: React.FC = () => {
                     <Button
                         type="primary"
                         htmlType="submit"
-                        className="login-form-button"
+                        className="login-form__button"
                     >
                         Log in
                     </Button>
-                    <div className="login-form-subText">
+                    <div className="login-form__subText">
                         Or <Link to="/registration">register now!</Link>
                     </div>
                 </Form.Item>

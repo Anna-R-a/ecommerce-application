@@ -10,17 +10,17 @@ import NotFoundPage from "./pages/notFound/NotFound";
 import "./App.css";
 
 function App() {
-    return (
-        <Routes>
-            <Route element={<PageLayout />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/registration" element={<RegistrationPage />} />
-                {/* <Route path="/catalog" element={<CatalogPage />} /> */}
-                <Route path="*" element={<NotFoundPage />} />
-            </Route>
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route element={<PageLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/registration" element={<RegistrationPage />} />
+        {/* <Route path="/catalog" element={<CatalogPage />} /> */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
