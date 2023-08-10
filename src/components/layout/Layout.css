@@ -1,0 +1,23 @@
+.main {
+    flex: 1 1 auto;
+}
+
+.main__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+
+    opacity: 1;
+    visibility: visible;
+}
+
+.main.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        0.55s opacity,
+        0.55s visibility;
+}
