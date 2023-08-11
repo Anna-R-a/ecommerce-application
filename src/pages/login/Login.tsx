@@ -10,17 +10,13 @@ const LoginPage: React.FC = () => {
         console.log("Received values of form: ", values);
     };
 
-    function validatePassword(
-        _: RuleObject,
-        value: string
-    ): Promise<void> | void {
-        const regexp =
-            /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    function validatePassword(_: RuleObject, value: string): Promise<void> {
+        const regexp = /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
         const valueTrimming = value?.trim();
-        return valueTrimming && regexp.test(valueTrimming)
+        return value && value === valueTrimming && regexp.test(valueTrimming)
             ? Promise.resolve()
             : Promise.reject(
-                  "Make sure it's at least 8 characters, one uppercase and lowercase letter, one digit and one special character"
+                  "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character"
               );
     }
 
@@ -37,19 +33,17 @@ const LoginPage: React.FC = () => {
                     name="email"
                     rules={[
                         {
-                            type: "email",
-                            message: "The input is not valid E-mail!",
-                        },
-                        {
                             required: true,
                             message: "Please input your E-mail!",
+                        },
+                        {
+                            type: "email",
+                            message: "Please input a valid E-mail!",
                         },
                     ]}
                 >
                     <Input
-                        prefix={
-                            <MailOutlined className="form-item-icon" />
-                        }
+                        prefix={<MailOutlined className="form-item-icon" />}
                         placeholder="Email"
                     />
                 </Form.Item>
@@ -64,9 +58,7 @@ const LoginPage: React.FC = () => {
                     ]}
                 >
                     <Input.Password
-                        prefix={
-                            <LockOutlined className="form-item-icon" />
-                        }
+                        prefix={<LockOutlined className="form-item-icon" />}
                         type="password"
                         placeholder="Password"
                     />

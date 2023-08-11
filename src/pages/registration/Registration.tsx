@@ -95,7 +95,7 @@ const RegistrationPage: React.FC = () => {
           rules={[
             {
               type: "email",
-              message: "The input is not valid E-mail!",
+              message: "Please input a valid E-mail!",
             },
             {
               required: true,

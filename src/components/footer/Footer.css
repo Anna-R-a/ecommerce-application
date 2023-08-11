@@ -1,8 +1,8 @@
 .footer {
     height: 46px;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
-    border-top: 1px solid rgba(5, 5, 5, 0.06);
+    font-size: 1.2rem;
+    color: var(--default-color);
+    border-top: 1px solid var(--line-color);
 }
 
 .footer__wrapper {

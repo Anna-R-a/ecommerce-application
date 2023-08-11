@@ -1,6 +1,6 @@
 .header {
     height: 45px;
-    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    border-bottom: 1px solid var(--line-color);
 }
 
 .header__wrapper {
@@ -13,7 +13,7 @@
 
 .logo {
     margin: 0 20px;
-    font-size: 26px;
+    font-size: 2.6rem;
 }
 
 .logo__link {

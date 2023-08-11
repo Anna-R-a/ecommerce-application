@@ -1,16 +1,5 @@
-.App {
+.app {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  text-align: center;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-.App-wrapper {
-  height: 100%;
 }
