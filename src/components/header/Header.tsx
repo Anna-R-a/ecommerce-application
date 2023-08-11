@@ -87,7 +87,7 @@ const UserBar: React.FC = () => {
 export default function Header() {
   return (
     <header className="header">
-      <div className="header__wrapper">
+      <div className="wrapper">
         <Logo />
         <Nav />
         <UserBar />

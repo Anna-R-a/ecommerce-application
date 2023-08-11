@@ -8,7 +8,7 @@ export const PageLayout = () => {
     <>
       <Header />
       <main className="main">
-        <div className="main__wrapper">
+        <div className="wrapper">
           <Outlet />
         </div>
       </main>

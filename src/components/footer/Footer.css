@@ -1,15 +1,11 @@
 .footer {
-    height: 46px;
-    font-size: 1.2rem;
-    color: var(--default-color);
     border-top: 1px solid var(--line-color);
 }
 
-.footer__wrapper {
-    height: 46px;
-    display: flex;
+.footer .wrapper {
+    height: 45px;
     justify-content: center;
     align-items: center;
-    max-width: var(--max-width);
-    margin: 0 auto;
+    font-size: 1.2rem;
+    padding: 0 20px;
 }
