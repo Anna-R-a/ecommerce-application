@@ -1,0 +1,11 @@
+.carousel {
+    width: 100%;
+}
+
+.carousel__home {
+    height: 160px;
+    color: #fff;
+    /* line-height: 160px;
+    text-align: center; */
+    background: url("./../../assets/8613825.svg");
+}

@@ -2,10 +2,12 @@
     --max-width: 1200px;
 
     --default-color: #000000e0;
+    --background-color: #ffffff;
     --dark-color: #3c7375;
     --medium-color: #5f9ea0;
     --light-color: #92bfc1;
     --line-color: #0505050f;
+    --cover-color: #0000000f;
 }
 
 html,
@@ -37,4 +39,10 @@ body {
 
 h1 {
     font-size: 2.6rem;
+    color: var(--dark-color);
+    margin: 15px auto;
+}
+
+.icon {
+    color: var(--dark-color)!important;
 }

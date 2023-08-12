@@ -10,39 +10,53 @@
 
 .logo {
     padding: 0 20px;
-    font-size: 2.6rem;
+}
+
+.logo__icon {
+    height: 31px;
+    width: 31px;
+    background: url("./../../logo.svg");
+    margin-right: 10px;
 }
 
 .logo__link {
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    color: var(--medium-color);
+    color: var(--dark-color);
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 .logo__link:hover {
-    color: var(--dark-color);
+    color: var(--medium-color);
 }
 
 .navigation >.ant-menu-item:hover::after,
 .navigation >.ant-menu-item-selected::after {
-    border-bottom-color: var(--medium-color)!important;
+    border-bottom-color: var(--dark-color)!important;
 }
 
 .navigation >.ant-menu-item-selected {
-    color: var(--medium-color)!important;
-}
-
-.user-bar >.ant-menu-submenu:hover::after,
-.user-bar >.ant-menu-submenu-selected::after,
-.user-bar >.ant-menu-submenu-title:hover::after {
-    border-bottom: none!important;
+    color: var(--dark-color)!important;
 }
 
 .user-bar >.ant-menu-submenu {
-    width: 56px!important;
     padding: 0 20px;
 }
 
-.user-bar >.ant-menu-submenu-selected > * {
-    color: var(--medium-color)!important;
+.user-bar >.ant-menu-submenu::after {
+    border-bottom: none!important;
 }
 
+.ant-menu-sub .ant-menu-item,
+.ant-menu-sub .ant-menu-item.ant-menu-item-selected {
+    background-color: var(--dark-color);
+    color: var(--background-color);
+}
+
+.ant-menu-sub >:last-child:hover,
+.ant-menu-sub .ant-menu-item:active {
+    background-color: var(--cover-color)!important;
+    color: var(--default-color)!important;
+}

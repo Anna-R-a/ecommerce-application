@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
@@ -11,7 +11,8 @@ const LoginPage: React.FC = () => {
     };
 
     function validatePassword(_: RuleObject, value: string): Promise<void> {
-        const regexp = /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        const regexp =
+            /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
         const valueTrimming = value?.trim();
         return value && value === valueTrimming && regexp.test(valueTrimming)
             ? Promise.resolve()
@@ -21,13 +22,14 @@ const LoginPage: React.FC = () => {
     }
 
     return (
-        <Fragment>
+        <>
             <h1>Log In</h1>
             <Form
                 name="login-form"
                 className="login-form"
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
+                data-testid={"form"}
             >
                 <Form.Item
                     name="email"
@@ -77,7 +79,7 @@ const LoginPage: React.FC = () => {
                     </div>
                 </Form.Item>
             </Form>
-        </Fragment>
+        </>
     );
 };
 
