@@ -1,0 +1,34 @@
+.login-form {
+    width: 250px;
+}
+
+#login-form .ant-input-affix-wrapper:focus,
+#login-form .ant-input-affix-wrapper:hover,
+#login-form .ant-input-affix-wrapper-focused {
+    border-color: var(--medium-color);
+}
+
+.login-form__button {
+    width: 100%;
+    background-color: var(--medium-color);
+}
+
+#login-form .login-form__button:hover {
+    background-color: var(--light-color);
+}
+
+.login-form__subText {
+    text-align: center;
+}
+
+.login-form__subText a {
+    color: var(--dark-color);
+}
+
+.login-form__subText a:hover {
+    color: var(--medium-color);
+}
+
+.form-item-icon {
+    width: 25px;
+}
