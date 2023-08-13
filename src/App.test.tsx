@@ -5,16 +5,16 @@ import { BrowserRouter } from "react-router-dom";
 import Header from "./components/header/Header";
 
 const renderWithRouter = (ui: JSX.Element, { route = "/" } = {}) => {
-    window.history.pushState({}, "Test page", route);
+  window.history.pushState({}, "Test page", route);
 
-    return {
-        ...render(ui, { wrapper: BrowserRouter }),
-    };
+  return {
+    ...render(ui, { wrapper: BrowserRouter }),
+  };
 };
 
 test("Renders header", () => {
-    renderWithRouter(<Header />);
-    expect(screen.getByTestId("header")).toBeInTheDocument();
+  renderWithRouter(<Header />);
+  expect(screen.getByTestId("header")).toBeInTheDocument();
 });
 
 // test("Renders form", () => {
