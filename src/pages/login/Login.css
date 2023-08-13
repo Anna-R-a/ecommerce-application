@@ -19,6 +19,7 @@
 
 .login-form__subText {
     text-align: center;
+    margin-top: 15px;
 }
 
 .login-form__subText a {

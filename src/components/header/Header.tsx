@@ -1,28 +1,29 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import "./Header.css";
 
-function Logo() {
+const Logo: React.FC = () => {
   return (
     <div className="logo">
       <Link to="/" className="logo__link">
+        <span className="logo__icon"></span>
         FRESH
       </Link>
     </div>
   );
-}
+};
 
-const itemsMenu: MenuProps["items"] = [
+const itemsNav: MenuProps["items"] = [
   {
     label: (
       <Link to="/" className="nav__link">
         Home
       </Link>
     ),
-    key: "home",
+    key: "/",
   },
   {
     label: (
@@ -30,26 +31,25 @@ const itemsMenu: MenuProps["items"] = [
         Catalog
       </Link>
     ),
-    key: "catalog",
+    key: "/catalog",
   },
   {
-    label: (
-      <Link to="/about" className="nav__link">
-        About Us
-      </Link>
-    ),
-    key: "about",
+    label: "About Us",
+    key: "/about",
+    disabled: true,
   },
 ];
 
 const Nav: React.FC = () => {
+  const location = useLocation();
+
   return (
     <Menu
       theme="light"
       mode="horizontal"
       className="navigation"
-      // defaultSelectedKeys={['home']}
-      items={itemsMenu}
+      items={itemsNav}
+      selectedKeys={[location.pathname]}
     />
   );
 };
@@ -58,7 +58,7 @@ const itemsUserBar: MenuProps["items"] = [
   {
     label: "",
     key: "SubMenu",
-    icon: <UserOutlined />,
+    icon: <UserOutlined className={"icon"} />,
     children: [
       {
         label: (
@@ -66,7 +66,7 @@ const itemsUserBar: MenuProps["items"] = [
             Log In
           </Link>
         ),
-        key: "login",
+        key: "/login",
       },
       {
         label: (
@@ -74,19 +74,36 @@ const itemsUserBar: MenuProps["items"] = [
             Registration
           </Link>
         ),
-        key: "registration",
+        key: "/registration",
+      },
+      {
+        label: (
+          <Link to="/profile" className="nav__link">
+            Profile
+          </Link>
+        ),
+        key: "/profile",
+        style: { color: "#fff", backgroundColor: "#92bfc1" },
       },
     ],
   },
 ];
 
 const UserBar: React.FC = () => {
-  return <Menu className="user-bar" mode="horizontal" items={itemsUserBar} />;
+  const location = useLocation();
+  return (
+    <Menu
+      className="user-bar"
+      mode="horizontal"
+      items={itemsUserBar}
+      selectedKeys={[location.pathname]}
+    />
+  );
 };
 
 export default function Header() {
   return (
-    <header className="header">
+    <header className="header" data-testid="header">
       <div className="wrapper">
         <Logo />
         <Nav />
