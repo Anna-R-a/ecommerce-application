@@ -101,7 +101,7 @@ const UserBar: React.FC = () => {
   );
 };
 
-export default function Header() {
+export const Header = () => {
   return (
     <header className="header" data-testid="header">
       <div className="wrapper">
