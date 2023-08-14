@@ -6,4 +6,4 @@ export const Footer = () => {
       <div className="wrapper">© Copyright 2023 AA-Team</div>
     </footer>
   );
-}
+};

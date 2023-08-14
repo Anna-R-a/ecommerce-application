@@ -1,0 +1,53 @@
+.navigation >.ant-menu-item:hover::after,
+.navigation >.ant-menu-item-selected::after {
+    border-bottom-color: var(--dark-color)!important;
+}
+
+.navigation >.ant-menu-item-selected {
+    color: var(--dark-color)!important;
+}
+
+.navigation,
+.user-bar {
+    border-inline-end: none!important;
+}
+
+.ant-menu-submenu-arrow {
+    display: none!important;
+}
+
+.hamburger {
+    margin: 0 20px;
+    color: var(--dark-color);
+    border-color: var(--light-color);
+}
+
+.user-bar >.ant-menu-submenu {
+    padding: 0 20px;
+}
+
+.user-bar >.ant-menu-submenu::after {
+    border-bottom: none!important;
+}
+
+.ant-menu-sub .ant-menu-item {
+    background-color: var(--dark-color);
+    color: var(--background-color);
+}
+
+.ant-menu-sub >:last-child:hover,
+.navigation .ant-menu-item.ant-menu-item-selected,
+.ant-menu-sub .ant-menu-item.ant-menu-item-selected,
+.ant-menu-sub .ant-menu-item:focus {
+    background-color: var(--cover-color)!important;
+    color: var(--default-color)!important;
+}
+
+.ant-menu-sub >:last-child {
+    background-color: var(--light-color)!important;
+    color: var(--background-color)!important;
+}
+
+.ant-menu-inline {
+    background: none!important;
+}

@@ -17,7 +17,16 @@ test("Renders header", () => {
   expect(screen.getByTestId("header")).toBeInTheDocument();
 });
 
-// test("Renders form", () => {
-//   renderWithRouter(<LoginPage />);
-//   expect(screen.getByTestId("form")).toBeInTheDocument();
-// });
+const renderWithRouterMini = (ui: JSX.Element, { route = "/" } = {}) => {
+  window.history.pushState({}, "Test page", route);
+  window.innerWidth = 599;
+
+  return {
+    ...render(ui, { wrapper: BrowserRouter }),
+  };
+};
+
+test("Renders header mini", () => {
+  renderWithRouterMini(<Header />);
+  expect(screen.getByTestId("header-mini")).toBeInTheDocument();
+});

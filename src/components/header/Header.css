@@ -31,32 +31,3 @@
 .logo__link:hover {
     color: var(--medium-color);
 }
-
-.navigation >.ant-menu-item:hover::after,
-.navigation >.ant-menu-item-selected::after {
-    border-bottom-color: var(--dark-color)!important;
-}
-
-.navigation >.ant-menu-item-selected {
-    color: var(--dark-color)!important;
-}
-
-.user-bar >.ant-menu-submenu {
-    padding: 0 20px;
-}
-
-.user-bar >.ant-menu-submenu::after {
-    border-bottom: none!important;
-}
-
-.ant-menu-sub .ant-menu-item,
-.ant-menu-sub .ant-menu-item.ant-menu-item-selected {
-    background-color: var(--dark-color);
-    color: var(--background-color);
-}
-
-.ant-menu-sub >:last-child:hover,
-.ant-menu-sub .ant-menu-item:active {
-    background-color: var(--cover-color)!important;
-    color: var(--default-color)!important;
-}
