@@ -1,97 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
+import { Nav, NavDrawer, UserBar } from "../navBar/NavBar";
 import "./Header.css";
 
-function Logo() {
-  return (
-    <div className="logo">
-      <Link to="/" className="logo__link">
-        FRESH
-      </Link>
-    </div>
-  );
-}
-
-const itemsMenu: MenuProps["items"] = [
-  {
-    label: (
-      <Link to="/" className="nav__link">
-        Home
-      </Link>
-    ),
-    key: "home",
-  },
-  {
-    label: (
-      <Link to="/catalog" className="nav__link">
-        Catalog
-      </Link>
-    ),
-    key: "catalog",
-  },
-  {
-    label: (
-      <Link to="/about" className="nav__link">
-        About Us
-      </Link>
-    ),
-    key: "about",
-  },
-];
-
-const Nav: React.FC = () => {
-  return (
-    <Menu
-      theme="light"
-      mode="horizontal"
-      className="navigation"
-      // defaultSelectedKeys={['home']}
-      items={itemsMenu}
-    />
-  );
+const Logo: React.FC = () => {
+    return (
+        <div className="logo">
+            <Link to="/" className="logo__link">
+                <span className="logo__icon"></span>
+                FRESH
+            </Link>
+        </div>
+    );
 };
 
-const itemsUserBar: MenuProps["items"] = [
-  {
-    label: "",
-    key: "SubMenu",
-    icon: <UserOutlined />,
-    children: [
-      {
-        label: (
-          <Link to="/login" className="nav__link">
-            Log In
-          </Link>
-        ),
-        key: "login",
-      },
-      {
-        label: (
-          <Link to="/registration" className="nav__link">
-            Registration
-          </Link>
-        ),
-        key: "registration",
-      },
-    ],
-  },
-];
+const useResize = () => {
+    const [width, setWidth] = useState(window.innerWidth);
+    useEffect(() => {
+        const handleResize = (event: Event) => {
+            if (event.target instanceof Window) {
+                setWidth(event.target.innerWidth);
+            }
+        };
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
-const UserBar: React.FC = () => {
-  return <Menu className="user-bar" mode="horizontal" items={itemsUserBar} />;
+    return width;
 };
 
-export default function Header() {
-  return (
-    <header className="header">
-      <div className="wrapper">
-        <Logo />
-        <Nav />
-        <UserBar />
-      </div>
-    </header>
-  );
-}
+export const Header = () => {
+    const width = useResize();
+    if (width < 600) {
+        return (
+            <header className="header" data-testid="header-mini">
+                <div className="wrapper">
+                    <Logo />
+                    <NavDrawer />
+                </div>
+            </header>
+        );
+    }
+    return (
+        <header className="header" data-testid="header">
+            <div className="wrapper">
+                <Logo />
+                <Nav />
+                <UserBar />
+            </div>
+        </header>
+    );
+};
