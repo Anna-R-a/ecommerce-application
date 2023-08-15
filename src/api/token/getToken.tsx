@@ -9,7 +9,7 @@ import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { apiAdmin } from "../constants";
 
 let tokenStore: TokenStore;
-let accessToken: string;
+export let accessToken: string;
 
 const tokenCache: TokenCache = {
   get() {
@@ -55,8 +55,10 @@ export const getProject1 = () => {
   return apiRoot.get().execute();
 };
 
-export const token = async () =>
+export const getToken = async () =>
   await getProject1()
     .then((res) => console.log("resAdmin", res))
     .then(() => console.log("accessToken", accessToken))
+    .then(() => {return accessToken})
     .catch(console.error);
+

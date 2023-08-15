@@ -3,7 +3,7 @@ import {
   ClientBuilder,
   HttpMiddlewareOptions,
 } from "@commercetools/sdk-client-v2";
-import { apiAdmin } from "./constants";
+import { apiAdmin } from "../constants";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 
 export const authMiddlewareOptions: AuthMiddlewareOptions = {

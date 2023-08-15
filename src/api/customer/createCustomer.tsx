@@ -4,7 +4,7 @@ import {
   type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
 } from "@commercetools/sdk-client-v2";
-import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
+import { MyCustomerSignin, createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { apiAdmin } from "../constants";
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
@@ -37,12 +37,10 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: "{projectKey}",
 });
 
-const getProject = () => {
+export const getProject = () => {
   return apiRoot.get().execute();
 };
 
-// Retrieve Project information and output the result to the log
-getProject().then(console.log).catch(console.error);
 
 const createCustomer = () => {
   return apiRoot
@@ -62,3 +60,20 @@ createCustomer()
     console.log(body.customer.id);
   })
   .catch(console.error);
+
+  
+  export const getCustomer = async ({
+    email,
+    password
+  }: MyCustomerSignin) => {
+    return await apiRoot
+        .me()
+        .login()
+        .post({
+          body: {
+            email,
+            password,
+          },
+        })
+        .execute()
+  }

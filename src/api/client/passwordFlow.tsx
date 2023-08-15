@@ -1,5 +1,5 @@
 import { TokenCache } from "@commercetools/sdk-client-v2";
-import { apiAdmin } from "./constants";
+import { apiAdmin } from "../constants";
 
 type PasswordAuthMiddlewareOptions = {
   host: string;

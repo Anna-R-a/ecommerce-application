@@ -1,7 +1,7 @@
 import { ClientBuilder, TokenCache } from "@commercetools/sdk-client-v2";
-import { apiAdmin } from "./constants";
+import { apiAdmin } from "../constants";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import { projectKey } from "./customer/createCustomer";
+import { projectKey } from "../customer/createCustomer";
 import { httpMiddlewareOptions } from "./createClient";
 
 type AnonymousAuthMiddlewareOptions = {

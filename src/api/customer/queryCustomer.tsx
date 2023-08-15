@@ -1,4 +1,4 @@
-import { apiRoot } from "../createClient";
+import { apiRoot } from "../client/createClient";
 
 // Return a Customer based on their ID
 export const queryCustomer = (customerID: string) => {
