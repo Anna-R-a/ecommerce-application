@@ -1,13 +1,12 @@
 import {
   ClientBuilder,
-  type AuthMiddlewareOptions, 
+  type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
   TokenStore,
-  TokenCache, 
+  TokenCache,
 } from "@commercetools/sdk-client-v2";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { apiAdmin } from "../constants";
-
 
 let tokenStore: TokenStore;
 let accessToken: string;
@@ -17,9 +16,9 @@ const tokenCache: TokenCache = {
     return tokenStore;
   },
   set(tokenStore) {
-      accessToken = tokenStore.token
+    accessToken = tokenStore.token;
   },
-}
+};
 
 const projectKey = apiAdmin.CTP_PROJECT_KEY;
 const scopes = [apiAdmin.CTP_SCOPES];
@@ -28,12 +27,12 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: apiAdmin.CTP_AUTH_URL,
   projectKey: projectKey,
   credentials: {
-      clientId: apiAdmin.CTP_CLIENT_ID,
-      clientSecret: apiAdmin.CTP_CLIENT_SECRET,
+    clientId: apiAdmin.CTP_CLIENT_ID,
+    clientSecret: apiAdmin.CTP_CLIENT_SECRET,
   },
   scopes,
   fetch,
-  tokenCache
+  tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -45,7 +44,7 @@ export const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() 
+  .withLoggerMiddleware()
   .build();
 
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
@@ -53,12 +52,11 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 });
 
 export const getProject1 = () => {
-  return apiRoot
-  .get()
-  .execute();
+  return apiRoot.get().execute();
 };
 
-export const token = async () => await getProject1()
-  .then((res) => console.log('resAdmin', res))
-  .then(() => console.log('accessToken', accessToken))
-  .catch(console.error); 
+export const token = async () =>
+  await getProject1()
+    .then((res) => console.log("resAdmin", res))
+    .then(() => console.log("accessToken", accessToken))
+    .catch(console.error);

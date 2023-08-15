@@ -8,8 +8,7 @@ export const apiAdmin = {
 
   USERNAME: "sdk12@example.com",
   PASSWORD: "examplePassword",
-  CTP_ANONYMOUS_ID: '111222'
-
+  CTP_ANONYMOUS_ID: "111222",
 };
 
 export const apiUser = {

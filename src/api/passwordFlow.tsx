@@ -1,4 +1,4 @@
-import {  TokenCache } from "@commercetools/sdk-client-v2";
+import { TokenCache } from "@commercetools/sdk-client-v2";
 import { apiAdmin } from "./constants";
 
 type PasswordAuthMiddlewareOptions = {
@@ -29,7 +29,7 @@ export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
       password: apiAdmin.PASSWORD,
     },
   },
-  scopes: [`manage_project:${ apiAdmin.CTP_PROJECT_KEY }`],
+  scopes: [`manage_project:${apiAdmin.CTP_PROJECT_KEY}`],
   fetch: fetch,
 };
 

@@ -17,12 +17,12 @@ type RefreshAuthMiddlewareOptions = {
 
 export const options: RefreshAuthMiddlewareOptions = {
   host: apiAdmin.CTP_AUTH_URL,
-  projectKey:  apiAdmin.CTP_PROJECT_KEY,
+  projectKey: apiAdmin.CTP_PROJECT_KEY,
   credentials: {
     clientId: apiAdmin.CTP_CLIENT_ID,
     clientSecret: apiAdmin.CTP_CLIENT_SECRET,
   },
-  refreshToken: 'bXvTyxc5yuebdvwTwyXn==',
+  refreshToken: "bXvTyxc5yuebdvwTwyXn==",
   // tokenCache: 'TokenCache',
   scopes: [`manage_project:${apiAdmin.CTP_PROJECT_KEY}`],
   fetch: fetch,

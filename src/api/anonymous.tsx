@@ -18,33 +18,28 @@ type AnonymousAuthMiddlewareOptions = {
   tokenCache?: TokenCache;
 };
 
-
 export const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
   host: apiAdmin.CTP_AUTH_URL,
-  projectKey:  apiAdmin.CTP_PROJECT_KEY,
+  projectKey: apiAdmin.CTP_PROJECT_KEY,
   credentials: {
-    clientId:apiAdmin.CTP_CLIENT_ID,
+    clientId: apiAdmin.CTP_CLIENT_ID,
     clientSecret: apiAdmin.CTP_CLIENT_SECRET,
-    anonymousId:apiAdmin.CTP_ANONYMOUS_ID, 
+    anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
   },
   scopes: [apiAdmin.CTP_SCOPES],
   fetch: fetch,
 };
 
-
 export const anonymousClient = new ClientBuilder()
-.withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
-.withHttpMiddleware(httpMiddlewareOptions)
-.withLoggerMiddleware()
-.build();
+  .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware()
+  .build();
 
-
-export const apiRootAnonym = createApiBuilderFromCtpClient(anonymousClient)
-  .withProjectKey({ projectKey: `${projectKey}` });
-
+export const apiRootAnonym = createApiBuilderFromCtpClient(
+  anonymousClient,
+).withProjectKey({ projectKey: `${projectKey}` });
 
 export const getProjectAnonym = () => {
-  return apiRootAnonym
-    .get()
-    .execute();
+  return apiRootAnonym.get().execute();
 };
