@@ -1,8 +1,6 @@
-import { ClientBuilder, TokenCache } from "@commercetools/sdk-client-v2";
-import { apiAdmin } from "../constants";
+import { ClientBuilder, HttpMiddlewareOptions, TokenCache } from "@commercetools/sdk-client-v2";
+import { apiAdmin, apiUser } from "../constants";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import { projectKey } from "../customer/createCustomer";
-import { httpMiddlewareOptions } from "./createClient";
 
 type AnonymousAuthMiddlewareOptions = {
   host: string;
@@ -24,22 +22,28 @@ export const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
   credentials: {
     clientId: apiAdmin.CTP_CLIENT_ID,
     clientSecret: apiAdmin.CTP_CLIENT_SECRET,
-    anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
+    // anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
   },
   scopes: [apiAdmin.CTP_SCOPES],
   fetch: fetch,
 };
 
+const httpMiddlewareOptions: HttpMiddlewareOptions = {
+  host: apiUser.CTP_API_URL,
+  fetch,
+};
+
 export const anonymousClient = new ClientBuilder()
   .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  .withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();
 
-export const apiRootAnonym = createApiBuilderFromCtpClient(
+export const apiRootAnonymous = createApiBuilderFromCtpClient(
   anonymousClient,
-).withProjectKey({ projectKey: `${projectKey}` });
+).withProjectKey({ projectKey: apiUser.CTP_PROJECT_KEY });
 
-export const getProjectAnonym = () => {
-  return apiRootAnonym.get().execute();
+export const getProjectAnonymous = () => {
+  return apiRootAnonymous.get().execute();
 };

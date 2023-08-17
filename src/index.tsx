@@ -4,9 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import "./index.css";
-import { getToken } from "./api/token/getToken";
-import { setToken } from "./api/api";
-
 
 
 const root = ReactDOM.createRoot(
@@ -23,5 +20,5 @@ root.render(
 
 reportWebVitals();
 
-const result = await getToken()
-console.log('this', getToken(), result, setToken)
+
+

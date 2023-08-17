@@ -4,10 +4,28 @@ import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { RuleObject } from "antd/es/form";
 import "./Login.css";
+import { signInCustomer } from "../../api/customer/createCustomer";
+import { findCustomerByEmail } from "../../api/customer/findCustomer";
 
 const LoginPage: React.FC = () => {
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
+    findCustomerByEmail(values.email)
+      .then(({ body }) => {
+        if (body.results.length === 0) {
+          console.log("This email address has not been registered.");
+          signInCustomer(values)
+          .then((res) => {
+            localStorage.setItem("isLogged", "true");
+            console.log("Get Customer", res.body.customer);
+          })
+        .catch((error) => console.log("error.message", error.message));
+        } else {
+        console.log("thisCustomer", body.results[0].id);
+        }
+  })
+  .catch(console.error)
+    
   };
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
