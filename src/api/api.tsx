@@ -1,7 +1,6 @@
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRootPassword } from "./client/passwordFlow";
 
-
 export const getProducts = async () => {
   const isLogged = localStorage.getItem("isLogged");
   if (isLogged) {
@@ -22,21 +21,4 @@ export const getCategories = async () => {
   return apiRootAnonymous.categories().get().execute();
 };
 
-
-// export const createAnonymousCustomer = () => {
-//   return apiRootAnonymous
-//     .customers()
-//     .post({
-//       body: {
-//         anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
-//         email: "",
-//       },
-//     })
-//     .execute();
-// };
-
-// export const setToken = () =>
-//   getProjectAnonym()
-//     .then(async () => localStorage.setItem("acceessToken", `${await getCustomerToken()}`))
-//     .then(() => console.log(localStorage));
 

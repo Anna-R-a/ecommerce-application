@@ -1,31 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { RuleObject } from "antd/es/form";
 import "./Login.css";
 import { signInCustomer } from "../../api/customer/createCustomer";
-import { findCustomerByEmail } from "../../api/customer/findCustomer";
+// import { findCustomerByEmail } from "../../api/customer/findCustomer";
 
 const LoginPage: React.FC = () => {
+  let navigate = useNavigate();
+
+  const goHome = () => {
+    navigate("/");
+  };
+  const errorMessage = () => {
+    Modal.error({
+      title: 'Error',
+      content: 'Account with the given email and password not found.  Try again or register your account!',
+    });
+  };
+
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-    findCustomerByEmail(values.email)
-      .then(({ body }) => {
-        if (body.results.length === 0) {
-          console.log("This email address has not been registered.");
+    // console.log("Received values of form: ", values);
+    // findCustomerByEmail(values.email)
+    //   .then(({ body }) => {
+    //     if (body.results.length === 0) {
+    //       console.log("This email address has not been registered.");
           signInCustomer(values)
-          .then((res) => {
-            localStorage.setItem("isLogged", "true");
-            console.log("Get Customer", res.body.customer);
-          })
-        .catch((error) => console.log("error.message", error.message));
-        } else {
-        console.log("thisCustomer", body.results[0].id);
-        }
-  })
-  .catch(console.error)
-    
+            .then((res) => {
+              console.log("Get Customer", res.body.customer);
+              localStorage.setItem("isLogged", "true");
+              goHome();
+            })
+            .catch((error) => errorMessage());
+        // } else {
+        //   console.log("thisCustomer", body.results[0].id);
+        // }
+      // })
+      // .catch(console.error);
   };
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {

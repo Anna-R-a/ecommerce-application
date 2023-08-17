@@ -1,9 +1,16 @@
-import { AuthMiddlewareOptions, ClientBuilder, HttpMiddlewareOptions, TokenCache } from "@commercetools/sdk-client-v2";
+import {
+  AuthMiddlewareOptions,
+  ClientBuilder,
+  HttpMiddlewareOptions,
+  TokenCache,
+} from "@commercetools/sdk-client-v2";
 import { apiUser } from "../constants";
-import { createTokenCache } from "../token/createToken";
+import { createTokenCache } from "../token/tokenCache";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 
-export const authMiddlewareOptions: AuthMiddlewareOptions = {
+const tokenCache = createTokenCache();
+
+const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: apiUser.CTP_AUTH_URL,
   projectKey: apiUser.CTP_PROJECT_KEY,
   credentials: {
@@ -12,6 +19,7 @@ export const authMiddlewareOptions: AuthMiddlewareOptions = {
   },
   scopes: [apiUser.CTP_SCOPES],
   fetch,
+  tokenCache,
 };
 
 type PasswordAuthMiddlewareOptions = {
@@ -41,8 +49,6 @@ const loginParams: LoginParamsOptions = {
   password: "password123!Q",
 };
 
-const tokenCache = createTokenCache();
-
 export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
   host: apiUser.CTP_AUTH_URL,
   projectKey: apiUser.CTP_PROJECT_KEY,
@@ -54,7 +60,7 @@ export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
       password: loginParams.password,
     },
   },
-  scopes: [ apiUser.CTP_PROJECT_KEY ],
+  scopes: [apiUser.CTP_SCOPES],
   fetch,
   tokenCache,
 };
@@ -64,7 +70,6 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
-
 export const passwordClient = new ClientBuilder()
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withPasswordFlow(passwordAuthMiddlewareOptions)
@@ -72,9 +77,8 @@ export const passwordClient = new ClientBuilder()
   .withLoggerMiddleware()
   .build();
 
-  export const apiRootPassword = createApiBuilderFromCtpClient(
-    passwordClient,
-  ).withProjectKey({
-    projectKey: apiUser.CTP_PROJECT_KEY,
-  });
-  
+export const apiRootPassword = createApiBuilderFromCtpClient(
+  passwordClient,
+).withProjectKey({
+  projectKey: apiUser.CTP_PROJECT_KEY,
+});

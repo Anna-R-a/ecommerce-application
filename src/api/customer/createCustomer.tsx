@@ -1,9 +1,6 @@
-import {
-  MyCustomerSignin,
-} from "@commercetools/platform-sdk";
+import { MyCustomerSignin } from "@commercetools/platform-sdk";
 import { apiRoot } from "../client/createClient";
 import { apiRootPassword } from "../client/passwordFlow";
-
 
 export const getProject = () => {
   return apiRoot.get().execute();
@@ -41,8 +38,8 @@ export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
     .execute();
 };
 
-export const createCustomerLogin = ({ email, password }: MyCustomerSignin) => {
-    return apiRootPassword
+export const createCustomer = ({ email, password }: MyCustomerSignin) => {
+  return apiRootPassword
     .customers()
     .post({
       body: {
@@ -51,5 +48,4 @@ export const createCustomerLogin = ({ email, password }: MyCustomerSignin) => {
       },
     })
     .execute();
-  };
-
+};

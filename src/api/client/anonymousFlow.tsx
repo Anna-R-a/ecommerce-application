@@ -1,6 +1,12 @@
-import { ClientBuilder, HttpMiddlewareOptions, TokenCache } from "@commercetools/sdk-client-v2";
-import { apiAdmin, apiUser } from "../constants";
+import {
+  ClientBuilder,
+  HttpMiddlewareOptions,
+  TokenCache,
+} from "@commercetools/sdk-client-v2";
+import { apiUser } from "../constants";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
+import { createTokenCache } from "../token/tokenCache";
+
 
 type AnonymousAuthMiddlewareOptions = {
   host: string;
@@ -16,16 +22,19 @@ type AnonymousAuthMiddlewareOptions = {
   tokenCache?: TokenCache;
 };
 
+const tokenCache = createTokenCache();
+
 export const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
-  host: apiAdmin.CTP_AUTH_URL,
-  projectKey: apiAdmin.CTP_PROJECT_KEY,
+  host: apiUser.CTP_AUTH_URL,
+  projectKey: apiUser.CTP_PROJECT_KEY,
   credentials: {
-    clientId: apiAdmin.CTP_CLIENT_ID,
-    clientSecret: apiAdmin.CTP_CLIENT_SECRET,
+    clientId: apiUser.CTP_CLIENT_ID,
+    clientSecret: apiUser.CTP_CLIENT_SECRET,
     // anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
   },
-  scopes: [apiAdmin.CTP_SCOPES],
+  scopes: [apiUser.CTP_SCOPES],
   fetch: fetch,
+  tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -34,7 +43,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export const anonymousClient = new ClientBuilder()
-  .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+  // .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
   .withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
