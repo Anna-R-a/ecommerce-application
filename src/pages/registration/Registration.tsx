@@ -1,80 +1,24 @@
-import React, { Fragment } from "react";
-import type { CascaderProps } from "antd";
+import React, { Fragment, useState } from "react";
+import type { RangePickerProps } from "antd/es/date-picker";
 import { Button, Cascader, DatePicker, Form, Input, Select } from "antd";
 import "./Registration.css";
+import moment from "moment";
+import { formItemLayout, postCodesRegEx, residences, tailFormItemLayout } from "./DataForRegistrationForm";
 
 const { Option } = Select;
 
-interface DataNodeType {
-  value: string;
-  label: string;
-  children?: DataNodeType[];
-}
-
-const residences: CascaderProps<DataNodeType>["options"] = [
-  {
-    value: "poland",
-    label: "Poland",
-  },
-  {
-    value: "lithuania",
-    label: "Lithuania",
-  },
-  {
-    value: "france",
-    label: "France",
-  },
-  {
-    value: "germany",
-    label: "Germany",
-  },
-  {
-    value: "spain",
-    label: "Spain",
-  },
-];
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
-};
-
 const RegistrationPage: React.FC = () => {
   const [form] = Form.useForm();
+
+  const [country, setCountry] = useState("");
 
   const onFinish = (values: any) => {
     console.log("Received values of form: ", values);
   };
 
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="48">+48</Option>
-        <Option value="49">+49</Option>
-        <Option value="33">+33</Option>
-        <Option value="370">+370</Option>
-      </Select>
-    </Form.Item>
-  );
+  const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+    return current > moment().subtract(13, "year");
+  };
 
   return (
     <Fragment>
@@ -88,6 +32,11 @@ const RegistrationPage: React.FC = () => {
         initialValues={{ residence: ["Poland"], prefix: "48" }}
         style={{ maxWidth: 600 }}
         scrollToFirstError
+        onValuesChange={(values) => {
+          if (values.country) {
+            setCountry(values.country[0]);
+          }
+        }}
       >
         <Form.Item
           name="email"
@@ -102,6 +51,7 @@ const RegistrationPage: React.FC = () => {
               message: "Please input your E-mail!",
             },
           ]}
+          hasFeedback
         >
           <Input />
         </Form.Item>
@@ -113,6 +63,17 @@ const RegistrationPage: React.FC = () => {
             {
               required: true,
               message: "Please input your password!",
+            },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters",
+            },
+            {
+              pattern: new RegExp(
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})/,
+              ),
+              message:
+                "Password at least 1 uppercase letter, 1 lowercase letter, and 1 number",
             },
           ]}
           hasFeedback
@@ -151,11 +112,16 @@ const RegistrationPage: React.FC = () => {
           tooltip="Input our First Name"
           rules={[
             {
+              pattern: new RegExp(/^[A-Za-zА-Яа-яЁё]*$/),
+              message: "No space, numbers or special characters allowed",
+            },
+            {
               required: true,
               message: "Please input your First name!",
               whitespace: true,
             },
           ]}
+          hasFeedback
         >
           <Input />
         </Form.Item>
@@ -166,11 +132,16 @@ const RegistrationPage: React.FC = () => {
           tooltip="Input our Last Name"
           rules={[
             {
+              pattern: new RegExp(/^[A-Za-zА-Яа-яЁё]*$/),
+              message: "No space, numbers or special characters allowed",
+            },
+            {
               required: true,
               message: "Please input your Last name!",
               whitespace: true,
             },
           ]}
+          hasFeedback
         >
           <Input />
         </Form.Item>
@@ -192,25 +163,12 @@ const RegistrationPage: React.FC = () => {
           label="Date of birth"
           rules={[
             {
-              required: false,
+              required: true,
               message: "Please select our Date of birth!",
             },
           ]}
         >
-          <DatePicker style={{ width: "100%" }} />
-        </Form.Item>
-
-        <Form.Item
-          name="phone"
-          label="Phone Number"
-          rules={[
-            {
-              required: true,
-              message: "Please input your phone number!",
-            },
-          ]}
-        >
-          <Input addonBefore={prefixSelector} style={{ width: "100%" }} />
+          <DatePicker disabledDate={disabledDate} style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item
@@ -225,6 +183,58 @@ const RegistrationPage: React.FC = () => {
           ]}
         >
           <Cascader options={residences} />
+        </Form.Item>
+
+        <Form.Item
+          name="city"
+          label="City"
+          rules={[
+            {
+              pattern: new RegExp(/^[A-Za-zА-Яа-яЁё]*$/),
+              message: "No space, numbers or special characters allowed",
+            },
+            {
+              required: true,
+              message: "Please input your City!",
+              whitespace: true,
+            },
+          ]}
+          hasFeedback
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="street"
+          label="Street"
+          rules={[
+            {
+              required: true,
+              message: "Please input your street!",
+              whitespace: true,
+            },
+          ]}
+          hasFeedback
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="postcode"
+          label="Postcode"
+          rules={[
+            {
+              required: true,
+              message: "Please input your postcode!",
+            },
+            {
+              pattern: postCodesRegEx[country],
+              message: "No valid postcode!",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
