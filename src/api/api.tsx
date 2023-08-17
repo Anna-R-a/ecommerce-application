@@ -20,5 +20,3 @@ export const load = async () => {
 export const getCategories = async () => {
   return apiRootAnonymous.categories().get().execute();
 };
-
-

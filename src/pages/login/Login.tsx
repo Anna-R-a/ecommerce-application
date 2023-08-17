@@ -15,8 +15,9 @@ const LoginPage: React.FC = () => {
   };
   const errorMessage = () => {
     Modal.error({
-      title: 'Error',
-      content: 'Account with the given email and password not found.  Try again or register your account!',
+      title: "Error",
+      content:
+        "Account with the given email and password not found.  Try again or register your account!",
     });
   };
 
@@ -26,18 +27,18 @@ const LoginPage: React.FC = () => {
     //   .then(({ body }) => {
     //     if (body.results.length === 0) {
     //       console.log("This email address has not been registered.");
-          signInCustomer(values)
-            .then((res) => {
-              console.log("Get Customer", res.body.customer);
-              localStorage.setItem("isLogged", "true");
-              goHome();
-            })
-            .catch((error) => errorMessage());
-        // } else {
-        //   console.log("thisCustomer", body.results[0].id);
-        // }
-      // })
-      // .catch(console.error);
+    signInCustomer(values)
+      .then((res) => {
+        console.log("Get Customer", res.body.customer);
+        localStorage.setItem("isLogged", "true");
+        goHome();
+      })
+      .catch((error) => errorMessage());
+    // } else {
+    //   console.log("thisCustomer", body.results[0].id);
+    // }
+    // })
+    // .catch(console.error);
   };
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {

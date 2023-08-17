@@ -1,7 +1,5 @@
 import { TokenStore, TokenCache } from "@commercetools/sdk-client-v2";
 
-
-
 export const createTokenCache = () => {
   let tokenStore: TokenStore;
   const tokenName = "accessToken";

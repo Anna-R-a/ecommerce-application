@@ -10,4 +10,3 @@ export const findCustomerByEmail = (customerEmail: string) => {
     })
     .execute();
 };
-

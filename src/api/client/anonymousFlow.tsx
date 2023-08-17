@@ -7,7 +7,6 @@ import { apiUser } from "../constants";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { createTokenCache } from "../token/tokenCache";
 
-
 type AnonymousAuthMiddlewareOptions = {
   host: string;
   projectKey: string;
