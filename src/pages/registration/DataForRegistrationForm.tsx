@@ -33,7 +33,7 @@ const postCodesRegEx: Record<string, RegExp> = {
   poland: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
   lithuania: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
   france: new RegExp(/^\d{5}$/),
-  germany: new RegExp(/^\d{2}$/),
+  germany: new RegExp(/^\d{5}$/),
   spain: new RegExp(/^\d{5}$/),
 };
 

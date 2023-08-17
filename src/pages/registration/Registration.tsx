@@ -232,6 +232,7 @@ const RegistrationPage: React.FC = () => {
               message: "No valid postcode!",
             },
           ]}
+          hasFeedback
         >
           <Input style={{ width: "100%" }} />
         </Form.Item>
