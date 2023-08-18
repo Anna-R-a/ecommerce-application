@@ -5,7 +5,6 @@ import { Button, Form, Input, Modal } from "antd";
 import { RuleObject } from "antd/es/form";
 import "./Login.css";
 import { signInCustomer } from "../../api/customer/createCustomer";
-// import { findCustomerByEmail } from "../../api/customer/findCustomer";
 
 const LoginPage: React.FC = () => {
   let navigate = useNavigate();
@@ -28,11 +27,6 @@ const LoginPage: React.FC = () => {
   };
 
   const onFinish = (values: any) => {
-    // console.log("Received values of form: ", values);
-    // findCustomerByEmail(values.email)
-    //   .then(({ body }) => {
-    //     if (body.results.length === 0) {
-    //       console.log("This email address has not been registered.");
     signInCustomer(values)
       .then((res) => {
         console.log("Get Customer", res.body.customer);
@@ -41,14 +35,9 @@ const LoginPage: React.FC = () => {
       })
       .catch((error) => {
         const errorCode = error.body.statusCode;
-        if (errorCode.toString().slice(0,1) === '4') clientErrorMessage();
-        if (errorCode.toString().slice(0,1) === '5') serverErrorMessage();
+        if (errorCode.toString().slice(0, 1) === "4") clientErrorMessage();
+        if (errorCode.toString().slice(0, 1) === "5") serverErrorMessage();
       });
-    // } else {
-    //   console.log("thisCustomer", body.results[0].id);
-    // }
-    // })
-    // .catch(console.error);
   };
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
