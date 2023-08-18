@@ -4,20 +4,19 @@ import {
   HttpMiddlewareOptions,
   TokenCache,
 } from "@commercetools/sdk-client-v2";
-import { apiUser } from "../constants";
 import { createTokenCache } from "../token/tokenCache";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 
 const tokenCache = createTokenCache();
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: apiUser.CTP_AUTH_URL,
-  projectKey: apiUser.CTP_PROJECT_KEY,
+  host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
+  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   credentials: {
-    clientId: apiUser.CTP_CLIENT_ID,
-    clientSecret: apiUser.CTP_CLIENT_SECRET,
+    clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
+    clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
   },
-  scopes: [apiUser.CTP_SCOPES],
+  scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch,
   tokenCache,
 };
@@ -50,23 +49,23 @@ const loginParams: LoginParamsOptions = {
 };
 
 export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
-  host: apiUser.CTP_AUTH_URL,
-  projectKey: apiUser.CTP_PROJECT_KEY,
+  host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
+  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   credentials: {
-    clientId: apiUser.CTP_CLIENT_ID,
-    clientSecret: apiUser.CTP_CLIENT_SECRET,
+    clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
+    clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
     user: {
       username: loginParams.email,
       password: loginParams.password,
     },
   },
-  scopes: [apiUser.CTP_SCOPES],
+  scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch,
   tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: apiUser.CTP_API_URL,
+  host: `${process.env.REACT_APP_USER_CTP_API_URL}`,
   fetch,
 };
 
@@ -80,5 +79,5 @@ export const passwordClient = new ClientBuilder()
 export const apiRootPassword = createApiBuilderFromCtpClient(
   passwordClient,
 ).withProjectKey({
-  projectKey: apiUser.CTP_PROJECT_KEY,
+  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`
 });
