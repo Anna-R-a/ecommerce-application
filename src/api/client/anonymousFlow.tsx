@@ -49,7 +49,9 @@ export const anonymousClient = new ClientBuilder()
 
 export const apiRootAnonymous = createApiBuilderFromCtpClient(
   anonymousClient,
-).withProjectKey({ projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}` });
+).withProjectKey({
+  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
+});
 
 export const getProjectAnonymous = () => {
   return apiRootAnonymous.get().execute();

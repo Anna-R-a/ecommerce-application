@@ -16,7 +16,6 @@ export const authMiddlewareOptions: AuthMiddlewareOptions = {
   fetch,
 };
 
-
 export const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: `${process.env.REACT_APP_ADMIN_CTP_API_URL}`,
   fetch,

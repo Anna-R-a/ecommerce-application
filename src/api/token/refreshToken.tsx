@@ -16,7 +16,7 @@ type RefreshAuthMiddlewareOptions = {
 
 export const options: RefreshAuthMiddlewareOptions = {
   host: `${process.env.REACT_APP_ADMIN_CTP_AUTH_URL}`,
-  projectKey:`${process.env.REACT_APP_ADMIN_CTP_CLIENT_ID}`,
+  projectKey: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_ID}`,
   credentials: {
     clientId: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_ID}`,
     clientSecret: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_SECRET}`,
