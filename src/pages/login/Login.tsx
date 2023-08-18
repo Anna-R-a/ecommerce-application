@@ -13,11 +13,18 @@ const LoginPage: React.FC = () => {
   const goHome = () => {
     navigate("/");
   };
-  const errorMessage = () => {
+  const clientErrorMessage = () => {
     Modal.error({
       title: "Error",
       content:
-        "Account with the given email and password not found.  Try again or register your account!",
+        "Account with the given email and password not found. Try again or register your account!",
+    });
+  };
+  const serverErrorMessage = () => {
+    Modal.error({
+      title: "Error",
+      content:
+        "Server Error. Try later!",
     });
   };
 
@@ -33,7 +40,13 @@ const LoginPage: React.FC = () => {
         localStorage.setItem("isLogged", "true");
         goHome();
       })
-      .catch((error) => errorMessage());
+      .catch((error) => {
+        const errorCode = error.body.statusCode;
+        if (errorCode === 400)
+        clientErrorMessage();
+        if (errorCode === 500)
+        serverErrorMessage();
+        })
     // } else {
     //   console.log("thisCustomer", body.results[0].id);
     // }
