@@ -1,13 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { RuleObject } from "antd/es/form";
 import "./Login.css";
+import { signInCustomer } from "../../api/customer/createCustomer";
 
 const LoginPage: React.FC = () => {
+  let navigate = useNavigate();
+
+  const goHome = () => {
+    navigate("/");
+  };
+  const clientErrorMessage = () => {
+    Modal.error({
+      title: "Error",
+      content:
+        "Account with the given email and password not found. Try again or register your account!",
+    });
+  };
+  const serverErrorMessage = () => {
+    Modal.error({
+      title: "Error",
+      content: "Server Error. Try later!",
+    });
+  };
+
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+    signInCustomer(values)
+      .then((res) => {
+        console.log("Get Customer", res.body.customer);
+        localStorage.setItem("isLogged", "true");
+        goHome();
+      })
+      .catch((error) => {
+        const errorCode = error.body.statusCode;
+        if (errorCode.toString().slice(0, 1) === "4") clientErrorMessage();
+        if (errorCode.toString().slice(0, 1) === "5") serverErrorMessage();
+      });
   };
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
