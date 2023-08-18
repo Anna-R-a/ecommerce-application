@@ -23,8 +23,7 @@ const LoginPage: React.FC = () => {
   const serverErrorMessage = () => {
     Modal.error({
       title: "Error",
-      content:
-        "Server Error. Try later!",
+      content: "Server Error. Try later!",
     });
   };
 
@@ -42,11 +41,9 @@ const LoginPage: React.FC = () => {
       })
       .catch((error) => {
         const errorCode = error.body.statusCode;
-        if (errorCode === 400)
-        clientErrorMessage();
-        if (errorCode === 500)
-        serverErrorMessage();
-        })
+        if (errorCode.toString().slice(0,1) === '4') clientErrorMessage();
+        if (errorCode.toString().slice(0,1) === '5') serverErrorMessage();
+      });
     // } else {
     //   console.log("thisCustomer", body.results[0].id);
     // }
