@@ -61,7 +61,7 @@ export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
   },
   scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch,
-  tokenCache
+  tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {

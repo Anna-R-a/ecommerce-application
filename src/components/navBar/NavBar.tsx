@@ -55,14 +55,14 @@ const subMenuWithAuth = [
     ),
     key: "/login",
   },
-  {
-    label: (
-      <Link to="/registration" className="nav__link">
-        Registration
-      </Link>
-    ),
-    key: "/registration",
-  },
+  // {
+  //   label: (
+  //     <Link to="/registration" className="nav__link">
+  //       Registration
+  //     </Link>
+  //   ),
+  //   key: "/registration",
+  // },
   {
     label: "Profile",
     key: "/profile",

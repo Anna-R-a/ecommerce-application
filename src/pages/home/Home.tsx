@@ -59,7 +59,7 @@ const Navigation: React.FC = () => (
     </Link>
     <Link to="/login">
       <Button type="primary" className="button_primary" block>
-        Log In
+        Login page
       </Button>
     </Link>
     <Link to="/registration">
