@@ -1,5 +1,4 @@
 import { TokenCache } from "@commercetools/sdk-client-v2";
-import { apiAdmin } from "../constants";
 
 type RefreshAuthMiddlewareOptions = {
   host: string;
@@ -16,15 +15,15 @@ type RefreshAuthMiddlewareOptions = {
 };
 
 export const options: RefreshAuthMiddlewareOptions = {
-  host: apiAdmin.CTP_AUTH_URL,
-  projectKey: apiAdmin.CTP_PROJECT_KEY,
+  host: `${process.env.REACT_APP_ADMIN_CTP_AUTH_URL}`,
+  projectKey: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_ID}`,
   credentials: {
-    clientId: apiAdmin.CTP_CLIENT_ID,
-    clientSecret: apiAdmin.CTP_CLIENT_SECRET,
+    clientId: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_ID}`,
+    clientSecret: `${process.env.REACT_APP_ADMIN_CTP_CLIENT_SECRET}`,
   },
   refreshToken: "bXvTyxc5yuebdvwTwyXn==",
   // tokenCache: 'TokenCache',
-  scopes: [`manage_project:${apiAdmin.CTP_PROJECT_KEY}`],
+  scopes: [`manage_project:${process.env.REACT_APP_ADMIN_CTP_PROJECT_KEY}`],
   fetch: fetch,
 };
 
