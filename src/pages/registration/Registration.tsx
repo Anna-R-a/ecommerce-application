@@ -3,7 +3,12 @@ import type { RangePickerProps } from "antd/es/date-picker";
 import { Button, Cascader, DatePicker, Form, Input, Select } from "antd";
 import "./Registration.css";
 import moment from "moment";
-import { formItemLayout, postCodesRegEx, residences, tailFormItemLayout } from "./DataForRegistrationForm";
+import {
+  formItemLayout,
+  postCodesRegEx,
+  residences,
+  tailFormItemLayout,
+} from "./DataForRegistrationForm";
 
 const { Option } = Select;
 
@@ -241,7 +246,7 @@ const RegistrationPage: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="registration-form-button"
+            className="registration-form-button button_primary"
           >
             Register
           </Button>

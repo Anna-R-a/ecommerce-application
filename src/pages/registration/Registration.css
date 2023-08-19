@@ -1,3 +1,4 @@
-.registration-form-button {
-    width: 100%;
+.registration-form-button,
+.ant-form-item .registration-form-button.button_primary {
+  width: 100%;
 }
