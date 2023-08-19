@@ -9,6 +9,7 @@ import {
   residences,
   tailFormItemLayout,
 } from "./DataForRegistrationForm";
+import { Link } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -250,6 +251,9 @@ const RegistrationPage: React.FC = () => {
           >
             Register
           </Button>
+          <div className="registration-form__subText">
+            Already registered? <Link to="/login">Log In here</Link>!
+          </div>
         </Form.Item>
       </Form>
     </Fragment>
