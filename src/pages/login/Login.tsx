@@ -1,10 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input} from "antd";
 import { RuleObject } from "antd/es/form";
 import "./Login.css";
 import { signInCustomer } from "../../api/customer/createCustomer";
+import {  ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { notify } from "../../components/notification/notification";
+
 
 const LoginPage: React.FC = () => {
   let navigate = useNavigate();
@@ -12,31 +16,23 @@ const LoginPage: React.FC = () => {
   const goHome = () => {
     navigate("/");
   };
-  const clientErrorMessage = () => {
-    Modal.error({
-      title: "Error",
-      content:
-        "Account with the given email and password not found. Try again or register your account!",
-    });
-  };
-  const serverErrorMessage = () => {
-    Modal.error({
-      title: "Error",
-      content: "Server Error. Try later!",
-    });
-  };
 
   const onFinish = (values: any) => {
     signInCustomer(values)
       .then((res) => {
         console.log("Get Customer", res.body.customer);
         localStorage.setItem("isLogged", "true");
-        goHome();
-      })
+        notify('Login Successful!', 'success')
+        setTimeout(goHome, 1500)
+        })
       .catch((error) => {
         const errorCode = error.body.statusCode;
-        if (errorCode.toString().slice(0, 1) === "4") clientErrorMessage();
-        if (errorCode.toString().slice(0, 1) === "5") serverErrorMessage();
+        if (errorCode.toString().slice(0, 1) === "4") {
+          notify("Account with the given email and password not found. Try again or register your account!", 'error')
+         }
+        if (errorCode.toString().slice(0, 1) === "5") {
+          notify("Server Error. Try later!", 'error')
+         };
       });
   };
 
@@ -53,6 +49,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
+    <ToastContainer />
       <h1>Log In</h1>
       <Form
         name="login-form"
