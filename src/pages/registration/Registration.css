@@ -2,3 +2,9 @@
 .ant-form-item .registration-form-button.button_primary {
   width: 100%;
 }
+
+#register .ant-input-affix-wrapper:focus,
+#register .ant-input-affix-wrapper:hover,
+#register .ant-input-affix-wrapper-focused {
+  border-color: var(--medium-color);
+}

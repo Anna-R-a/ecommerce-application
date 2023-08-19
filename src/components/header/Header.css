@@ -1,33 +1,33 @@
 .header {
-    border-bottom: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
 }
 
 .header .wrapper {
-    height: 45px;
-    justify-content: space-between;
-    align-items: center;
+  height: 45px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-    padding: 0 20px;
+  padding: 0 20px;
 }
 
 .logo__icon {
-    height: 31px;
-    width: 31px;
-    background: url("./../../assets/logo.svg");
-    margin-right: 10px;
+  height: 31px;
+  width: 31px;
+  background: url("./../../assets/logo.svg");
+  margin-right: 10px;
 }
 
 .logo__link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--dark-color);
-    font-size: 2rem;
-    font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--dark-color);
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 .logo__link:hover {
-    color: var(--medium-color);
+  color: var(--medium-color);
 }

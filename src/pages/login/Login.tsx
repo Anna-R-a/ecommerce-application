@@ -99,12 +99,12 @@ const LoginPage: React.FC = () => {
           <Button
             type="primary"
             htmlType="submit"
-            className="login-form__button"
+            className="login-form__button button_primary"
           >
             Log in
           </Button>
           <div className="login-form__subText">
-            Or <Link to="/registration">register now!</Link>
+            Or <Link to="/registration">register now</Link>!
           </div>
         </Form.Item>
       </Form>
