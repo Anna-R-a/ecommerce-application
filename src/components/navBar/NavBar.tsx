@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { UserOutlined, MenuOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Menu, Button, Drawer } from "antd";
+import { UserOutlined, MenuOutlined } from "@ant-design/icons";
+import { MenuInfo } from "rc-menu/lib/interface";
 import "./NavBar.css";
 
 const itemsNav: MenuProps["items"] = [
@@ -15,12 +16,9 @@ const itemsNav: MenuProps["items"] = [
     key: "/",
   },
   {
-    label: (
-      <Link to="/catalog" className="nav__link">
-        Catalog
-      </Link>
-    ),
+    label: "Catalog",
     key: "/catalog",
+    disabled: true,
   },
   {
     label: "About Us",
@@ -29,7 +27,7 @@ const itemsNav: MenuProps["items"] = [
   },
 ];
 
-const subMenu = [
+const subMenuWithoutAuth = [
   {
     label: (
       <Link to="/login" className="nav__link">
@@ -46,31 +44,29 @@ const subMenu = [
     ),
     key: "/registration",
   },
+];
+
+const subMenuWithAuth = [
   {
     label: (
-      <Link to="/profile" className="nav__link">
-        Profile
+      <Link to="/login" className="nav__link">
+        Log Out
       </Link>
     ),
+    key: "/login",
+  },
+  // {
+  //   label: (
+  //     <Link to="/registration" className="nav__link">
+  //       Registration
+  //     </Link>
+  //   ),
+  //   key: "/registration",
+  // },
+  {
+    label: "Profile",
     key: "/profile",
-  },
-];
-
-const itemsUserBar: MenuProps["items"] = [
-  {
-    label: "",
-    key: "SubMenu",
-    icon: <UserOutlined className={"icon"} />,
-    children: subMenu,
-  },
-];
-
-const itemsUserBarHamburger: MenuProps["items"] = [
-  {
-    label: "",
-    key: "SubMenu",
     disabled: true,
-    children: subMenu,
   },
 ];
 
@@ -88,14 +84,34 @@ export const Nav: React.FC = () => {
   );
 };
 
+const handlerLogInOut = (info: MenuInfo) => {
+  const isLogged = localStorage.getItem("isLogged");
+  if (isLogged && info.key === "/login") {
+    localStorage.clear();
+  }
+};
+
 export const UserBar: React.FC = () => {
   const location = useLocation();
+
+  const itemsUserBar: MenuProps["items"] = [
+    {
+      label: "",
+      key: "SubMenu",
+      icon: <UserOutlined className={"icon"} />,
+      children: localStorage.getItem("isLogged")
+        ? subMenuWithAuth
+        : subMenuWithoutAuth,
+    },
+  ];
+
   return (
     <Menu
       className="user-bar"
       mode="horizontal"
       items={itemsUserBar}
       selectedKeys={[location.pathname]}
+      onClick={handlerLogInOut}
     />
   );
 };
@@ -108,9 +124,25 @@ export const NavDrawer: React.FC = () => {
     setOpen(true);
   };
 
-  const onClose = () => {
+  const onCloseDrawer = () => {
     setOpen(false);
   };
+
+  const onClose = (info: MenuInfo) => {
+    handlerLogInOut(info);
+    setOpen(false);
+  };
+
+  const itemsUserBar: MenuProps["items"] = [
+    {
+      label: "",
+      key: "SubMenu",
+      disabled: true,
+      children: localStorage.getItem("isLogged")
+        ? subMenuWithAuth
+        : subMenuWithoutAuth,
+    },
+  ];
 
   return (
     <>
@@ -124,7 +156,7 @@ export const NavDrawer: React.FC = () => {
         title="Menu"
         placement={"right"}
         width={320}
-        onClose={onClose}
+        onClose={onCloseDrawer}
         open={open}
       >
         <Menu
@@ -140,7 +172,7 @@ export const NavDrawer: React.FC = () => {
           className="user-bar"
           mode="inline"
           defaultOpenKeys={["SubMenu"]}
-          items={itemsUserBarHamburger}
+          items={itemsUserBar}
           selectedKeys={[location.pathname]}
           onClick={onClose}
         />

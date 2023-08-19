@@ -35,17 +35,11 @@
     color: var(--background-color);
 }
 
-.ant-menu-sub >:last-child:hover,
-.navigation .ant-menu-item.ant-menu-item-selected,
+.ant-drawer-body .ant-menu-item.ant-menu-item-selected,
 .ant-menu-sub .ant-menu-item.ant-menu-item-selected,
-.ant-menu-sub .ant-menu-item:focus {
+.ant-menu-sub .ant-menu-item:active {
     background-color: var(--cover-color)!important;
     color: var(--default-color)!important;
-}
-
-.ant-menu-sub >:last-child {
-    background-color: var(--light-color)!important;
-    color: var(--background-color)!important;
 }
 
 .ant-menu-inline {

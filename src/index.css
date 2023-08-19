@@ -1,48 +1,70 @@
 :root {
-    --max-width: 1200px;
+  --max-width: 1200px;
+  --min-width: 390px;
 
-    --default-color: #000000e0;
-    --background-color: #ffffff;
-    --dark-color: #3c7375;
-    --medium-color: #5f9ea0;
-    --light-color: #92bfc1;
-    --line-color: #0505050f;
-    --cover-color: #0000000f;
+  --default-color: #000000e0;
+  --background-color: #ffffff;
+  --dark-color: #3c7375;
+  --medium-color: #5f9ea0;
+  --light-color: #92bfc1;
+  --line-color: #0505050f;
+  --cover-color: #0000000f;
+  --secondary-color: #ff8107;
 }
 
 html,
 body {
-    height: 100%;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    color: var(--default-color);
-    font-size: 10px;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: smooth;
+  height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  color: var(--default-color);
+  font-size: 10px;
+  min-width: var(--min-width);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 #root {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    font-size: 1.6rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.6rem;
 }
 
 .wrapper {
-    display: flex;
-    max-width: var(--max-width);
-    margin: 0 auto;
+  display: flex;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 h1 {
-    font-size: 2.6rem;
-    color: var(--dark-color);
-    margin: 15px auto;
+  font-size: 2.6rem;
+  color: var(--dark-color);
+  margin: 15px auto;
 }
 
 .icon {
-    color: var(--dark-color)!important;
+  color: var(--dark-color) !important;
+}
+
+.button_primary {
+  width: 250px;
+  background-color: var(--medium-color);
+}
+
+.button_primary:hover {
+  background-color: var(--light-color) !important;
+}
+
+.button_secondary {
+  width: 250px;
+}
+
+.button_secondary:hover {
+  color: var(--default-color) !important;
+  background-color: var(--cover-color) !important;
+  border-color: var(--cover-color) !important;
 }

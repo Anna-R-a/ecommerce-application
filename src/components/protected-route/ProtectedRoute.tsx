@@ -4,10 +4,18 @@ interface ProtectedRouteProps {
   children: JSX.Element;
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const userId = localStorage.getItem("userId");
-  if (!userId) {
+export const ProtectedRouteProfile = ({ children }: ProtectedRouteProps) => {
+  const isLogged = localStorage.getItem("isLogged");
+  if (!isLogged) {
     return <Navigate to="/registration" />;
+  }
+  return children;
+};
+
+export const ProtectedRouteLogin = ({ children }: ProtectedRouteProps) => {
+  const isLogged = localStorage.getItem("isLogged");
+  if (isLogged) {
+    return <Navigate to="/" />;
   }
   return children;
 };

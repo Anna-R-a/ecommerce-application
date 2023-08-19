@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { PageLayout } from "./components/layout/Layout";
-import { ProtectedRoute } from "./components/protected-route/ProtectedRoute";
-
+import {
+  ProtectedRouteProfile,
+  ProtectedRouteLogin,
+} from "./components/protected-route/ProtectedRoute";
 import HomePage from "./pages/home/Home";
-// import { CatalogPage } from "./pages/catalog/Catalog";
 import LoginPage from "./pages/login/Login";
 import RegistrationPage from "./pages/registration/Registration";
+// import CatalogPage from "./pages/catalog/catalog";
 import ProfilePage from "./pages/profile/Profile";
 import NotFoundPage from "./pages/notFound/NotFound";
 
@@ -16,15 +18,22 @@ function App() {
     <Routes>
       <Route element={<PageLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <ProtectedRouteLogin>
+              <LoginPage />
+            </ProtectedRouteLogin>
+          }
+        />
         <Route path="/registration" element={<RegistrationPage />} />
         {/* <Route path="/catalog" element={<CatalogPage />} /> */}
         <Route
           path="/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedRouteProfile>
               <ProfilePage />
-            </ProtectedRoute>
+            </ProtectedRouteProfile>
           }
         />
         <Route path="*" element={<NotFoundPage />} />

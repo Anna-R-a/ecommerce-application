@@ -1,3 +1,29 @@
-.registration-form-button {
-    width: 100%;
+.registration-form-button,
+.ant-form-item .registration-form-button.button_primary {
+  width: 100%;
+}
+
+#register .ant-input-affix-wrapper:focus,
+#register .ant-input-affix-wrapper:hover,
+#register .ant-input-affix-wrapper-focused
+#register .ant-select-selector:focus,
+#register .ant-select-selector:hover,
+#register .ant-select-selector-focused,
+#register .ant-picker:focus,
+#register .ant-picker:hover,
+#register .ant-picker-focused {
+  border-color: var(--medium-color);
+}
+
+.registration-form__subText {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.registration-form__subText a {
+  color: var(--dark-color);
+}
+
+.registration-form__subText a:hover {
+  color: var(--medium-color);
 }

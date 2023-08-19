@@ -61,9 +61,4 @@ const tailFormItemLayout = {
   },
 };
 
-export {
-  tailFormItemLayout,
-  formItemLayout,
-  postCodesRegEx,
-  residences,
-};
+export { tailFormItemLayout, formItemLayout, postCodesRegEx, residences };

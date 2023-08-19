@@ -9,14 +9,6 @@ export const getProducts = async () => {
   return apiRootAnonymous.products().get().execute();
 };
 
-export const load = async () => {
-  const isLogged = localStorage.getItem("isLogged");
-  if (isLogged) {
-    return apiRootPassword.get().execute();
-  }
-  return apiRootAnonymous.get().execute();
-};
-
 export const getCategories = async () => {
   return apiRootAnonymous.categories().get().execute();
 };
