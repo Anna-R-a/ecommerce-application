@@ -1,4 +1,5 @@
 import type { CascaderProps } from "antd";
+import { Moment } from "moment";
 
 interface DataNodeType {
   value: string;
@@ -8,33 +9,33 @@ interface DataNodeType {
 
 const residences: CascaderProps<DataNodeType>["options"] = [
   {
-    value: "poland",
+    value: "PL",
     label: "Poland",
   },
   {
-    value: "lithuania",
+    value: "LT",
     label: "Lithuania",
   },
   {
-    value: "france",
+    value: "FR",
     label: "France",
   },
   {
-    value: "germany",
+    value: "DE",
     label: "Germany",
   },
   {
-    value: "spain",
+    value: "ES",
     label: "Spain",
   },
 ];
 
 const postCodesRegEx: Record<string, RegExp> = {
-  poland: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
-  lithuania: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
-  france: new RegExp(/^\d{5}$/),
-  germany: new RegExp(/^\d{5}$/),
-  spain: new RegExp(/^\d{5}$/),
+  PL: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
+  LT: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
+  FR: new RegExp(/^\d{5}$/),
+  DE: new RegExp(/^\d{5}$/),
+  SP: new RegExp(/^\d{5}$/),
 };
 
 const formItemLayout = {
@@ -59,6 +60,20 @@ const tailFormItemLayout = {
       offset: 4,
     },
   },
+};
+
+export type RegistrationData = {
+  city: string;
+  confirm: string;
+  country: string[];
+  dateOfBirth: Moment;
+  email: string;
+  firstName: string;
+  gender: string;
+  lastName: string;
+  password: string;
+  postcode: string;
+  street: string;
 };
 
 export { tailFormItemLayout, formItemLayout, postCodesRegEx, residences };

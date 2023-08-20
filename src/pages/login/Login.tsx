@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
     const regexp =
-      /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])(\S*){8,}$/;
     const valueTrimming = value?.trim();
     return value && value === valueTrimming && regexp.test(valueTrimming)
       ? Promise.resolve()
