@@ -16,6 +16,8 @@ import {
   mapRegDataToRequest,
 } from "../../api/customer/createCustomer";
 import { notify } from "../../components/notification/notification";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Option } = Select;
 
@@ -57,6 +59,7 @@ const RegistrationPage: React.FC = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <h1>Registration</h1>
 
       <Form
@@ -291,6 +294,3 @@ const RegistrationPage: React.FC = () => {
 };
 
 export default RegistrationPage;
-function goHome(): void {
-  throw new Error("Function not implemented.");
-}
