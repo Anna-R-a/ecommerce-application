@@ -76,10 +76,10 @@ const RegistrationPage: React.FC = () => {
             },
             {
               pattern: new RegExp(
-                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})/,
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
               ),
               message:
-                "Password at least 1 uppercase letter, 1 lowercase letter, and 1 number",
+                "Password at least one uppercase and lowercase letter, digit and special character",
             },
           ]}
           hasFeedback
