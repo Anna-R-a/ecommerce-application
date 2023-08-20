@@ -4,22 +4,51 @@ import { Button, Cascader, DatePicker, Form, Input, Select } from "antd";
 import "./Registration.css";
 import moment from "moment";
 import {
+  RegistrationData,
   formItemLayout,
   postCodesRegEx,
   residences,
   tailFormItemLayout,
 } from "./DataForRegistrationForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  createCustomer,
+  mapRegDataToRequest,
+} from "../../api/customer/createCustomer";
+import { notify } from "../../components/notification/notification";
 
 const { Option } = Select;
 
 const RegistrationPage: React.FC = () => {
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [country, setCountry] = useState("");
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  let navigate = useNavigate();
+
+  const goHome = () => {
+    navigate("/");
+  };
+
+  const onFinish = (values: RegistrationData) => {
+    setIsLoading(true);
+    createCustomer(mapRegDataToRequest(values))
+      .then((res) => {
+        console.log("Get Customer", res.body.customer);
+        notify("Registration Successful!", "success");
+        setTimeout(goHome, 1500);
+      })
+      .catch((error) => {
+        const errorCode = error.body.statusCode;
+        if (errorCode.toString().slice(0, 1) === "4") {
+          notify("Account with the such an email exists", "error");
+        }
+        if (errorCode.toString().slice(0, 1) === "5") {
+          notify("Server Error. Try later!", "error");
+        }
+      });
+    setIsLoading(false);
   };
 
   const disabledDate: RangePickerProps["disabledDate"] = (current) => {
@@ -165,7 +194,7 @@ const RegistrationPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="dateBirth"
+          name="dateOfBirth"
           label="Date of birth"
           rules={[
             {
@@ -248,6 +277,7 @@ const RegistrationPage: React.FC = () => {
             type="primary"
             htmlType="submit"
             className="registration-form-button button_primary"
+            loading={isLoading}
           >
             Register
           </Button>
@@ -261,3 +291,6 @@ const RegistrationPage: React.FC = () => {
 };
 
 export default RegistrationPage;
+function goHome(): void {
+  throw new Error("Function not implemented.");
+}

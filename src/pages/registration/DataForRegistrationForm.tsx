@@ -1,4 +1,5 @@
 import type { CascaderProps } from "antd";
+import { Moment } from "moment";
 
 interface DataNodeType {
   value: string;
@@ -8,23 +9,23 @@ interface DataNodeType {
 
 const residences: CascaderProps<DataNodeType>["options"] = [
   {
-    value: "poland",
+    value: "PL",
     label: "Poland",
   },
   {
-    value: "lithuania",
+    value: "LT",
     label: "Lithuania",
   },
   {
-    value: "france",
+    value: "FR",
     label: "France",
   },
   {
-    value: "germany",
+    value: "GER",
     label: "Germany",
   },
   {
-    value: "spain",
+    value: "SP",
     label: "Spain",
   },
 ];
@@ -59,6 +60,20 @@ const tailFormItemLayout = {
       offset: 4,
     },
   },
+};
+
+export type RegistrationData = {
+  city: string;
+  confirm: string;
+  country: string[];
+  dateOfBirth: Moment;
+  email: string;
+  firstName: string;
+  gender: string;
+  lastName: string;
+  password: string;
+  postcode: string;
+  street: string;
 };
 
 export { tailFormItemLayout, formItemLayout, postCodesRegEx, residences };

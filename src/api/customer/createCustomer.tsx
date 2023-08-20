@@ -1,25 +1,51 @@
-import { CustomerDraft, MyCustomerSignin } from "@commercetools/platform-sdk";
+import {
+  BaseAddress,
+  CustomerDraft,
+  MyCustomerSignin,
+} from "@commercetools/platform-sdk";
 import { apiRoot } from "../client/createClient";
 import { apiRootPassword } from "../client/passwordFlow";
+import { RegistrationData } from "../../pages/registration/DataForRegistrationForm";
 
 export const getProject = () => {
   return apiRoot.get().execute();
 };
 
-export const createCustomer = (dataForRegitration: CustomerDraft) => {
-  try{
-    return apiRoot
+export function mapRegDataToRequest(data: RegistrationData): CustomerDraft {
+  const {
+    email,
+    firstName,
+    lastName,
+    password,
+    dateOfBirth,
+    country,
+    postcode,
+    city,
+    street,
+  } = data;
+  const address: BaseAddress = {
+    country: country[0],
+    postalCode: postcode,
+    city,
+    streetName: street,
+  };
+  return {
+    email,
+    firstName,
+    lastName,
+    password,
+    dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+    addresses: [address],
+  };
+}
+
+export const createCustomer = async (body: CustomerDraft) => {
+  return await apiRoot
     .customers()
     .post({
-      body: {
-        ...dataForRegitration
-      },
+      body,
     })
     .execute();
-  } catch(e){
-    console.log(e)
-  }
-  
 };
 
 export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
@@ -34,4 +60,3 @@ export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
     })
     .execute();
 };
-
