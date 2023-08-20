@@ -25,7 +25,7 @@ const residences: CascaderProps<DataNodeType>["options"] = [
     label: "Germany",
   },
   {
-    value: "SP",
+    value: "ES",
     label: "Spain",
   },
 ];
