@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   createCustomer,
   mapRegDataToRequest,
+  signInCustomer,
 } from "../../api/customer/createCustomer";
 import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
@@ -37,7 +38,8 @@ const RegistrationPage: React.FC = () => {
     setIsLoading(true);
     createCustomer(mapRegDataToRequest(values))
       .then((res) => {
-        console.log("Get Customer", res.body.customer);
+        signInCustomer(values);
+        localStorage.setItem('isLogged', 'true');
         notify("Registration Successful!", "success");
         setTimeout(goHome, 1500);
       })

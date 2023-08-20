@@ -21,7 +21,7 @@ const residences: CascaderProps<DataNodeType>["options"] = [
     label: "France",
   },
   {
-    value: "GER",
+    value: "DE",
     label: "Germany",
   },
   {
@@ -31,11 +31,11 @@ const residences: CascaderProps<DataNodeType>["options"] = [
 ];
 
 const postCodesRegEx: Record<string, RegExp> = {
-  poland: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
-  lithuania: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
-  france: new RegExp(/^\d{5}$/),
-  germany: new RegExp(/^\d{5}$/),
-  spain: new RegExp(/^\d{5}$/),
+  PL: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
+  LT: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
+  FR: new RegExp(/^\d{5}$/),
+  DE: new RegExp(/^\d{5}$/),
+  SP: new RegExp(/^\d{5}$/),
 };
 
 const formItemLayout = {
