@@ -131,7 +131,7 @@ const RegistrationPage: React.FC = () => {
         style={{ maxWidth: 600 }}
         scrollToFirstError
         onValuesChange={(values) => {
-          console.log(values);
+
           if (values.countryShipping) {
             setCountryShipping(values.countryShipping[0]);
           }
