@@ -44,7 +44,7 @@ export const createPasswordClient = ({ email, password }: MyCustomerSignin) => {
     .build();
 
   const apiRootPassword = createApiBuilderFromCtpClient(
-    passwordClient
+    passwordClient,
   ).withProjectKey({
     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   });

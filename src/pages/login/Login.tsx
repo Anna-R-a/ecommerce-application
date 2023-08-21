@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
         if (errorCode.toString().slice(0, 1) === "4") {
           notify(
             "Account with the given email and password not found. Try again or register your account!",
-            "error"
+            "error",
           );
         }
         if (errorCode.toString().slice(0, 1) === "5") {
@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
     return value && value === valueTrimming && regexp.test(valueTrimming)
       ? Promise.resolve()
       : Promise.reject(
-          "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character"
+          "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character",
         );
   }
 
