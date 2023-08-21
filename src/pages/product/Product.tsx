@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, Modal, Row } from "antd";
 import { LineItem, Product } from "@commercetools/platform-sdk";
-import { addProductToCart, createCart, getActiveCart, getProductDetails, removeProductFromCart } from "../../api/api";
+import {
+  addProductToCart,
+  createCart,
+  getActiveCart,
+  getProductDetails,
+  removeProductFromCart,
+} from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
@@ -68,37 +74,41 @@ const ProductPage: React.FC = () => {
     : [];
   const [cart, setCart] = useState<LineItem[]>(productsOnCart);
 
-  const isInCart = (id: string) =>{
-    return cart.find(item => item.productId === id);
-  }
-  const lineItemId = isInCart(id)?.id!
+  const isInCart = (id: string) => {
+    return cart.find((item) => item.productId === id);
+  };
+  const lineItemId = isInCart(id)?.id!;
 
   const addItem = async (productId: string) => {
     if (!activeCart && !cartCustomer) {
       await createCart();
-  }
-  const fullCart =  await addProductToCart(productId).then(()=> getActiveCart()) ;
-  setCart(fullCart.body.lineItems);
-  setContext(fullCart.body.totalLineItemQuantity);
-  
-  if (cartCustomer) {
+    }
+    const fullCart = await addProductToCart(productId).then(() =>
+      getActiveCart(),
+    );
+    setCart(fullCart.body.lineItems);
+    setContext(fullCart.body.totalLineItemQuantity);
+
+    if (cartCustomer) {
       localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
     } else {
       localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
     }
-  }
+  };
 
   const removeItem = async (lineItemId: string) => {
-  const fullCart =  await removeProductFromCart(lineItemId).then(()=> getActiveCart()) 
-  setCart(fullCart.body.lineItems);
-  setContext(fullCart.body.totalLineItemQuantity);
-  
-  if (cartCustomer) {
+    const fullCart = await removeProductFromCart(lineItemId).then(() =>
+      getActiveCart(),
+    );
+    setCart(fullCart.body.lineItems);
+    setContext(fullCart.body.totalLineItemQuantity);
+
+    if (cartCustomer) {
       localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
     } else {
       localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
     }
-  }
+  };
 
   return (
     <>
@@ -148,26 +158,27 @@ const ProductPage: React.FC = () => {
               </p>
             </div>
             <div>
-              {isInCart(id) 
-            ? (<Button 
-              type="primary" 
-              className="button_primary" 
-              key={`${key}`}
-              onClick={async()=> await removeItem(lineItemId)}
-            >
-              Remove
-            </Button>)
-          : (<Button 
-            type="primary" 
-            className="button_primary" 
-            key={`${key}`}
-            onClick={async()=> await addItem(id)}
-          >
-            Add to cart
-          </Button>)
-              }
+              {isInCart(id) ? (
+                <Button
+                  type="primary"
+                  className="button_primary"
+                  key={`${key}`}
+                  onClick={async () => await removeItem(lineItemId)}
+                >
+                  Remove
+                </Button>
+              ) : (
+                <Button
+                  type="primary"
+                  className="button_primary"
+                  key={`${key}`}
+                  onClick={async () => await addItem(id)}
+                >
+                  Add to cart
+                </Button>
+              )}
             </div>
-            </Card>
+          </Card>
         </Col>
       </Row>
       <>

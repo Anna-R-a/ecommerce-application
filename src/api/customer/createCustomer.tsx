@@ -82,10 +82,8 @@ export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
         email,
         password,
         activeCartSignInMode: "MergeWithExistingCustomerCart",
-        updateProductData: true
+        updateProductData: true,
       },
     })
     .execute();
 };
-
-
