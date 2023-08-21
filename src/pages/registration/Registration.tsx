@@ -38,7 +38,8 @@ const RegistrationPage: React.FC = () => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [country, setCountry] = useState("");
+  const [countryShipping, setCountryShipping] = useState("");
+  const [countryBilling, setCountryBilling] = useState("");
 
   const [defaultShipping, setDefaultShipping] = useState({
     defaultShippingAddresses: false,
@@ -131,8 +132,12 @@ const RegistrationPage: React.FC = () => {
         style={{ maxWidth: 600 }}
         scrollToFirstError
         onValuesChange={(values) => {
-          if (values.country) {
-            setCountry(values.country[0]);
+          console.log(values);
+          if (values.countryShipping) {
+            setCountryShipping(values.countryShipping[0]);
+          }
+          if (values.countryBilling) {
+            setCountryBilling(values.countryShipping[0]);
           }
         }}
       >
@@ -327,7 +332,7 @@ const RegistrationPage: React.FC = () => {
               message: "Please input your postcode!",
             },
             {
-              pattern: postCodesRegEx[country],
+              pattern: postCodesRegEx[countryShipping],
               message: "No valid postcode!",
             },
           ]}
@@ -405,7 +410,7 @@ const RegistrationPage: React.FC = () => {
                 message: "Please input your postcode!",
               },
               {
-                pattern: postCodesRegEx[country],
+                pattern: postCodesRegEx[countryBilling],
                 message: "No valid postcode!",
               },
             ]}

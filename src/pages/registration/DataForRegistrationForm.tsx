@@ -35,7 +35,7 @@ export const postCodesRegEx: Record<string, RegExp> = {
   LT: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
   FR: new RegExp(/^\d{5}$/),
   DE: new RegExp(/^\d{5}$/),
-  SP: new RegExp(/^\d{5}$/),
+  ES: new RegExp(/^\d{5}$/),
 };
 
 export const formItemLayout = {
