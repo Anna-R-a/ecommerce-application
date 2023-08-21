@@ -106,8 +106,7 @@ const RegistrationPage: React.FC = () => {
         const errorCode = error.body.statusCode;
         if (errorCode.toString().slice(0, 1) === "4") {
           notify("Account with the such email exists", "error");
-        }
-        if (errorCode.toString().slice(0, 1) === "5") {
+        } else if (errorCode.toString().slice(0, 1) === "5") {
           notify("Server Error. Try later!", "error");
         }
       });
@@ -137,7 +136,7 @@ const RegistrationPage: React.FC = () => {
             setCountryShipping(values.countryShipping[0]);
           }
           if (values.countryBilling) {
-            setCountryBilling(values.countryShipping[0]);
+            setCountryBilling(values.countryBilling[0]);
           }
         }}
       >
