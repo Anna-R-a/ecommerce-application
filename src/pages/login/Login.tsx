@@ -40,9 +40,8 @@ const LoginPage: React.FC = () => {
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
     const regexp =
-    /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])(\S*){8,}$/;
-    const valueTrimming = value?.trim();
-    return value && value === valueTrimming && regexp.test(valueTrimming)
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S{8,}$/;
+    return regexp.test(value)
       ? Promise.resolve()
       : Promise.reject(
           "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character",
