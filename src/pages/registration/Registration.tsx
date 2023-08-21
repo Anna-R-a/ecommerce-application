@@ -39,7 +39,7 @@ const RegistrationPage: React.FC = () => {
     createCustomer(mapRegDataToRequest(values))
       .then((res) => {
         signInCustomer(values);
-        localStorage.setItem('isLogged', 'true');
+        localStorage.setItem("isLogged", "true");
         notify("Registration Successful!", "success");
         setTimeout(goHome, 1500);
       })
