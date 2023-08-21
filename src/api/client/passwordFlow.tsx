@@ -1,67 +1,33 @@
 import {
-  AuthMiddlewareOptions,
+  //AuthMiddlewareOptions,
   ClientBuilder,
   HttpMiddlewareOptions,
-  TokenCache,
+  //TokenCache,
 } from "@commercetools/sdk-client-v2";
 import { createTokenCache } from "../token/tokenCache";
-import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
+import {
+  MyCustomerSignin,
+  createApiBuilderFromCtpClient,
+} from "@commercetools/platform-sdk";
 
 const tokenCache = createTokenCache();
 
-const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
-  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
-  credentials: {
-    clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
-    clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
-  },
-  scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
-  fetch,
-  tokenCache,
-};
-
-type PasswordAuthMiddlewareOptions = {
-  host: string;
-  projectKey: string;
-  credentials: {
-    clientId: string;
-    clientSecret: string;
-    user: {
-      username: string;
-      password: string;
-    };
-  };
-  scopes?: Array<string>;
-  tokenCache?: TokenCache;
-  oauthUri?: string;
-  fetch?: any;
-};
-
-type LoginParamsOptions = {
-  email: string;
-  password: string;
-};
-
-const loginParams: LoginParamsOptions = {
-  email: "email@email.com",
-  password: "password123!Q",
-};
-
-export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
-  host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
-  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
-  credentials: {
-    clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
-    clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
-    user: {
-      username: loginParams.email,
-      password: loginParams.password,
+const getPasswordParams = ({ email, password }: MyCustomerSignin) => {
+  return {
+    host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
+    projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
+    credentials: {
+      clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
+      clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
+      user: {
+        username: email,
+        password: password,
+      },
     },
-  },
-  scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
-  fetch,
-  tokenCache,
+    scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
+    fetch,
+    tokenCache,
+  };
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -69,15 +35,19 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
-export const passwordClient = new ClientBuilder()
-  .withClientCredentialsFlow(authMiddlewareOptions)
-  .withPasswordFlow(passwordAuthMiddlewareOptions)
-  .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware()
-  .build();
+export const createPasswordClient = ({ email, password }: MyCustomerSignin) => {
+  const passwordClient = new ClientBuilder()
+    //.withClientCredentialsFlow(authMiddlewareOptions)
+    .withPasswordFlow(getPasswordParams({ email, password }))
+    .withHttpMiddleware(httpMiddlewareOptions)
+    .withLoggerMiddleware()
+    .build();
 
-export const apiRootPassword = createApiBuilderFromCtpClient(
-  passwordClient,
-).withProjectKey({
-  projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
-});
+  const apiRootPassword = createApiBuilderFromCtpClient(
+    passwordClient,
+  ).withProjectKey({
+    projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
+  });
+
+  return apiRootPassword;
+};
