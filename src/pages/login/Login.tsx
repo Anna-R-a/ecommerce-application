@@ -46,7 +46,7 @@ const LoginPage: React.FC = () => {
     return value && value === valueTrimming && regexp.test(valueTrimming)
       ? Promise.resolve()
       : Promise.reject(
-          "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character",
+          "Password must be at least 8 characters, one uppercase and lowercase letter, digit and special character",
         );
   }
 

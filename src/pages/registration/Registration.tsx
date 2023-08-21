@@ -104,7 +104,7 @@ const RegistrationPage: React.FC = () => {
       .catch((error) => {
         const errorCode = error.body.statusCode;
         if (errorCode.toString().slice(0, 1) === "4") {
-          notify("Account with the such an email exists", "error");
+          notify("Account with the such email exists", "error");
         }
         if (errorCode.toString().slice(0, 1) === "5") {
           notify("Server Error. Try later!", "error");
@@ -171,7 +171,7 @@ const RegistrationPage: React.FC = () => {
                 /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
               ),
               message:
-                "Password at least one uppercase and lowercase letter, digit and special character",
+                "Password must be at least one uppercase and lowercase letter, digit and special character",
             },
           ]}
           hasFeedback
