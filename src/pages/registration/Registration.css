@@ -1,12 +1,12 @@
 .registration-form-button,
 .ant-form-item .registration-form-button.button_primary {
   width: 100%;
+  margin-top: 25px;
 }
 
 #register .ant-input-affix-wrapper:focus,
 #register .ant-input-affix-wrapper:hover,
-#register .ant-input-affix-wrapper-focused
-#register .ant-select-selector:focus,
+#register .ant-input-affix-wrapper-focused #register .ant-select-selector:focus,
 #register .ant-select-selector:hover,
 #register .ant-select-selector-focused,
 #register .ant-picker:focus,
@@ -26,4 +26,17 @@
 
 .registration-form__subText a:hover {
   color: var(--medium-color);
+}
+
+#register .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--medium-color);
+  border-color: var(--medium-color);
+}
+
+#register .ant-checkbox:hover .ant-checkbox-inner {
+  border-color: var(--medium-color);
+}
+
+#register .ant-checkbox-wrapper:hover .ant-checkbox-inner {
+  border-color: var(--medium-color);
 }

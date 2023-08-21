@@ -7,7 +7,7 @@ interface DataNodeType {
   children?: DataNodeType[];
 }
 
-const residences: CascaderProps<DataNodeType>["options"] = [
+export const residences: CascaderProps<DataNodeType>["options"] = [
   {
     value: "PL",
     label: "Poland",
@@ -30,7 +30,7 @@ const residences: CascaderProps<DataNodeType>["options"] = [
   },
 ];
 
-const postCodesRegEx: Record<string, RegExp> = {
+export const postCodesRegEx: Record<string, RegExp> = {
   PL: new RegExp(/^\d{2}[- ]{0,1}\d{3}$/),
   LT: new RegExp(/^[Ll][Tt][- ]{0,1}\d{5}$/),
   FR: new RegExp(/^\d{5}$/),
@@ -38,7 +38,7 @@ const postCodesRegEx: Record<string, RegExp> = {
   SP: new RegExp(/^\d{5}$/),
 };
 
-const formItemLayout = {
+export const formItemLayout = {
   labelCol: {
     xs: { span: 20 },
     sm: { span: 10 },
@@ -49,7 +49,7 @@ const formItemLayout = {
   },
 };
 
-const tailFormItemLayout = {
+export const tailFormItemLayout = {
   wrapperCol: {
     xs: {
       span: 24,
@@ -63,17 +63,24 @@ const tailFormItemLayout = {
 };
 
 export type RegistrationData = {
-  city: string;
-  confirm: string;
-  country: string[];
-  dateOfBirth: Moment;
   email: string;
-  firstName: string;
-  gender: string;
-  lastName: string;
   password: string;
-  postcode: string;
-  street: string;
+  confirm: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  dateOfBirth: Moment;
+  countryShipping: string[];
+  cityShipping: string;
+  streetShipping: string;
+  postcodeShipping: string;
+  countryBilling: string[];
+  cityBilling: string;
+  streetBilling: string;
+  postcodeBilling: string;
 };
 
-export { tailFormItemLayout, formItemLayout, postCodesRegEx, residences };
+export type DefaultAddressesParams = [
+  { defaultShippingAddresses: boolean },
+  { defaultBillingAddresses: boolean },
+];

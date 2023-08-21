@@ -1,7 +1,18 @@
 import React, { Fragment, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import type { RangePickerProps } from "antd/es/date-picker";
-import { Button, Cascader, DatePicker, Form, Input, Select } from "antd";
-import "./Registration.css";
+import {
+  Button,
+  Cascader,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Select,
+  Checkbox,
+  Space,
+} from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import moment from "moment";
 import {
   RegistrationData,
@@ -10,7 +21,7 @@ import {
   residences,
   tailFormItemLayout,
 } from "./DataForRegistrationForm";
-import { Link, useNavigate } from "react-router-dom";
+
 import {
   createCustomer,
   mapRegDataToRequest,
@@ -18,6 +29,7 @@ import {
 } from "../../api/customer/createCustomer";
 import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
+import "./Registration.css";
 import "react-toastify/dist/ReactToastify.css";
 
 const { Option } = Select;
@@ -28,18 +40,64 @@ const RegistrationPage: React.FC = () => {
 
   const [country, setCountry] = useState("");
 
+  const [defaultShipping, setDefaultShipping] = useState({
+    defaultShippingAddresses: false,
+  });
+  const [defaultBilling, setDefaultBilling] = useState({
+    defaultBillingAddresses: false,
+  });
+
+  const [visibilityBilling, setVisibilityBilling] = useState("block");
+
   let navigate = useNavigate();
 
   const goHome = () => {
     navigate("/");
   };
 
+  const onDefaultShipping = (e: CheckboxChangeEvent) => {
+    setDefaultShipping({ defaultShippingAddresses: e.target.checked });
+  };
+
+  const onDefaultBilling = (e: CheckboxChangeEvent) => {
+    setDefaultBilling({ defaultBillingAddresses: e.target.checked });
+  };
+
+  const setActiveBilling = (e: CheckboxChangeEvent) => {
+    if (e.target.checked) {
+      setVisibilityBilling("none");
+      form.setFieldValue("countryBilling", [
+        `${form.getFieldValue("countryShipping")}`,
+      ]);
+      form.setFieldValue(
+        "cityBilling",
+        `${form.getFieldValue("cityShipping")}`
+      );
+      form.setFieldValue(
+        "streetBilling",
+        `${form.getFieldValue("streetShipping")}`
+      );
+      form.setFieldValue(
+        "postcodeBilling",
+        `${form.getFieldValue("postcodeShipping")}`
+      );
+    } else {
+      setVisibilityBilling("block");
+      form.setFieldValue("countryBilling", [""]);
+      form.setFieldValue("cityBilling", "");
+      form.setFieldValue("streetBilling", "");
+      form.setFieldValue("postcodeBilling", "");
+    }
+  };
+
   const onFinish = (values: RegistrationData) => {
     setIsLoading(true);
-    createCustomer(mapRegDataToRequest(values))
-      .then((res) => {
+    createCustomer(
+      mapRegDataToRequest(values, [defaultShipping, defaultBilling])
+    )
+      .then(() => {
         signInCustomer(values);
-        localStorage.setItem('isLogged', 'true');
+        localStorage.setItem("isLogged", "true");
         notify("Registration Successful!", "success");
         setTimeout(goHome, 1500);
       })
@@ -110,7 +168,7 @@ const RegistrationPage: React.FC = () => {
             },
             {
               pattern: new RegExp(
-                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/
               ),
               message:
                 "Password at least one uppercase and lowercase letter, digit and special character",
@@ -137,7 +195,7 @@ const RegistrationPage: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!"),
+                  new Error("The new password that you entered do not match!")
                 );
               },
             }),
@@ -211,8 +269,9 @@ const RegistrationPage: React.FC = () => {
           <DatePicker disabledDate={disabledDate} style={{ width: "100%" }} />
         </Form.Item>
 
+        <Divider>Shipping address</Divider>
         <Form.Item
-          name="country"
+          name="countryShipping"
           label="Country"
           rules={[
             {
@@ -226,7 +285,7 @@ const RegistrationPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="city"
+          name="cityShipping"
           label="City"
           rules={[
             {
@@ -245,7 +304,7 @@ const RegistrationPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="street"
+          name="streetShipping"
           label="Street"
           rules={[
             {
@@ -260,7 +319,7 @@ const RegistrationPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="postcode"
+          name="postcodeShipping"
           label="Postcode"
           rules={[
             {
@@ -276,6 +335,90 @@ const RegistrationPage: React.FC = () => {
         >
           <Input style={{ width: "100%" }} />
         </Form.Item>
+
+        <Space align="center" direction="vertical" style={{ width: "100%" }}>
+          <Checkbox onChange={onDefaultShipping}>
+            Set as default shipping address
+          </Checkbox>
+
+          <Checkbox onChange={setActiveBilling}>
+            Use it as billing address
+          </Checkbox>
+        </Space>
+
+        <div style={{ display: `${visibilityBilling}` }}>
+          <Divider>Billing address</Divider>
+          <Form.Item
+            name="countryBilling"
+            label="Country"
+            rules={[
+              {
+                type: "array",
+                required: true,
+                message: "Please select your Country!",
+              },
+            ]}
+          >
+            <Cascader options={residences} />
+          </Form.Item>
+
+          <Form.Item
+            name="cityBilling"
+            label="City"
+            rules={[
+              {
+                pattern: new RegExp(/^[A-Za-zА-Яа-яЁё]*$/),
+                message: "No space, numbers or special characters allowed",
+              },
+              {
+                required: true,
+                message: "Please input your City!",
+                whitespace: true,
+              },
+            ]}
+            hasFeedback
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="streetBilling"
+            label="Street"
+            rules={[
+              {
+                required: true,
+                message: "Please input your street!",
+                whitespace: true,
+              },
+            ]}
+            hasFeedback
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="postcodeBilling"
+            label="Postcode"
+            rules={[
+              {
+                required: true,
+                message: "Please input your postcode!",
+              },
+              {
+                pattern: postCodesRegEx[country],
+                message: "No valid postcode!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input style={{ width: "100%" }} />
+          </Form.Item>
+          <Space align="center" direction="vertical" style={{ width: "100%" }}>
+            <Checkbox onChange={onDefaultBilling}>
+              Set as default billing address
+            </Checkbox>
+          </Space>
+        </div>
 
         <Form.Item {...tailFormItemLayout}>
           <Button

@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { MyCustomerSignin } from "@commercetools/platform-sdk";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { RuleObject } from "antd/es/form";
-import "./Login.css";
 import { signInCustomer } from "../../api/customer/createCustomer";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { notify } from "../../components/notification/notification";
+import "react-toastify/dist/ReactToastify.css";
+import "./Login.css";
 
 const LoginPage: React.FC = () => {
   let navigate = useNavigate();
@@ -16,7 +17,7 @@ const LoginPage: React.FC = () => {
     navigate("/");
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: MyCustomerSignin) => {
     signInCustomer(values)
       .then((res) => {
         console.log("Get Customer", res.body.customer);
@@ -29,7 +30,7 @@ const LoginPage: React.FC = () => {
         if (errorCode.toString().slice(0, 1) === "4") {
           notify(
             "Account with the given email and password not found. Try again or register your account!",
-            "error",
+            "error"
           );
         }
         if (errorCode.toString().slice(0, 1) === "5") {
@@ -40,12 +41,12 @@ const LoginPage: React.FC = () => {
 
   function validatePassword(_: RuleObject, value: string): Promise<void> {
     const regexp =
-    /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])(\S*){8,}$/;
+      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])(\S*){8,}$/;
     const valueTrimming = value?.trim();
     return value && value === valueTrimming && regexp.test(valueTrimming)
       ? Promise.resolve()
       : Promise.reject(
-          "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character",
+          "Make sure it's at least 8 characters, one uppercase and lowercase letter, digit and special character"
         );
   }
 

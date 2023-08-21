@@ -4,38 +4,63 @@ import {
   MyCustomerSignin,
 } from "@commercetools/platform-sdk";
 import { apiRoot } from "../client/createClient";
-import { apiRootPassword } from "../client/passwordFlow";
-import { RegistrationData } from "../../pages/registration/DataForRegistrationForm";
+import { createPasswordClient } from "../client/passwordFlow";
+import {
+  RegistrationData,
+  DefaultAddressesParams,
+} from "../../pages/registration/DataForRegistrationForm";
 
-export const getProject = () => {
-  return apiRoot.get().execute();
-};
-
-export function mapRegDataToRequest(data: RegistrationData): CustomerDraft {
+export function mapRegDataToRequest(
+  data: RegistrationData,
+  defaultAddresses: DefaultAddressesParams
+): CustomerDraft {
   const {
     email,
     firstName,
     lastName,
     password,
     dateOfBirth,
-    country,
-    postcode,
-    city,
-    street,
+    countryShipping,
+    cityShipping,
+    streetShipping,
+    postcodeShipping,
+    countryBilling,
+    cityBilling,
+    streetBilling,
+    postcodeBilling,
   } = data;
-  const address: BaseAddress = {
-    country: country[0],
-    postalCode: postcode,
-    city,
-    streetName: street,
+  console.log(data);
+  const addressShipping: BaseAddress = {
+    key: "addressShipping",
+    country: countryShipping[0],
+    postalCode: postcodeShipping,
+    city: cityShipping,
+    streetName: streetShipping,
   };
+
+  const addressBilling: BaseAddress = {
+    key: "addressBilling",
+    country: countryBilling[0],
+    postalCode: postcodeBilling,
+    city: cityBilling,
+    streetName: streetBilling,
+  };
+
   return {
     email,
     firstName,
     lastName,
     password,
     dateOfBirth: dateOfBirth.toISOString().split("T")[0],
-    addresses: [address],
+    addresses: [addressShipping, addressBilling],
+    shippingAddresses: [0],
+    defaultShippingAddress: defaultAddresses[0].defaultShippingAddresses
+      ? 0
+      : undefined,
+    billingAddresses: [1],
+    defaultBillingAddress: defaultAddresses[1].defaultBillingAddresses
+      ? 1
+      : undefined,
   };
 }
 
@@ -49,7 +74,7 @@ export const createCustomer = async (body: CustomerDraft) => {
 };
 
 export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
-  return await apiRootPassword
+  return await createPasswordClient({ email, password })
     .me()
     .login()
     .post({
