@@ -19,8 +19,8 @@ export const getCustomers = async () => {
 };
 
 export const getProjectDetails = () => {
-  return apiRoot.get().execute()
-}
+  return apiRoot.get().execute();
+};
 // module.exports = {
 //   getCustomers,
 // }
