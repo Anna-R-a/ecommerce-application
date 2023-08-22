@@ -19,8 +19,7 @@ const LoginPage: React.FC = () => {
 
   const onFinish = (values: MyCustomerSignin) => {
     signInCustomer(values)
-      .then((res) => {
-        console.log("Get Customer", res.body.customer);
+      .then(() => {
         localStorage.setItem("isLogged", "true");
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
