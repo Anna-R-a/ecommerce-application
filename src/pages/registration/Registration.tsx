@@ -417,13 +417,12 @@ const RegistrationPage: React.FC = () => {
           >
             <Input style={{ width: "100%" }} />
           </Form.Item>
-          <Space align="center" direction="vertical" style={{ width: "100%" }}>
+        </div>
+        <Space align="center" direction="vertical" style={{ width: "100%", marginTop: "10px" }}>
             <Checkbox onChange={onDefaultBilling}>
               Set as default billing address
             </Checkbox>
           </Space>
-        </div>
-
         <Form.Item {...tailFormItemLayout}>
           <Button
             type="primary"
