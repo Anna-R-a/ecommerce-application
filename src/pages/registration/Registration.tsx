@@ -131,7 +131,6 @@ const RegistrationPage: React.FC = () => {
         style={{ maxWidth: 600 }}
         scrollToFirstError
         onValuesChange={(values) => {
-
           if (values.countryShipping) {
             setCountryShipping(values.countryShipping[0]);
           }
@@ -418,11 +417,15 @@ const RegistrationPage: React.FC = () => {
             <Input style={{ width: "100%" }} />
           </Form.Item>
         </div>
-        <Space align="center" direction="vertical" style={{ width: "100%", marginTop: "10px" }}>
-            <Checkbox onChange={onDefaultBilling}>
-              Set as default billing address
-            </Checkbox>
-          </Space>
+        <Space
+          align="center"
+          direction="vertical"
+          style={{ width: "100%", marginTop: "10px" }}
+        >
+          <Checkbox onChange={onDefaultBilling}>
+            Set as default billing address
+          </Checkbox>
+        </Space>
         <Form.Item {...tailFormItemLayout}>
           <Button
             type="primary"
