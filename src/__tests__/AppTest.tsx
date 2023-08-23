@@ -28,7 +28,10 @@ const renderWithRouterMini = (ui: JSX.Element, { route = "/" } = {}) => {
 
 test("should render header mini", () => {
   renderWithRouterMini(<Header />);
+
   expect(screen.getByTestId("header-mini")).toBeInTheDocument();
+  const link = screen.getByRole("link", { name: /fresh/i });
+  expect(link).toBeVisible();
 });
 
 test("should render footer", () => {
@@ -38,8 +41,11 @@ test("should render footer", () => {
 
 //   test('should redirect to home page', async () => {
 //     renderWithRouter(<App/>);
-//     userEvent.click(await screen.findByText(/Home/));
-//     expect(screen.getByText(/Only FRESH Farmer Goods/i)).toBeInTheDocument();
+//     await waitFor(() => {
+//       expect(screen.getByText('Only FRESH Farmer Goods')).toBeInTheDocument();
+//     });
+//     // userEvent.click(await screen.findByText(/Home/));
+
 // });
 
 // test('landing on a bad page', () => {
