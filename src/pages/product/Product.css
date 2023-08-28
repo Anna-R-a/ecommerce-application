@@ -1,0 +1,14 @@
+.price-block,
+.description-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  border: none;
+}
+
+.name {
+  text-align: start;
+  margin: 15px;
+}

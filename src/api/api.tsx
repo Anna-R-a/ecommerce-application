@@ -1,6 +1,6 @@
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
-// import { apiRootPassword } from "./client/passwordFlow";
+
 
 export const getProducts = async () => {
   // const isLogged = localStorage.getItem("isLogged");
@@ -21,6 +21,9 @@ export const getCustomers = async () => {
 export const getProjectDetails = () => {
   return apiRoot.get().execute();
 };
-// module.exports = {
-//   getCustomers,
-// }
+
+export const getProductDetails = async(childPathArgs: {
+  key: string;
+}) => {
+  return apiRoot.products().withKey(childPathArgs).get().execute();
+};

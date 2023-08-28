@@ -12,6 +12,7 @@ import ProfilePage from "./pages/profile/Profile";
 import NotFoundPage from "./pages/notFound/NotFound";
 
 import "./App.css";
+import ProductPage from "./pages/product/Product";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         />
         <Route path="/registration" element={<RegistrationPage />} />
         {/* <Route path="/catalog" element={<CatalogPage />} /> */}
+        <Route path="/product" element={<ProductPage />} />
         <Route
           path="/profile"
           element={

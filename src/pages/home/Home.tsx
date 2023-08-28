@@ -67,6 +67,12 @@ const Navigation: React.FC = () => (
         Registration
       </Button>
     </Link>
+    <Link to="/product">
+      <Button type="primary" className="button_primary" block>
+        Product
+      </Button>
+    </Link>
+
   </Space>
 );
 
