@@ -1,0 +1,22 @@
+.ant-card-cover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* flex-direction: column; */
+  /* width: 100%; */
+  /* max-width: 250px; */
+  max-height: 200px;
+  /* height: 200px; */
+  flex: 1 1 200px;
+  margin: 0 !important;
+  margin-inline: 0 !important;
+}
+
+.ant-card-meta-title {
+  font-size: 15px !important;
+}
+
+.catalog__wrapper {
+  width: 100%;
+  display: flex;
+}
