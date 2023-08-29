@@ -35,7 +35,7 @@ const ListProduct: React.FC = () => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45
+        45,
       )}...`;
       return descriptionShort;
     }
