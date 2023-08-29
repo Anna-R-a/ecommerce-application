@@ -1,81 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, List } from "antd";
-import { Product } from "@commercetools/platform-sdk";
-import { getProducts } from "../../api/api";
+import React from "react";
+import { Breadcrumb, Layout } from "antd";
+import SiderMenu from "../../components/sider-menu/SiderMenu";
+import ListProduct from "../../components/list-product/ListProduct";
 import "./Catalog.css";
 
-const { Meta } = Card;
+const { Content } = Layout;
 
 const CatalogPage: React.FC = () => {
-  const [data, setData] = useState<Product[]>([]);
-
-  useEffect(() => {
-    getProducts()
-      .then((res) => {
-        console.log(res.body.results);
-        setData(res.body.results);
-      })
-      .catch(console.error);
-  }, []);
-
   return (
-    <>
-      <List
-        grid={{
-          gutter: 16,
-          xs: 1,
-          sm: 2,
-          md: 4,
-          lg: 4,
-          xl: 6,
-          xxl: 3,
-        }}
-        pagination={{ position: "bottom", align: "center" }}
-        dataSource={data}
-        // itemLayout={"vertical"}
-        renderItem={(item, index) => (
-          <List.Item>
-            <Card
-              // style={{ width: 200,  height: 280 }}
-              cover={
-                <img
-                  alt={item.masterData.current.name["en"]}
-                  src={`${
-                    item.masterData.staged.masterVariant.images
-                      ? item.masterData.staged.masterVariant.images[0].url
-                      : ""
-                  }`}
-                  width={200}
-                  height={200}
-                />
-              }
-              actions={[
-                // <SettingOutlined key="setting" />,
-                // <EditOutlined key="edit" />,
-                <Button
-                  type="primary"
-                  key="shoppingCart"
-                  title="In cart"
-                  size="middle"
-                />,
-              ]}
-            >
-              <Meta
-                title={
-                  item.masterData.staged.masterVariant.prices
-                    ? `${
-                        item.masterData.staged.masterVariant.prices[0].value
-                          .centAmount / 100
-                      }$`
-                    : "0$"
-                }
-                description={item.masterData.current.name["en"]}
-              />
-            </Card>
-          </List.Item>
-        )}
-      />
-    </>
+    <Layout style={{ width: "100%" }} className="catalog__wrapper">
+      <SiderMenu />
+      <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>Catalog</Breadcrumb.Item>
+          <Breadcrumb.Item>Subnav 1</Breadcrumb.Item>
+        </Breadcrumb>
+        <Content
+          style={{
+            padding: 24,
+            margin: 0,
+            minHeight: 280,
+            background: "#fff",
+          }}
+        >
+          <ListProduct />
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 
