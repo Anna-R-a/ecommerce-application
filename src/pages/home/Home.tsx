@@ -72,7 +72,6 @@ const Navigation: React.FC = () => (
         Product
       </Button>
     </Link>
-
   </Space>
 );
 

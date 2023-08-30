@@ -1,13 +1,20 @@
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
 
-
-export const getProducts = async () => {
-  // const isLogged = localStorage.getItem("isLogged");
-  // if (isLogged) {
-  //   return apiRootPassword.products().get().execute();
-  // }
+export const getProducts = () => {
   return apiRootAnonymous.products().get().execute();
+};
+
+export const getProductsFromCategory = async (categoryId: string) => {
+  return apiRootAnonymous
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        filter: [`categories.id:"${categoryId}"`],
+      },
+    })
+    .execute();
 };
 
 export const getCategories = async () => {
@@ -22,8 +29,6 @@ export const getProjectDetails = () => {
   return apiRoot.get().execute();
 };
 
-export const getProductDetails = async(childPathArgs: {
-  key: string;
-}) => {
+export const getProductDetails = async (childPathArgs: { key: string }) => {
   return apiRoot.products().withKey(childPathArgs).get().execute();
 };
