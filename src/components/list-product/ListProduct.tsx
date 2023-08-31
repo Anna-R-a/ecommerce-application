@@ -10,6 +10,7 @@ const { Meta } = Card;
 
 const ListProduct: React.FC = () => {
   const currentCategory = "241d5c5d-f8cc-45be-866f-14af2c0c150c";
+  console.log("currentCategory list", currentCategory);
   const [categoryId, setCategoryId] = useState(currentCategory);
 
   const [data, setData] = useState<ProductProjection[]>([]);
@@ -17,7 +18,7 @@ const ListProduct: React.FC = () => {
   useEffect(() => {
     getProductsFromCategory(categoryId)
       .then((res) => {
-        console.log(res.body.results);
+        // console.log(res.body.results);
         setData(res.body.results);
       })
       .catch(console.error);
@@ -71,20 +72,20 @@ const ListProduct: React.FC = () => {
       dataSource={data}
       renderItem={(item) => (
         <List.Item>
-          <Link to={`/catalog/${item.key}`} className="product__link">
+          <Link to={`/products/${item.key}`} className="product__link">
             <Card
               className="card__item"
               cover={<img alt={name(item)} src={image(item)} />}
               actions={[
-                <Button
-                  type="primary"
-                  key="shoppingCart"
-                  title="In cart"
-                  size="middle"
-                  className="button_primary"
-                >
-                  <ShoppingCartOutlined key="shoppingCart" />
-                </Button>,
+                // <Button
+                //   type="primary"
+                //   key="shoppingCart"
+                //   title="In cart"
+                //   size="middle"
+                //   className="button_primary"
+                // >
+                //   <ShoppingCartOutlined key="shoppingCart" />
+                // </Button>,
               ]}
             >
               <Meta title={name(item)} description={description(item)} />

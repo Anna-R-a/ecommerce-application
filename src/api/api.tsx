@@ -22,6 +22,17 @@ export const getCategories = async () => {
   return apiRootAnonymous.categories().get().execute();
 };
 
+export const getCategoriesStructure = async () => {
+  return apiRootAnonymous
+  .categories()
+  .get({
+    queryArgs: {
+      expand: ['parent'],
+    },
+  })
+  .execute();
+};
+
 export const getCustomers = async () => {
   return apiRoot.customers().get().execute();
 };
