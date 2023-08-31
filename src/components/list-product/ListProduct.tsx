@@ -8,21 +8,24 @@ import "./ListProduct.css";
 
 const { Meta } = Card;
 
-const ListProduct: React.FC = () => {
+type Props = { currentCategory: string };
+
+const ListProduct: React.FC<Props> = (props: Props) => {
   const currentCategory = "241d5c5d-f8cc-45be-866f-14af2c0c150c";
-  console.log("currentCategory list", currentCategory);
+  console.log("props", props);
   const [categoryId, setCategoryId] = useState(currentCategory);
 
   const [data, setData] = useState<ProductProjection[]>([]);
 
   useEffect(() => {
+    setCategoryId(props.currentCategory);
     getProductsFromCategory(categoryId)
       .then((res) => {
         // console.log(res.body.results);
         setData(res.body.results);
       })
       .catch(console.error);
-  }, [categoryId]);
+  }, [categoryId, props.currentCategory]);
 
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";

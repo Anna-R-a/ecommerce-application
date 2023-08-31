@@ -7,91 +7,92 @@ import { MenuInfo } from "rc-menu/lib/interface";
 import { getCategories, getCategoriesStructure } from "../../api/api";
 import "./Catalog.css";
 import { Link, useLocation } from "react-router-dom";
+import { Category } from "@commercetools/platform-sdk";
 
 const { Sider, Content } = Layout;
 
 const CatalogPage: React.FC = () => {
-  const location = useLocation();
+  //const location = useLocation();
 
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [currentCategory, setCurrentCategory] = useState("");
   const [openKeys, setOpenKeys] = useState<string[]>([]);
 
   type MenuItem = Required<MenuProps>["items"][number];
+  type StructureMenu = {
+    title: string;
+    key: string;
+    label: JSX.Element;
+    children: MenuItem[];
+  }[];
+
   const rootSubmenuKeys: string[] = [];
 
   const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (latestOpenKey) {
       setOpenKeys([latestOpenKey]);
+      console.log("latestOpenKey", latestOpenKey);
       setCurrentCategory(latestOpenKey);
     }
+  };
+
+  const createStructureMenu = (allCategories: Category[]) => {
+    let treeCategories: StructureMenu = [];
+    allCategories.forEach((item) => {
+      if (!item.parent) {
+        const menuItem = {
+          title: `/${item.slug.en}`,
+          key: item.id,
+          //key: `/${item.slug.en}`,
+          label: (
+            <Link to={`/catalog/${item.slug.en}`} className="menu__link">
+              {item.name.en}
+            </Link>
+          ),
+          children: [],
+        };
+        treeCategories?.push(menuItem);
+        rootSubmenuKeys.push(item.id);
+      }
+    });
+    allCategories.forEach((item) => {
+      if (item.parent) {
+        const parentId = item.parent?.id;
+        treeCategories?.forEach((itemParent) => {
+          if (itemParent?.key === parentId && itemParent) {
+            itemParent.children.push({
+              key: item.id,
+              label: (
+                <Link
+                  to={`/catalog${itemParent.title}/${item.slug.en}`}
+                  className="menu-children__link"
+                >
+                  {item.name.en}
+                </Link>
+              ),
+            });
+          }
+        });
+      }
+    });
+    console.log("structureCategories", treeCategories);
+    setCategories(treeCategories);
+    //return treeCategories;
   };
 
   useEffect(() => {
     getCategories()
       .then((res) => {
-        console.log(res.body.results);
-        const allCategories = res.body.results;
-        let structureCategories: {
-          title: string;
-          key: string;
-          label: JSX.Element;
-          children: MenuItem[];
-        }[] = [];
-        allCategories.forEach((item) => {
-          if (!item.parent) {
-            const menuItem = {
-              title: item.id,
-              key: `/${item.slug.en}`,
-              label: (
-                <Link to={`/catalog/${item.slug.en}`} className="menu__link">
-                  {item.name.en}
-                </Link>
-              ),
-              children: [],
-            };
-            structureCategories?.push(menuItem);
-            rootSubmenuKeys.push(item.id);
-          }
-        });
-        allCategories.forEach((item) => {
-          if (item.parent) {
-            const parentId = item.parent?.id;
-            structureCategories?.forEach((itemParent) => {
-              if (itemParent?.title === parentId && itemParent) {
-                itemParent.children.push({
-                  key: `/${item.slug.en}`,
-                  label: (
-                    <Link
-                      to={`/catalog${itemParent.key}/${item.slug.en}`}
-                      className="menu-children__link"
-                    >
-                      {item.name.en}
-                    </Link>
-                  ),
-                });
-              }
-            });
-          }
-        });
-        setCategories(structureCategories);
-        console.log("structureCategories", structureCategories);
+        createStructureMenu(res.body.results);
+        //setCategories(treeCategories);
       })
       .catch(console.error);
-    // getCategoriesStructure()
-    //   .then((result) => {
-    //     console.log("getCategoriesStructure", result.body.results);
-    // setCategories(res.body.results);
-    //   })
-    //   .catch(console.error);
   }, []);
 
   const onClickMenu = (info: MenuInfo) => {
-    console.log("info", info.key);
     setCurrentCategory(info.key);
   };
-  console.log("currentCategory", currentCategory);
 
   return (
     <Layout style={{ width: "100%" }} className="catalog__wrapper">
@@ -101,7 +102,8 @@ const CatalogPage: React.FC = () => {
           mode="inline"
           openKeys={openKeys}
           onOpenChange={onOpenChange}
-          selectedKeys={[location.pathname]}
+          selectedKeys={[currentCategory]}
+          //selectedKeys={[location.pathname]}
           style={{ height: "100%", borderRight: 0 }}
           items={categories}
           onClick={onClickMenu}
@@ -117,7 +119,7 @@ const CatalogPage: React.FC = () => {
             background: "#fff",
           }}
         >
-          <ListProduct />
+          <ListProduct currentCategory={currentCategory} />
         </Content>
       </Layout>
     </Layout>
