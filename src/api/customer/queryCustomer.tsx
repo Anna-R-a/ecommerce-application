@@ -6,8 +6,8 @@ export const queryCustomer = (customerID: string) => {
 };
 
 // Query the Customer and output the Customer's email address
-queryCustomer("{customerID}")
-  .then(({ body }) => {
-    console.log(body.email);
-  })
-  .catch(console.error);
+// queryCustomer("{customerID}")
+//   .then(({ body }) => {
+//     return body;
+//   })
+//   .catch(console.error);
