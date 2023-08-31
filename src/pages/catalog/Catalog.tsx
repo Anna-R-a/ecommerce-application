@@ -63,7 +63,10 @@ const CatalogPage: React.FC = () => {
                 itemParent.children.push({
                   key: `/${item.slug.en}`,
                   label: (
-                    <Link to={`/catalog${itemParent.key}/${item.slug.en}`} className="menu-children__link">
+                    <Link
+                      to={`/catalog${itemParent.key}/${item.slug.en}`}
+                      className="menu-children__link"
+                    >
                       {item.name.en}
                     </Link>
                   ),

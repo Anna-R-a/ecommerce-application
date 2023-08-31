@@ -76,17 +76,19 @@ const ListProduct: React.FC = () => {
             <Card
               className="card__item"
               cover={<img alt={name(item)} src={image(item)} />}
-              actions={[
-                // <Button
-                //   type="primary"
-                //   key="shoppingCart"
-                //   title="In cart"
-                //   size="middle"
-                //   className="button_primary"
-                // >
-                //   <ShoppingCartOutlined key="shoppingCart" />
-                // </Button>,
-              ]}
+              actions={
+                [
+                  // <Button
+                  //   type="primary"
+                  //   key="shoppingCart"
+                  //   title="In cart"
+                  //   size="middle"
+                  //   className="button_primary"
+                  // >
+                  //   <ShoppingCartOutlined key="shoppingCart" />
+                  // </Button>,
+                ]
+              }
             >
               <Meta title={name(item)} description={description(item)} />
               <div className="product__price">

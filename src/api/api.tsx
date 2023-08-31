@@ -24,13 +24,13 @@ export const getCategories = async () => {
 
 export const getCategoriesStructure = async () => {
   return apiRootAnonymous
-  .categories()
-  .get({
-    queryArgs: {
-      expand: ['parent'],
-    },
-  })
-  .execute();
+    .categories()
+    .get({
+      queryArgs: {
+        expand: ["parent"],
+      },
+    })
+    .execute();
 };
 
 export const getCustomers = async () => {
