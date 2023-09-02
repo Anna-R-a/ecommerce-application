@@ -1,31 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, List } from "antd";
+import { Card, List } from "antd";
 import { ProductProjection } from "@commercetools/platform-sdk";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import { getProductsFromCategory } from "../../api/api";
 import "./ListProduct.css";
 
 const { Meta } = Card;
 
-type Props = { currentCategory: string };
+type Props = { selectCategory: string };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
-  const currentCategory = "241d5c5d-f8cc-45be-866f-14af2c0c150c";
-  console.log("props", props);
-  const [categoryId, setCategoryId] = useState(currentCategory);
-
+  const [categoriesId, setCategoriesId] = useState(props.selectCategory);
   const [data, setData] = useState<ProductProjection[]>([]);
+  const categories = ["241d5c5d-f8cc-45be-866f-14af2c0c150c", "fcf30caa-46ad-4ac8-b859-3fc0395b791c", "1836bc07-4722-42e4-a8cf-5ad943e8da0b"];
 
   useEffect(() => {
-    setCategoryId(props.currentCategory);
-    getProductsFromCategory(categoryId)
-      .then((res) => {
-        // console.log(res.body.results);
-        setData(res.body.results);
-      })
-      .catch(console.error);
-  }, [categoryId, props.currentCategory]);
+    if (props.selectCategory === "default") {
+      setData([]);
+      // console.log('categories', categories);
+      // categories.forEach((categoryId) => {
+      //   getProductsFromCategory(categoryId)
+      //   .then((res) => {
+      //     setData((prev) => {
+      //       // if (prev) {
+      //       //   prev.push(...res.body.results)
+      //       //   console.log('prev', prev);
+      //       //   return prev;
+      //       // } else {
+      //         return res.body.results;
+      //       //}
+      //     });
+      //   })
+      //   .catch(console.error);
+      // })
+
+    } else {
+      setCategoriesId(props.selectCategory);
+      localStorage.setItem("currentCategory", props.selectCategory);
+      getProductsFromCategory(categoriesId)
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
+    }
+  }, [categoriesId, props.selectCategory]);
 
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
@@ -39,7 +57,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45,
+        45
       )}...`;
       return descriptionShort;
     }

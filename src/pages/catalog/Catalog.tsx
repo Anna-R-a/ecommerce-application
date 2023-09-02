@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
+import type { MenuProps } from "antd";
 // import SiderMenu from "../../components/sider-menu/SiderMenu";
 import ListProduct from "../../components/list-product/ListProduct";
-import type { MenuProps } from "antd";
+import { getCategories } from "../../api/api";
 import { MenuInfo } from "rc-menu/lib/interface";
-import { getCategories, getCategoriesStructure } from "../../api/api";
-import "./Catalog.css";
-import { Link, useLocation } from "react-router-dom";
 import { Category } from "@commercetools/platform-sdk";
+import "./Catalog.css";
 
 const { Sider, Content } = Layout;
 
-const CatalogPage: React.FC = () => {
-  //const location = useLocation();
+type Props = { default: boolean };
+
+const CatalogPage: React.FC<Props> = (props: Props) => {
+  const currentCategoryLS = localStorage.getItem("currentCategory");
+  const currentCategory = currentCategoryLS ? currentCategoryLS : "";
 
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
-  const [currentCategory, setCurrentCategory] = useState("");
-  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [selectCategory, setSelectCategory] = useState(currentCategory);
+  const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
+
+  useEffect(() => {
+    if (props.default) {
+      setSelectCategory("default");
+      setOpenKeys([""]);
+      // setSelectCategory("241d5c5d-f8cc-45be-866f-14af2c0c150c");
+      // setOpenKeys(["241d5c5d-f8cc-45be-866f-14af2c0c150c"]);
+    }
+  }, [props.default]);
 
   type MenuItem = Required<MenuProps>["items"][number];
   type StructureMenu = {
@@ -24,17 +36,29 @@ const CatalogPage: React.FC = () => {
     key: string;
     label: JSX.Element;
     children: MenuItem[];
+    onTitleClick: ({ key }: { key: string }) => void;
   }[];
 
   const rootSubmenuKeys: string[] = [];
 
   const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+    console.log("keys", keys);
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (latestOpenKey) {
       setOpenKeys([latestOpenKey]);
-      console.log("latestOpenKey", latestOpenKey);
-      setCurrentCategory(latestOpenKey);
+      setSelectCategory(latestOpenKey);
     }
+    // if (latestOpenKey && rootSubmenuKeys.find((key) => openKeys.indexOf(key) === -1)) {
+    //   setOpenKeys([latestOpenKey]);
+    //   setSelectCategory(latestOpenKey);
+    // } else {
+    //   setOpenKeys([keys[1]]);
+    //   setSelectCategory(keys[0]);
+    // }
+  };
+
+  const onClickMenu = (info: MenuInfo) => {
+    setSelectCategory(info.key);
   };
 
   const createStructureMenu = (allCategories: Category[]) => {
@@ -44,13 +68,13 @@ const CatalogPage: React.FC = () => {
         const menuItem = {
           title: `/${item.slug.en}`,
           key: item.id,
-          //key: `/${item.slug.en}`,
           label: (
             <Link to={`/catalog/${item.slug.en}`} className="menu__link">
               {item.name.en}
             </Link>
           ),
           children: [],
+          onTitleClick: ({ key }: { key: string }) => setSelectCategory(key),
         };
         treeCategories?.push(menuItem);
         rootSubmenuKeys.push(item.id);
@@ -76,23 +100,20 @@ const CatalogPage: React.FC = () => {
         });
       }
     });
-    console.log("structureCategories", treeCategories);
-    setCategories(treeCategories);
-    //return treeCategories;
+    return treeCategories;
   };
 
   useEffect(() => {
     getCategories()
       .then((res) => {
-        createStructureMenu(res.body.results);
-        //setCategories(treeCategories);
+        //createStructureMenu(res.body.results);
+        setCategories(createStructureMenu(res.body.results));
       })
       .catch(console.error);
+      setSelectCategory(currentCategory);
+      console.log("OpenKeys", openKeys);
+      setOpenKeys([currentCategory]);
   }, []);
-
-  const onClickMenu = (info: MenuInfo) => {
-    setCurrentCategory(info.key);
-  };
 
   return (
     <Layout style={{ width: "100%" }} className="catalog__wrapper">
@@ -102,9 +123,11 @@ const CatalogPage: React.FC = () => {
           mode="inline"
           openKeys={openKeys}
           onOpenChange={onOpenChange}
-          selectedKeys={[currentCategory]}
+          selectedKeys={[selectCategory]}
+          defaultSelectedKeys={[selectCategory]}
+          defaultOpenKeys={openKeys}
           //selectedKeys={[location.pathname]}
-          style={{ height: "100%", borderRight: 0 }}
+          className="sider-menu"
           items={categories}
           onClick={onClickMenu}
         />
@@ -119,7 +142,7 @@ const CatalogPage: React.FC = () => {
             background: "#fff",
           }}
         >
-          <ListProduct currentCategory={currentCategory} />
+          <ListProduct selectCategory={selectCategory} />
         </Content>
       </Layout>
     </Layout>
