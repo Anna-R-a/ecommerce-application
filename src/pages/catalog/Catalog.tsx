@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Checkbox, Layout, Menu, Space } from "antd";
 import type { MenuProps } from "antd";
 // import SiderMenu from "../../components/sider-menu/SiderMenu";
 import ListProduct from "../../components/list-product/ListProduct";
-import { getCategories } from "../../api/api";
+import {
+  getCategories,
+  getProductsAttributes,
+  getProductsFromCategory,
+} from "../../api/api";
 import { MenuInfo } from "rc-menu/lib/interface";
-import { Category } from "@commercetools/platform-sdk";
+import { Category, ProductProjection } from "@commercetools/platform-sdk";
 import "./Catalog.css";
+import { CheckboxValueType } from "antd/es/checkbox/Group";
 
 const { Sider, Content } = Layout;
 
@@ -20,6 +25,9 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [selectCategory, setSelectCategory] = useState(currentCategory);
   const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
+  const [data, setData] = useState<ProductProjection[]>([]);
+
+  const [filter, setFilter] = useState<{name: string, value: CheckboxValueType[]}[]>();
 
   useEffect(() => {
     if (props.default) {
@@ -29,6 +37,26 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
       // setOpenKeys(["241d5c5d-f8cc-45be-866f-14af2c0c150c"]);
     }
   }, [props.default]);
+
+  useEffect(() => {
+    localStorage.setItem("currentCategory", selectCategory);
+    getProductsFromCategory(selectCategory)
+      .then((res) => {
+        setData(res.body.results);
+      })
+      .catch(console.error);
+  }, [selectCategory]);
+
+  useEffect(() => {
+    if (filter) {
+      getProductsAttributes(filter)
+      .then((res) => {
+        console.log("res", res.body.results);
+        setData(res.body.results);
+      })
+      .catch(console.error);
+    }
+  }, [filter]);
 
   type MenuItem = Required<MenuProps>["items"][number];
   type StructureMenu = {
@@ -42,19 +70,11 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   const rootSubmenuKeys: string[] = [];
 
   const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
-    console.log("keys", keys);
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (latestOpenKey) {
       setOpenKeys([latestOpenKey]);
       setSelectCategory(latestOpenKey);
     }
-    // if (latestOpenKey && rootSubmenuKeys.find((key) => openKeys.indexOf(key) === -1)) {
-    //   setOpenKeys([latestOpenKey]);
-    //   setSelectCategory(latestOpenKey);
-    // } else {
-    //   setOpenKeys([keys[1]]);
-    //   setSelectCategory(keys[0]);
-    // }
   };
 
   const onClickMenu = (info: MenuInfo) => {
@@ -106,14 +126,45 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     getCategories()
       .then((res) => {
-        //createStructureMenu(res.body.results);
         setCategories(createStructureMenu(res.body.results));
       })
       .catch(console.error);
-      setSelectCategory(currentCategory);
-      console.log("OpenKeys", openKeys);
-      setOpenKeys([currentCategory]);
+    setSelectCategory(currentCategory);
+    setOpenKeys([currentCategory]);
   }, []);
+
+  const onChange = (checkedValues: CheckboxValueType[]) => {
+    let nameFilter: string = '';
+    let valueFilter: string[] = [];
+    checkedValues.forEach((item) => {
+      nameFilter = item.toString().split(" ")[0];
+      valueFilter.push(item.toString().split(" ")[1]);
+    });
+    console.log([{name: nameFilter, value: valueFilter}]);
+    setFilter([{name: nameFilter, value: valueFilter}]);
+  };
+
+  const onChangeSize = (checkedValues: CheckboxValueType[]) => {
+    console.log("checked = ", checkedValues);
+    setFilter([{name: "berries-size", value: checkedValues}]);
+  };
+
+  // const optionsColor = ["black", "blue", "red", "yellow"];
+
+  // const optionsSize = ["small", "medium", "large"];
+
+  const optionsColor = [
+    { label: "black", value: "berries-color black" },
+    { label: "blue", value: "berries-color blue" },
+    { label: "red", value: "berries-color red" },
+    { label: "yellow", value: "berries-color yellow" },
+  ];
+
+  const optionsSize = [
+    { label: "small", value: "berries-size small" },
+    { label: "medium", value: "berries-size medium" },
+    { label: "large", value: "berries-size large" },
+  ];
 
   return (
     <Layout style={{ width: "100%" }} className="catalog__wrapper">
@@ -126,11 +177,28 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
           selectedKeys={[selectCategory]}
           defaultSelectedKeys={[selectCategory]}
           defaultOpenKeys={openKeys}
-          //selectedKeys={[location.pathname]}
           className="sider-menu"
           items={categories}
           onClick={onClickMenu}
         />
+        <Space
+          direction="vertical"
+          size="middle"
+          style={{ display: "flex", padding: "20px" }}
+        >
+          <span>Color:</span>
+          <Checkbox.Group
+            name="berries-color"
+            options={optionsColor}
+            onChange={onChange}
+          />
+          <span>Size:</span>
+          <Checkbox.Group
+            name="berries-size"
+            options={optionsSize}
+            onChange={onChange}
+          />
+        </Space>
       </Sider>
       <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
         {/* <Breadcrumbs /> */}
@@ -142,7 +210,8 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
             background: "#fff",
           }}
         >
-          <ListProduct selectCategory={selectCategory} />
+          <ListProduct data={data} />
+          {/* <ListProduct selectCategory={selectCategory} /> */}
         </Content>
       </Layout>
     </Layout>

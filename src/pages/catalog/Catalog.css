@@ -55,3 +55,7 @@
 .sider-menu .ant-menu-submenu-title:hover a.menu__link {
   color: var(--default-color)!important;
 }
+
+.ant-checkbox-group {
+  flex-direction: column;
+}

@@ -1,3 +1,4 @@
+import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
 // import { apiRootPassword } from "./client/passwordFlow";
@@ -13,6 +14,21 @@ export const getProductsFromCategory = async (categoryId: string) => {
     .get({
       queryArgs: {
         filter: [`categories.id:"${categoryId}"`],
+      },
+    })
+    .execute();
+};
+
+export const getProductsAttributes = async (filter: {name: string, value: CheckboxValueType[]}[]) => {
+  const filterOptions = filter.map((item) => {
+    return `variants.attributes.${item.name}.key:"${item.value.join("\",\"")}"`
+  })
+  return apiRootAnonymous
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        filter: filterOptions,
       },
     })
     .execute();
