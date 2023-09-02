@@ -5,6 +5,8 @@ import { Button, DatePicker, Form, FormItemProps, Input } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import moment from "moment";
 import dayjs from "dayjs";
+import { updateCustomer } from "../../api/customer/updateCustomer";
+import { Moment } from "moment";
 
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -28,9 +30,17 @@ const disabledDate: RangePickerProps["disabledDate"] = (current) => {
   return current > moment().subtract(13, "year");
 };
 
+type GeneralDataForm = {
+  dateOfBirth: Moment;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
 export const ProfileGeneralForm: React.FC = () => {
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [isLoading, setIsLoading] = useState(false);
+  const [version, setVersion] = useState(0);
 
   React.useEffect(() => {
     const getCustomer = async () => {
@@ -41,9 +51,34 @@ export const ProfileGeneralForm: React.FC = () => {
       setIsLoading(true);
     };
     getCustomer();
-  }, []);
+  }, [version]);
 
-  const onFinish = () => {};
+  const onFinish = (values: GeneralDataForm) => {
+    const version = customer?.body.version;
+    const id = customer?.body.id;
+    if (version && id) {
+      updateCustomer(id, version, [
+        {
+          action: "setFirstName",
+          firstName: values.firstName,
+        },
+        {
+          action: "setLastName",
+          lastName: values.lastName,
+        },
+        {
+          action: "setDateOfBirth",
+          dateOfBirth: values.dateOfBirth.toISOString().split("T")[0],
+        },
+        {
+          action: "changeEmail",
+          email: values.email,
+        },
+      ]).then(() => {
+        setVersion((v) => v + 1);
+      });
+    }
+  };
 
   return (
     <>
@@ -87,6 +122,24 @@ export const ProfileGeneralForm: React.FC = () => {
           >
             <Input />
           </MyFormItem>
+          <Form.Item
+            name="email"
+            label="E-mail"
+            rules={[
+              {
+                type: "email",
+                message: "Please input a valid E-mail!",
+              },
+              {
+                required: true,
+                message: "Please input your E-mail!",
+              },
+            ]}
+            initialValue={customer?.body.email}
+            hasFeedback
+          >
+            <Input />
+          </Form.Item>
           <MyFormItem
             name="dateOfBirth"
             label="Date of birth"
