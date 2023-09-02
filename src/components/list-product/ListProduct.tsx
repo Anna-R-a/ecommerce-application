@@ -6,9 +6,11 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { getProductsFromCategory } from "../../api/api";
 import "./ListProduct.css";
 
+
 const { Meta } = Card;
 
 const ListProduct: React.FC = () => {
+
   const currentCategory = "241d5c5d-f8cc-45be-866f-14af2c0c150c";
   const [categoryId, setCategoryId] = useState(currentCategory);
 
@@ -70,8 +72,8 @@ const ListProduct: React.FC = () => {
       pagination={{ position: "bottom", align: "center" }}
       dataSource={data}
       renderItem={(item) => (
-        <List.Item>
-          <Link to={`/catalog/${item.key}`} className="product__link">
+        <List.Item >
+          <Link to={`/catalog/${item.key}`} key={item.key} className="product__link">
             <Card
               className="card__item"
               cover={<img alt={name(item)} src={image(item)} />}

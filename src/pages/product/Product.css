@@ -1,4 +1,3 @@
-.price-block,
 .description-block {
   display: flex;
   flex-direction: column;
@@ -6,9 +5,53 @@
   align-items: center;
   height: 100%;
   border: none;
+  text-align: justify;
+  font-size: 1.1em;
+  margin: 5px;
+  padding: 5px;
 }
 
 .name {
   text-align: start;
   margin: 15px;
+}
+.price-text,
+.discount {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.price-discounted {
+  text-decoration: line-through;
+}
+
+.price-text,
+.price-discounted {
+  margin: 5px;
+}
+
+.discount {
+margin: 10px;
+}
+
+.image-column,
+.description-block,
+.price-block {
+  min-width: 300px !important;
+}
+
+
+
+.price-block {
+  width: 20vw;
+  display: flex;
+  border: none;
+  justify-content: center;
+}
+.carousel .control-arrow {
+color: rgb(0, 0, 0);
+opacity: .2;
+}
+.modal-window {
+  width: 80vw;
 }
