@@ -27,7 +27,8 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
   const [data, setData] = useState<ProductProjection[]>([]);
 
-  const [filter, setFilter] = useState<{name: string, value: CheckboxValueType[]}[]>();
+  const [filter, setFilter] =
+    useState<{ name: string; value: CheckboxValueType[] }[]>();
 
   useEffect(() => {
     if (props.default) {
@@ -50,11 +51,11 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (filter) {
       getProductsAttributes(filter)
-      .then((res) => {
-        console.log("res", res.body.results);
-        setData(res.body.results);
-      })
-      .catch(console.error);
+        .then((res) => {
+          console.log("res", res.body.results);
+          setData(res.body.results);
+        })
+        .catch(console.error);
     }
   }, [filter]);
 
@@ -134,19 +135,19 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   }, []);
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    let nameFilter: string = '';
+    let nameFilter: string = "";
     let valueFilter: string[] = [];
     checkedValues.forEach((item) => {
       nameFilter = item.toString().split(" ")[0];
       valueFilter.push(item.toString().split(" ")[1]);
     });
-    console.log([{name: nameFilter, value: valueFilter}]);
-    setFilter([{name: nameFilter, value: valueFilter}]);
+    console.log([{ name: nameFilter, value: valueFilter }]);
+    setFilter([{ name: nameFilter, value: valueFilter }]);
   };
 
   const onChangeSize = (checkedValues: CheckboxValueType[]) => {
     console.log("checked = ", checkedValues);
-    setFilter([{name: "berries-size", value: checkedValues}]);
+    setFilter([{ name: "berries-size", value: checkedValues }]);
   };
 
   // const optionsColor = ["black", "blue", "red", "yellow"];

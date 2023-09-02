@@ -19,10 +19,12 @@ export const getProductsFromCategory = async (categoryId: string) => {
     .execute();
 };
 
-export const getProductsAttributes = async (filter: {name: string, value: CheckboxValueType[]}[]) => {
+export const getProductsAttributes = async (
+  filter: { name: string; value: CheckboxValueType[] }[],
+) => {
   const filterOptions = filter.map((item) => {
-    return `variants.attributes.${item.name}.key:"${item.value.join("\",\"")}"`
-  })
+    return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
+  });
   return apiRootAnonymous
     .productProjections()
     .search()

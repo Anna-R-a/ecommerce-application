@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter, Link, Route, Routes, useLocation } from "react-router-dom";
+import { HashRouter, Link, useLocation } from "react-router-dom";
 import { Alert, Breadcrumb } from "antd";
 
 const Apps = () => (
