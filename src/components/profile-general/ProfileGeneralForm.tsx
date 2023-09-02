@@ -41,6 +41,7 @@ export const ProfileGeneralForm: React.FC = () => {
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState(0);
+  const [disabled, setDisabled] = useState(true)
 
   React.useEffect(() => {
     const getCustomer = async () => {
@@ -80,10 +81,14 @@ export const ProfileGeneralForm: React.FC = () => {
     }
   };
 
+  const onChange = ()=>{
+    setDisabled(false)
+  }
+
   return (
     <>
       {isLoading && (
-        <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+        <Form name="form_item_path" layout="vertical" onFinish={onFinish} onChange={onChange}>
           <MyFormItem
             name="firstName"
             label="First Name"
@@ -158,8 +163,8 @@ export const ProfileGeneralForm: React.FC = () => {
             />
           </MyFormItem>
 
-          <Button type="primary" htmlType="submit">
-            Submit
+          <Button type="primary" htmlType="submit" disabled={disabled}>
+            Save changes
           </Button>
         </Form>
       )}
