@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { updateCustomer } from "../../api/customer/updateCustomer";
-import { BaseAddress, ClientResponse, Customer } from "@commercetools/platform-sdk";
-import { ProfileForm } from "./ProfileForm";
+import {
+  BaseAddress,
+  ClientResponse,
+  Customer,
+} from "@commercetools/platform-sdk";
 import { queryCustomer } from "../../api/customer/queryCustomer";
 import ProfileTabs from "../../components/profile-tabs/profileTabs";
 
@@ -23,7 +26,7 @@ const ProfilPage: React.FC = () => {
   // const onFinish = () => {};
   return (
     <>
-    <ProfileTabs />
+      <ProfileTabs />
       {/* {isLoading && (
         <ProfileForm
           onFinish={onFinish}

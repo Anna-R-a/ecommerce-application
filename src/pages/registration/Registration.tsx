@@ -97,7 +97,7 @@ const RegistrationPage: React.FC = () => {
       mapRegDataToRequest(values, [defaultShipping, defaultBilling]),
     )
       .then(() => {
-        signInCustomer(values).then((res)=>{
+        signInCustomer(values).then((res) => {
           localStorage.setItem("isLogged", "true");
           localStorage.setItem("id", res.body.customer.id);
           notify("Registration Successful!", "success");
