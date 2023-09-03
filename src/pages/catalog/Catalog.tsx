@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Button, Checkbox, Layout, Menu, Space } from "antd";
 import type { CheckboxOptionType, MenuProps } from "antd";
 // import SiderMenu from "../../components/sider-menu/SiderMenu";
@@ -7,6 +7,7 @@ import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
   getProductType,
+  getProducts,
   getProductsAttributes,
   getProductsFromCategory,
 } from "../../api/api";
@@ -30,6 +31,9 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
     { categoryID: "fcf30caa-46ad-4ac8-b859-3fc0395b791c", key: "vegetables" },
     { categoryID: "1836bc07-4722-42e4-a8cf-5ad943e8da0b", key: "berries" },
   ];
+
+  const { key } = useParams();
+  console.log("key", key);
 
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
@@ -62,8 +66,12 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
     if (props.default) {
       setSelectCategory("default");
       setOpenKeys([""]);
-      // setSelectCategory("241d5c5d-f8cc-45be-866f-14af2c0c150c");
-      // setOpenKeys(["241d5c5d-f8cc-45be-866f-14af2c0c150c"]);
+      // getProducts()
+      // .then((res) => {
+      //   console.log("res", res);
+      //   setData(res.body.results);
+      // })
+      // .catch(console.error);
     }
   }, [props.default]);
 
@@ -223,7 +231,7 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     console.log("nameFilter", nameFilter);
     checkedValues.length === 0
@@ -292,16 +300,16 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    setSelectCategory(currentCategory);
-    let keyCurrentCategory = getCategoryOptions(currentCategory).key;
-    getProductType(keyCurrentCategory)
+    if(key) {
+      getProductType(key)
       .then((res) => {
         if (res.body.attributes) {
           getFilterAttribute(res.body.attributes);
         }
       })
       .catch(console.error);
-  }, [currentCategory]);
+    }
+  }, [key]);
 
   const Filters: React.FC = () => {
     return (
@@ -311,9 +319,11 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
             direction="vertical"
             size="middle"
             style={{ display: "flex", padding: "10px" }}
+            key={item.keyField}
           >
             <span>{item.labelField}</span>
             <Checkbox.Group
+              key={item.labelField}
               name={item.keyField}
               options={item.value}
               value={selectFilters}
