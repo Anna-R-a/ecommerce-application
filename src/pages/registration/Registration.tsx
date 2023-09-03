@@ -100,6 +100,7 @@ const RegistrationPage: React.FC = () => {
         signInCustomer(values).then((res) => {
           localStorage.setItem("isLogged", "true");
           localStorage.setItem("id", res.body.customer.id);
+          localStorage.setItem("password", values.password);
           notify("Registration Successful!", "success");
           setTimeout(goHome, 1500);
         });

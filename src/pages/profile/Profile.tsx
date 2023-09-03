@@ -1,11 +1,4 @@
-import React, { useState } from "react";
-import { updateCustomer } from "../../api/customer/updateCustomer";
-import {
-  BaseAddress,
-  ClientResponse,
-  Customer,
-} from "@commercetools/platform-sdk";
-import { queryCustomer } from "../../api/customer/queryCustomer";
+import React from "react";
 import ProfileTabs from "../../components/profile-tabs/profileTabs";
 
 const ProfilPage: React.FC = () => {

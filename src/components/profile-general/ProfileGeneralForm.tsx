@@ -7,6 +7,8 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { updateCustomer } from "../../api/customer/updateCustomer";
 import { Moment } from "moment";
+import { notify } from "../notification/notification";
+import { ToastContainer } from "react-toastify";
 
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -41,7 +43,7 @@ export const ProfileGeneralForm: React.FC = () => {
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState(0);
-  const [disabled, setDisabled] = useState(true)
+  const [disabled, setDisabled] = useState(true);
 
   React.useEffect(() => {
     const getCustomer = async () => {
@@ -76,19 +78,26 @@ export const ProfileGeneralForm: React.FC = () => {
           email: values.email,
         },
       ]).then(() => {
+        notify("General data changed", "success");
         setVersion((v) => v + 1);
       });
     }
   };
 
-  const onChange = ()=>{
-    setDisabled(false)
-  }
+  const onChange = () => {
+    setDisabled(false);
+  };
 
   return (
     <>
+      <ToastContainer />
       {isLoading && (
-        <Form name="form_item_path" layout="vertical" onFinish={onFinish} onChange={onChange}>
+        <Form
+          name="form_item_path"
+          layout="vertical"
+          onFinish={onFinish}
+          onChange={onChange}
+        >
           <MyFormItem
             name="firstName"
             label="First Name"

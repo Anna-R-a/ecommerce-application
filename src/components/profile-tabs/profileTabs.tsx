@@ -2,9 +2,10 @@ import React from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
 import { ProfileGeneralForm } from "../profile-general/ProfileGeneralForm";
+import { ProfilePasswordForm } from "../profile-password/ProfilePasswordForm";
 
-const onChange = (key: string) => {
-  console.log(key);
+const onChange = () => {
+  return;
 };
 
 const items: TabsProps["items"] = [
@@ -16,7 +17,7 @@ const items: TabsProps["items"] = [
   {
     key: "password",
     label: "Password",
-    children: "Content of Tab Pane 2",
+    children: <ProfilePasswordForm />,
   },
   {
     key: "addresses",

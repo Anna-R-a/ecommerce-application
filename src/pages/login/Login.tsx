@@ -22,6 +22,7 @@ const LoginPage: React.FC = () => {
       .then((res) => {
         localStorage.setItem("isLogged", "true");
         localStorage.setItem("id", res.body.customer.id);
+        localStorage.setItem("password", values.password);
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
       })
