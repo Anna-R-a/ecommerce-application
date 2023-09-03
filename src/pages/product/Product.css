@@ -1,3 +1,8 @@
+.product-container {
+  width: 100%;
+  display: flex;
+}
+
 .description-block {
   display: flex;
   flex-direction: column;
@@ -47,11 +52,31 @@ margin: 10px;
   display: flex;
   border: none;
   justify-content: center;
+  align-items: center;
 }
-.carousel .control-arrow {
-color: rgb(0, 0, 0);
-opacity: .2;
+.price-info {
+  text-align: center;
 }
-.modal-window {
-  width: 80vw;
+
+.cols {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
+
+
+.carousel-slider > button.control-arrow.control-next::before {
+    border-left: 8px solid #000000;;
+    }
+
+.carousel-slider > button.control-arrow.control-prev::before {
+  border-right: 8px solid #000000;;
+  }
+
+  @media screen and (max-width: 720px){
+    .cols {
+      flex-direction: column;
+    }
+  }
+  

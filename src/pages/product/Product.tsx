@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Modal, Row } from "antd";
+import { Button, Card, Col,  Modal, Row } from "antd";
 import { Product } from "@commercetools/platform-sdk";
 import { getProductDetails } from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -7,15 +7,14 @@ import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
 
-
-
-  const ProductPage : React.FC = () => {
-
+const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<Product>();
-  const {key} = useParams()
+  const { key } = useParams();
+  
+  const [slide, setSlide] = useState(0)
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const showModal = (ind:number) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
     setIsModalOpen(true);
   };
 
@@ -26,38 +25,37 @@ import { useParams } from "react-router-dom";
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-useEffect(() => {
-
-  getProductDetails({ key: `${key}` })
-    .then((res) => {
-      setProductData(res.body);
-    })
-    .catch(console.error);
-}, [key]);
-
+  useEffect(() => {
+    getProductDetails({ key: `${key}` })
+      .then((res) => {
+        setProductData(res.body);
+      })
+      .catch(console.error);
+  }, [key]);
 
   const name = productData?.masterData?.current?.name?.en;
   const images = productData?.masterData?.current?.masterVariant?.images?.length
     ? productData?.masterData?.current?.masterVariant?.images
     : [];
 
-const description =
-productData?.masterData?.current?.description
+  const description = productData?.masterData?.current?.description
     ? productData?.masterData?.current?.description.en
     : "";
 
-
   const price = productData?.masterData?.current?.masterVariant?.prices
-    ? productData?.masterData?.current?.masterVariant?.prices[0].value.centAmount / 100
+    ? productData?.masterData?.current?.masterVariant?.prices[0].value
+        .centAmount / 100
     : 0;
 
   const priceDiscounted = productData?.masterData?.current?.masterVariant.prices
+    ? productData?.masterData?.current?.masterVariant.prices[0].discounted
       ? productData?.masterData?.current?.masterVariant.prices[0].discounted
-        ? productData?.masterData?.current?.masterVariant.prices[0].discounted?.value.centAmount / 100
-        : 0
-      : 0;
-  const discount = (Math.ceil((1 - priceDiscounted/ price) * 100)) ;
-  
+          ?.value.centAmount / 100
+      : 0
+    : 0;
+  const discount = Math.ceil((1 - priceDiscounted / price) * 100);
+
+
   return (
     <>
       <Row>
@@ -68,9 +66,17 @@ productData?.masterData?.current?.description
       <Row gutter={16} className="cols">
         <Col span={8} className="image-column">
           <div>
-            <Carousel showArrows={true}>
+            <Carousel 
+            showArrows={images.length>1}
+            showThumbs={images.length>1}
+            showIndicators={images.length>1}
+            useKeyboardArrows
+            onClickItem={(index) => {
+              setSlide(index);
+              showModal();
+            }}>
               {images.map((image, i) => (
-                <div key={i} className="images" onClick={()=>showModal(i)}>
+                <div key={i} className="images" >
                   <img alt={`${i}`} src={`${image.url}`} />
                 </div>
               ))}
@@ -79,39 +85,51 @@ productData?.masterData?.current?.description
         </Col>
         <Col span={8} className="description">
           <Card className="description-block">
-          <div  dangerouslySetInnerHTML={{ __html:`${description}`}}></div>
+            <div dangerouslySetInnerHTML={{ __html: `${description}` }}></div>
           </Card>
         </Col>
         <Col span={8} className="price">
           <Card className="price-block">
             <div className="price-info">
-            <p className="price-text">
-              {`${priceDiscounted || price} $/kg    `}
-            </p>
-            <p className="price-discounted">
-              {priceDiscounted? `${price} $/kg` : ""}
-            </p>
-            <p className="discount">
-              {priceDiscounted? `- ${discount} %` : ""}
-            </p>
+              <p className="price-text">
+                {`${priceDiscounted || price} $/kg    `}
+              </p>
+              <p className="price-discounted">
+                {priceDiscounted ? `${price} $/kg` : ""}
+              </p>
+              <p className="discount">
+                {priceDiscounted ? `- ${discount} %` : ""}
+              </p>
             </div>
             <Button type="primary">Add to cart</Button>
           </Card>
         </Col>
       </Row>
       <>
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel} className="modal-window" width={700}>
-        <Carousel showArrows={true} useKeyboardArrows>
-        {images.map((image, i) => (
-                <div key={i} className="images" >
-                  <img alt={`${i}`} src={`${image.url}`} />
-                </div>
-              ))}
-        </Carousel>
-      </Modal>
-      
-    </>
-    </>
+        <Modal
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          className="modal-window"
+          width={700}
+          footer={[]}
+        >
+          <Carousel 
+          showArrows={images.length>1}
+          showThumbs={images.length>1}
+          showIndicators={images.length>1}
+          useKeyboardArrows 
+          selectedItem={slide}    
+          >
+            {images.map((image, i) => (
+              <div key={i} className="images">
+                <img alt={`${i}`} src={`${image.url}`} />
+              </div>
+            ))}
+          </Carousel>
+        </Modal>
+      </>
+      </>
   );
 };
 
