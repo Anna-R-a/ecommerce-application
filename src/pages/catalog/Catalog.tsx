@@ -231,7 +231,7 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     console.log("nameFilter", nameFilter);
     checkedValues.length === 0
@@ -300,14 +300,14 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    if(key) {
+    if (key) {
       getProductType(key)
-      .then((res) => {
-        if (res.body.attributes) {
-          getFilterAttribute(res.body.attributes);
-        }
-      })
-      .catch(console.error);
+        .then((res) => {
+          if (res.body.attributes) {
+            getFilterAttribute(res.body.attributes);
+          }
+        })
+        .catch(console.error);
     }
   }, [key]);
 
