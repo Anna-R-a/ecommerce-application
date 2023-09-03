@@ -59,9 +59,9 @@ const ProductPage: React.FC = () => {
   //   ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
   //   :'';
 
-    // const color =  productData?.masterData?.current?.masterVariant?.attributes
-    // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
-    // :'';
+  // const color =  productData?.masterData?.current?.masterVariant?.attributes
+  // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
+  // :'';
 
   return (
     <>
@@ -120,10 +120,11 @@ const ProductPage: React.FC = () => {
           onOk={handleOk}
           onCancel={handleCancel}
           className="modal-window"
-          width={700}
+          width={650}
           footer={[]}
         >
           <Carousel
+            showStatus={false}
             showArrows={images.length > 1}
             showThumbs={images.length > 1}
             showIndicators={images.length > 1}
