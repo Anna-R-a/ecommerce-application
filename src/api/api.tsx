@@ -51,13 +51,7 @@ export const getProductsAttributes = async (
 };
 
 export const getProductType = async (key: string) => {
-  return (
-    apiRootAnonymous
-      .productTypes()
-      .withKey({ key: key })
-      .get()
-      .execute()
-  );
+  return apiRootAnonymous.productTypes().withKey({ key: key }).get().execute();
 };
 
 export const getCategories = async () => {

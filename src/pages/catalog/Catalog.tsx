@@ -62,11 +62,15 @@ const CatalogPage: React.FC = () => {
       localStorage.setItem("currentCategory", "");
       setSelectCategory("");
       setOpenKeys([""]);
-      getProductsFromCategory(["241d5c5d-f8cc-45be-866f-14af2c0c150c", "fcf30caa-46ad-4ac8-b859-3fc0395b791c", "1836bc07-4722-42e4-a8cf-5ad943e8da0b"])
-      .then((res) => {
-        setData(res.body.results);
-      })
-      .catch(console.error);
+      getProductsFromCategory([
+        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
+        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
+        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
+      ])
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
     } else {
       localStorage.setItem("currentCategory", selectCategory);
       getProductsFromCategory([selectCategory])
@@ -165,9 +169,9 @@ const CatalogPage: React.FC = () => {
               if (child?.key === selectCategory) {
                 setOpenKeys([item.key]);
               }
-            })
+            });
           }
-        })
+        });
       })
       .catch(console.error);
   }, [selectCategory]);
@@ -253,10 +257,10 @@ const CatalogPage: React.FC = () => {
     // setSelectFilters([]);
     // filter.forEach((item) => {
     //   console.log("filter", filter);
-      //selectFilter.concat(item.value);
-      // setSelectFilters((prev) => {
-      //   return prev.concat(item.value);
-      // })
+    //selectFilter.concat(item.value);
+    // setSelectFilters((prev) => {
+    //   return prev.concat(item.value);
+    // })
     // });
     // console.log("filter2", filter);
   };
@@ -281,7 +285,10 @@ const CatalogPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (key && (key === "berries" || key === "fruits" || key === "vegetables")) {
+    if (
+      key &&
+      (key === "berries" || key === "fruits" || key === "vegetables")
+    ) {
       getProductType(key)
         .then((res) => {
           if (res.body.attributes) {
