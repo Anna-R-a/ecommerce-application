@@ -4,9 +4,6 @@ import type { TabsProps } from "antd";
 import { ProfileGeneralForm } from "../profile-general/ProfileGeneralForm";
 import { ProfilePasswordForm } from "../profile-password/ProfilePasswordForm";
 
-const onChange = () => {
-  return;
-};
 
 const items: TabsProps["items"] = [
   {
@@ -27,7 +24,7 @@ const items: TabsProps["items"] = [
 ];
 
 const ProfileTabs: React.FC = () => (
-  <Tabs defaultActiveKey="general" items={items} onChange={onChange} />
+  <Tabs defaultActiveKey="general" items={items} />
 );
 
 export default ProfileTabs;

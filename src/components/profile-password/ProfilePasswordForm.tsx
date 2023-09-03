@@ -3,14 +3,15 @@ import React, { useState } from "react";
 import { queryCustomer } from "../../api/customer/queryCustomer";
 import { Button, Form, Input } from "antd";
 import { updatePassword } from "../../api/customer/updateCustomer";
-import { ToastContainer } from "react-toastify";
 import { notify } from "../notification/notification";
 
 type PasswordDataForm = {
-  password: string;
+  newPassword: string;
+  currentPassword: string;
 };
 
 export const ProfilePasswordForm: React.FC = () => {
+  const [form] = Form.useForm();
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [isLoading, setIsLoading] = useState(false);
   const [version, setVersion] = useState(0);
@@ -30,32 +31,54 @@ export const ProfilePasswordForm: React.FC = () => {
   const onFinish = (values: PasswordDataForm) => {
     const customerVersion = customer?.body.version;
     const id = customer?.body.id;
-    const currentPassword = localStorage.getItem("password");
-    if (currentPassword === values.password) {
-      notify("Such a password has already existed", "success");
-      return;
-    }
-    if (customerVersion && id && currentPassword) {
+    const {currentPassword, newPassword} = values;
+    if (customerVersion && id) {
       updatePassword({
         id: id,
         version: customerVersion,
-        newPassword: values.password,
-        currentPassword: currentPassword,
+        newPassword,
+        currentPassword,
       }).then(() => {
-        localStorage.setItem("password", values.password);
+        form.resetFields()
         setVersion((v) => v + 1);
         notify("Password changed", "success");
+      }).catch(()=>{
+        notify("Password change failed", "warning");
       });
     }
   };
 
   return (
     <>
-      <ToastContainer />
       {isLoading && (
-        <Form name="form_item" layout="vertical" onFinish={onFinish}>
+        <Form name="form_password" layout="vertical" onFinish={onFinish} form={form}>
           <Form.Item
-            name="password"
+            name="currentPassword"
+            label="Current Password"
+            rules={[
+              {
+                required: true,
+                message: "Please input your password!",
+              },
+              {
+                min: 8,
+                message: "Password must be at least 8 characters",
+              },
+              {
+                pattern: new RegExp(
+                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
+                ),
+                message:
+                  "Password must be at least one uppercase and lowercase letter, digit and special character",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Form.Item
+            name="newPassword"
             label="New Password"
             rules={[
               {
@@ -82,7 +105,7 @@ export const ProfilePasswordForm: React.FC = () => {
           <Form.Item
             name="confirm"
             label="Confirm Password"
-            dependencies={["password"]}
+            dependencies={["newPassword"]}
             hasFeedback
             rules={[
               {
@@ -91,7 +114,7 @@ export const ProfilePasswordForm: React.FC = () => {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
+                  if (!value || getFieldValue("newPassword") === value) {
                     setDisabled(false);
                     return Promise.resolve();
                   }

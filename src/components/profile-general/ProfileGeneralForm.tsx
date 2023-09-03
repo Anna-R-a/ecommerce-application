@@ -90,10 +90,9 @@ export const ProfileGeneralForm: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
       {isLoading && (
         <Form
-          name="form_item_path"
+          name="form_general"
           layout="vertical"
           onFinish={onFinish}
           onChange={onChange}
