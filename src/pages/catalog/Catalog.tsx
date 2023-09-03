@@ -34,7 +34,6 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
 
-
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [selectCategory, setSelectCategory] = useState(currentCategory);
   const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
@@ -46,15 +45,18 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
 
   const getCategoryOptions = (currentCategoryID: string) => {
     console.log("currentCategoryID", currentCategoryID);
-    let categoryOptions: { categoryID: string, key: string } = {categoryID: currentCategoryID, key: ''};
+    let categoryOptions: { categoryID: string; key: string } = {
+      categoryID: currentCategoryID,
+      key: "",
+    };
     attributesCategories.forEach((item) => {
       if (item.categoryID === currentCategoryID) {
         categoryOptions.key = item.key;
       }
-    })
+    });
     console.log("categoryOptions", categoryOptions);
     return categoryOptions;
-  }
+  };
 
   useEffect(() => {
     if (props.default) {
@@ -65,13 +67,11 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
     }
   }, [props.default]);
 
-
-
   useEffect(() => {
     localStorage.setItem("currentCategory", selectCategory);
     getProductsFromCategory(selectCategory)
       .then((res) => {
-        console.log('res', res);
+        console.log("res", res);
         setData(res.body.results);
       })
       .catch(console.error);
@@ -223,7 +223,7 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     console.log("nameFilter", nameFilter);
     checkedValues.length === 0
@@ -264,11 +264,9 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
     value: CheckboxOptionType[];
   };
 
-
   const [filtersCategory, setFiltersCategory] = useState<Filter[]>([]);
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [cat, setCat] = useState("");
-
 
   //const optionsColor = ["black", "blue", "red", "yellow"];
 
@@ -306,7 +304,6 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   }, [currentCategory]);
 
   const Filters: React.FC = () => {
-
     return (
       <>
         {filtersCategory.map((item) => (

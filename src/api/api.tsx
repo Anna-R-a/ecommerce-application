@@ -20,7 +20,7 @@ export const getProductsFromCategory = async (categoryId: string) => {
 };
 
 export const getProductsAttributes = async (
-  filter: { name: string; value: CheckboxValueType[] }[]
+  filter: { name: string; value: CheckboxValueType[] }[],
 ) => {
   const filterOptions = filter.map((item) => {
     return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
@@ -37,15 +37,18 @@ export const getProductsAttributes = async (
 };
 
 export const getProductType = async (key: string) => {
-  return apiRootAnonymous
-    .productTypes().withKey({key: key})
-    .get()
-    // .get({
-    //   queryArgs: {
-    //     key: ["parent"],
-    //   },
-    // })
-    .execute();
+  return (
+    apiRootAnonymous
+      .productTypes()
+      .withKey({ key: key })
+      .get()
+      // .get({
+      //   queryArgs: {
+      //     key: ["parent"],
+      //   },
+      // })
+      .execute()
+  );
   ///product-types/eky = { key };
   // .productProjections()
   // .search()
