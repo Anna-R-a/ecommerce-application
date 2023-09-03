@@ -28,11 +28,11 @@ function App() {
           }
         />
         <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/catalog" element={<CatalogPage default={true} />} />
-        <Route path="/catalog/:key" element={<CatalogPage default={false} />} />
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/catalog/:key" element={<CatalogPage />} />
         <Route
           path="/catalog/:key/:key"
-          element={<CatalogPage default={false} />}
+          element={<CatalogPage />}
         />
         <Route path="/products/:key" element={<ProductPage />} />
         <Route

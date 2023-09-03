@@ -7,17 +7,31 @@ export const getProducts = () => {
   return apiRootAnonymous.products().get().execute();
 };
 
-export const getProductsFromCategory = async (categoryId: string) => {
+export const getProductsFromCategory = async (categoryId: string[]) => {
   return apiRootAnonymous
     .productProjections()
     .search()
     .get({
       queryArgs: {
-        filter: [`categories.id:"${categoryId}"`],
+        filter: [`categories.id:"${categoryId.join('","')}"`],
       },
     })
     .execute();
 };
+
+// export const getProductGroups = async (childPathArgs: { key: string }) => {
+//    const res = apiRoot.attributeGroups().withKey(childPathArgs).get().execute();
+
+//    return apiRootAnonymous
+//    .productProjections()
+//    .search()
+//    .get({
+//      queryArgs: {
+//        filter: `variants.attributes.${(await res).body.attributes[0]}.key:"${item.value.join('","')}"`,
+//      },
+//    })
+//    .execute();
+// };
 
 export const getProductsAttributes = async (
   filter: { name: string; value: CheckboxValueType[] }[],
@@ -42,22 +56,8 @@ export const getProductType = async (key: string) => {
       .productTypes()
       .withKey({ key: key })
       .get()
-      // .get({
-      //   queryArgs: {
-      //     key: ["parent"],
-      //   },
-      // })
       .execute()
   );
-  ///product-types/eky = { key };
-  // .productProjections()
-  // .search()
-  // .get({
-  //   queryArgs: {
-  //     filter: `productType.id:${id}`,
-  //   },
-  // })
-  // .execute();
 };
 
 export const getCategories = async () => {

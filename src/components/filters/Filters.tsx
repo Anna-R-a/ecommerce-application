@@ -40,7 +40,7 @@ export const Filters: React.FC<Props> = (props: Props) => {
         })
         .catch(console.error);
     } else {
-      getProductsFromCategory(selectCategory)
+      getProductsFromCategory([selectCategory])
         .then((res) => {
           setData(res.body.results);
         })
