@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Checkbox, Layout, Menu, Space } from "antd";
-import type { MenuProps } from "antd";
+import { Button, Checkbox, Layout, Menu, Space } from "antd";
+import type { CheckboxOptionType, MenuProps } from "antd";
 // import SiderMenu from "../../components/sider-menu/SiderMenu";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
+  getProductType,
   getProductsAttributes,
   getProductsFromCategory,
 } from "../../api/api";
 import { MenuInfo } from "rc-menu/lib/interface";
-import { Category, ProductProjection } from "@commercetools/platform-sdk";
+import {
+  AttributeDefinition,
+  AttributePlainEnumValue,
+  Category,
+  ProductProjection,
+} from "@commercetools/platform-sdk";
 import "./Catalog.css";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 
@@ -19,16 +25,36 @@ const { Sider, Content } = Layout;
 type Props = { default: boolean };
 
 const CatalogPage: React.FC<Props> = (props: Props) => {
+  const attributesCategories = [
+    { categoryID: "241d5c5d-f8cc-45be-866f-14af2c0c150c", key: "fruits" },
+    { categoryID: "fcf30caa-46ad-4ac8-b859-3fc0395b791c", key: "vegetables" },
+    { categoryID: "1836bc07-4722-42e4-a8cf-5ad943e8da0b", key: "berries" },
+  ];
+
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
+
 
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [selectCategory, setSelectCategory] = useState(currentCategory);
   const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
   const [data, setData] = useState<ProductProjection[]>([]);
 
-  const [filter, setFilter] =
-    useState<{ name: string; value: CheckboxValueType[] }[]>();
+  const [filter, setFilter] = useState<
+    { name: string; value: CheckboxValueType[] }[]
+  >([]);
+
+  const getCategoryOptions = (currentCategoryID: string) => {
+    console.log("currentCategoryID", currentCategoryID);
+    let categoryOptions: { categoryID: string, key: string } = {categoryID: currentCategoryID, key: ''};
+    attributesCategories.forEach((item) => {
+      if (item.categoryID === currentCategoryID) {
+        categoryOptions.key = item.key;
+      }
+    })
+    console.log("categoryOptions", categoryOptions);
+    return categoryOptions;
+  }
 
   useEffect(() => {
     if (props.default) {
@@ -39,25 +65,34 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
     }
   }, [props.default]);
 
+
+
   useEffect(() => {
     localStorage.setItem("currentCategory", selectCategory);
     getProductsFromCategory(selectCategory)
       .then((res) => {
+        console.log('res', res);
         setData(res.body.results);
       })
       .catch(console.error);
   }, [selectCategory]);
 
   useEffect(() => {
-    if (filter) {
+    if (filter.length > 0) {
       getProductsAttributes(filter)
         .then((res) => {
           console.log("res", res.body.results);
           setData(res.body.results);
         })
         .catch(console.error);
+    } else {
+      getProductsFromCategory(selectCategory)
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
     }
-  }, [filter]);
+  }, [filter, selectCategory]);
 
   type MenuItem = Required<MenuProps>["items"][number];
   type StructureMenu = {
@@ -125,47 +160,173 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    //setSelectCategory(currentCategory);
+    //setOpenKeys([currentCategory]);
     getCategories()
       .then((res) => {
         setCategories(createStructureMenu(res.body.results));
       })
       .catch(console.error);
-    setSelectCategory(currentCategory);
-    setOpenKeys([currentCategory]);
   }, []);
 
+  const [selectGroupFilters, setSelectGroupFilters] = useState<
+    { name: string; value: CheckboxValueType[] }[]
+  >([]);
+
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    let nameFilter: string = "";
-    let valueFilter: string[] = [];
-    checkedValues.forEach((item) => {
-      nameFilter = item.toString().split(" ")[0];
-      valueFilter.push(item.toString().split(" ")[1]);
+    if (checkedValues.length > 0) {
+      setSelectFilters(checkedValues);
+    } else {
+      setSelectFilters([]);
+    }
+
+    console.log("checkedValues", checkedValues);
+    let nameFilter = "";
+    filtersCategory.forEach((item) => {
+      item.value.forEach((value) => {
+        if (value.value === checkedValues[0]) {
+          nameFilter = item.keyField;
+        }
+      });
     });
-    console.log([{ name: nameFilter, value: valueFilter }]);
-    setFilter([{ name: nameFilter, value: valueFilter }]);
+    // setSelectGroupFilters((prev) => {
+    //   console.log("checkedValues", checkedValues);
+    //   let prevData = false;
+    //   prev.map((prevItem) => {
+    //     if (prevItem.name === nameFilter) {
+    //       prevItem.value = checkedValues;
+    //       prevData = true;
+    //     }
+    //     console.log("prev setSelectGroupFilters", prev);
+
+    //     return prev;
+    //   });
+    //   console.log("prevData", prevData);
+    //   console.log("return", prevData ? prev : [...prev, { name: nameFilter, value: checkedValues }]);
+    //   return prevData ? prev : [...prev, { name: nameFilter, value: checkedValues }];
+    // });
+    // //setSelectFilters([]);
+    // selectGroupFilters.forEach((item) => {
+
+    //   setSelectFilters((prev) => {
+    //     return prev.concat(item.value);
+    //   });
+    // });
+
+    handlerFilter(nameFilter, checkedValues);
   };
 
-  const onChangeSize = (checkedValues: CheckboxValueType[]) => {
-    console.log("checked = ", checkedValues);
-    setFilter([{ name: "berries-size", value: checkedValues }]);
+  // const onChangeSize = (checkedValues: CheckboxValueType[]) => {
+  //   const nameFilter = "berries-size";
+  //   handlerFilter(nameFilter, checkedValues);
+  // };
+
+  const handlerFilter = (
+    nameFilter: string,
+    checkedValues: CheckboxValueType[]
+  ) => {
+    console.log("nameFilter", nameFilter);
+    checkedValues.length === 0
+      ? setFilter([])
+      : setFilter([{ name: nameFilter, value: checkedValues }]);
+
+    //setFilter((prev) => {
+    // prev = prev.length === 1 && prev[0].name === nameFilter ? [] : prev;
+    // if (prev.length > 1) {
+    //   const selectPrev: { name: string; value: CheckboxValueType[] }[] = [];
+    //   prev.forEach((item) => {
+    //     if (item.name !== nameFilter) {
+    //       selectPrev.push(item);
+    //     }
+    //   });
+    //   prev = [...selectPrev];
+    // }
+    // return checkedValues.length === 0
+    //   ? prev
+    //   : [...prev, { name: nameFilter, value: checkedValues }];
+    //});
+    const selectFilter: CheckboxValueType[] = [];
+
+    // setSelectFilters([]);
+    filter.forEach((item) => {
+      console.log("filter", filter);
+      //selectFilter.concat(item.value);
+      // setSelectFilters((prev) => {
+      //   return prev.concat(item.value);
+      // })
+    });
+    console.log("filter2", filter);
   };
 
-  // const optionsColor = ["black", "blue", "red", "yellow"];
+  type Filter = {
+    keyField: string;
+    labelField: string;
+    value: CheckboxOptionType[];
+  };
 
-  // const optionsSize = ["small", "medium", "large"];
 
-  const optionsColor = [
-    { label: "black", value: "berries-color black" },
-    { label: "blue", value: "berries-color blue" },
-    { label: "red", value: "berries-color red" },
-    { label: "yellow", value: "berries-color yellow" },
-  ];
+  const [filtersCategory, setFiltersCategory] = useState<Filter[]>([]);
+  const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
+  const [cat, setCat] = useState("");
 
-  const optionsSize = [
-    { label: "small", value: "berries-size small" },
-    { label: "medium", value: "berries-size medium" },
-    { label: "large", value: "berries-size large" },
-  ];
+
+  //const optionsColor = ["black", "blue", "red", "yellow"];
+
+  //const optionsSize = ["small", "medium", "large"];
+
+  const getFilterAttribute = (attributes: AttributeDefinition[]) => {
+    let filters: Filter[] = [];
+    attributes?.forEach((item) => {
+      let valuesItem: CheckboxOptionType[] = [];
+      if (item.type.name === "enum") {
+        const values = item.type.values;
+        values.forEach((value) => {
+          valuesItem.push({ label: value.label, value: value.key });
+        });
+        filters.push({
+          keyField: item.name,
+          labelField: item.label.en,
+          value: valuesItem,
+        });
+      }
+    });
+    setFiltersCategory(filters);
+  };
+
+  useEffect(() => {
+    setSelectCategory(currentCategory);
+    let keyCurrentCategory = getCategoryOptions(currentCategory).key;
+    getProductType(keyCurrentCategory)
+      .then((res) => {
+        if (res.body.attributes) {
+          getFilterAttribute(res.body.attributes);
+        }
+      })
+      .catch(console.error);
+  }, [currentCategory]);
+
+  const Filters: React.FC = () => {
+
+    return (
+      <>
+        {filtersCategory.map((item) => (
+          <Space
+            direction="vertical"
+            size="middle"
+            style={{ display: "flex", padding: "10px" }}
+          >
+            <span>{item.labelField}</span>
+            <Checkbox.Group
+              name={item.keyField}
+              options={item.value}
+              value={selectFilters}
+              onChange={onChange}
+            />
+          </Space>
+        ))}
+      </>
+    );
+  };
 
   return (
     <Layout style={{ width: "100%" }} className="catalog__wrapper">
@@ -182,24 +343,7 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
           items={categories}
           onClick={onClickMenu}
         />
-        <Space
-          direction="vertical"
-          size="middle"
-          style={{ display: "flex", padding: "20px" }}
-        >
-          <span>Color:</span>
-          <Checkbox.Group
-            name="berries-color"
-            options={optionsColor}
-            onChange={onChange}
-          />
-          <span>Size:</span>
-          <Checkbox.Group
-            name="berries-size"
-            options={optionsSize}
-            onChange={onChange}
-          />
-        </Space>
+        <Filters />
       </Sider>
       <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
         {/* <Breadcrumbs /> */}
@@ -212,7 +356,6 @@ const CatalogPage: React.FC<Props> = (props: Props) => {
           }}
         >
           <ListProduct data={data} />
-          {/* <ListProduct selectCategory={selectCategory} /> */}
         </Content>
       </Layout>
     </Layout>

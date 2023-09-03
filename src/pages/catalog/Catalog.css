@@ -57,5 +57,5 @@
 }
 
 .ant-checkbox-group {
-  flex-direction: column;
+  /* flex-direction: column; */
 }
