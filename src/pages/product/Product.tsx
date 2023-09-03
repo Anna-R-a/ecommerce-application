@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col,  Modal, Row } from "antd";
+import { Button, Card, Col, Modal, Row } from "antd";
 import { Product } from "@commercetools/platform-sdk";
 import { getProductDetails } from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -10,8 +10,8 @@ import { useParams } from "react-router-dom";
 const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<Product>();
   const { key } = useParams();
-  
-  const [slide, setSlide] = useState(0)
+
+  const [slide, setSlide] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -55,6 +55,13 @@ const ProductPage: React.FC = () => {
     : 0;
   const discount = Math.ceil((1 - priceDiscounted / price) * 100);
 
+  // const size =  productData?.masterData?.current?.masterVariant?.attributes
+  //   ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
+  //   :'';
+
+    // const color =  productData?.masterData?.current?.masterVariant?.attributes
+    // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
+    // :'';
 
   return (
     <>
@@ -66,17 +73,18 @@ const ProductPage: React.FC = () => {
       <Row gutter={16} className="cols">
         <Col span={8} className="image-column">
           <div>
-            <Carousel 
-            showArrows={images.length>1}
-            showThumbs={images.length>1}
-            showIndicators={images.length>1}
-            useKeyboardArrows
-            onClickItem={(index) => {
-              setSlide(index);
-              showModal();
-            }}>
+            <Carousel
+              showArrows={images.length > 1}
+              showThumbs={images.length > 1}
+              showIndicators={images.length > 1}
+              useKeyboardArrows
+              onClickItem={(index) => {
+                setSlide(index);
+                showModal();
+              }}
+            >
               {images.map((image, i) => (
-                <div key={i} className="images" >
+                <div key={i} className="images">
                   <img alt={`${i}`} src={`${image.url}`} />
                 </div>
               ))}
@@ -86,6 +94,7 @@ const ProductPage: React.FC = () => {
         <Col span={8} className="description">
           <Card className="description-block">
             <div dangerouslySetInnerHTML={{ __html: `${description}` }}></div>
+            {/* <div >{`Size: ${size}`}</div> */}
           </Card>
         </Col>
         <Col span={8} className="price">
@@ -114,12 +123,12 @@ const ProductPage: React.FC = () => {
           width={700}
           footer={[]}
         >
-          <Carousel 
-          showArrows={images.length>1}
-          showThumbs={images.length>1}
-          showIndicators={images.length>1}
-          useKeyboardArrows 
-          selectedItem={slide}    
+          <Carousel
+            showArrows={images.length > 1}
+            showThumbs={images.length > 1}
+            showIndicators={images.length > 1}
+            useKeyboardArrows
+            selectedItem={slide}
           >
             {images.map((image, i) => (
               <div key={i} className="images">
@@ -129,7 +138,7 @@ const ProductPage: React.FC = () => {
           </Carousel>
         </Modal>
       </>
-      </>
+    </>
   );
 };
 
