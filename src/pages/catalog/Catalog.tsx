@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Checkbox, Dropdown, Layout, Menu, Space } from "antd";
+import { Button, Checkbox, Dropdown, Layout, Menu, Space, Input } from "antd";
 import type { CheckboxOptionType, MenuProps } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
@@ -9,6 +9,7 @@ import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
   getProductType,
+  getProductsBySearch,
   getProductsFromCategory,
 } from "../../api/api";
 import { MenuInfo } from "rc-menu/lib/interface";
@@ -17,9 +18,11 @@ import {
   Category,
   ProductProjection,
 } from "@commercetools/platform-sdk";
+import { AudioOutlined } from "@ant-design/icons";
 import "./Catalog.css";
 
 const { Sider, Content } = Layout;
+const { Search } = Input;
 
 type MenuItem = Required<MenuProps>["items"][number];
 type StructureMenu = {
@@ -190,7 +193,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     console.log("nameFilter", nameFilter);
     checkedValues.length === 0
@@ -253,6 +256,7 @@ const CatalogPage: React.FC = () => {
             size="middle"
             style={{ display: "flex", padding: "10px" }}
             key={item.keyField}
+            className="filter-group"
           >
             <span>{item.labelField}</span>
             <Checkbox.Group
@@ -286,7 +290,7 @@ const CatalogPage: React.FC = () => {
       .catch(console.error);
   };
 
-  const Sorting: React.FC = () => {
+  const SortingAndSearch: React.FC = () => {
     const items: MenuProps["items"] = [
       {
         key: "asc",
@@ -299,36 +303,56 @@ const CatalogPage: React.FC = () => {
     ];
 
     return (
-      <div className="sorting__wrapper">
-        Sort by:
-        <Dropdown
-          menu={{
-            items,
-            selectable: true,
-            defaultSelectedKeys: [selectSorting.name],
-            onClick: handleClickName,
-          }}
-        >
-          <Button type="link">
-            name
-            <DownOutlined />
-          </Button>
-        </Dropdown>
-        <Dropdown
-          menu={{
-            items,
-            selectable: true,
-            defaultSelectedKeys: [selectSorting.price],
-            onClick: handleClickPrice,
-          }}
-        >
-          <Button type="link">
-            price
-            <DownOutlined />
-          </Button>
-        </Dropdown>
+      <div className="sort-search__wrapper">
+        <Space direction="vertical">
+          <Search
+            placeholder="input search text"
+            allowClear
+            onSearch={onSearch}
+            style={{ width: 200 }}
+          />
+        </Space>
+        <Space>
+          <span>Sort by:</span>
+          <Dropdown
+            menu={{
+              items,
+              selectable: true,
+              defaultSelectedKeys: [selectSorting.name],
+              onClick: handleClickName,
+            }}
+          >
+            <Button type="link">
+              name
+              <DownOutlined />
+            </Button>
+          </Dropdown>
+          <Dropdown
+            menu={{
+              items,
+              selectable: true,
+              defaultSelectedKeys: [selectSorting.price],
+              onClick: handleClickPrice,
+            }}
+          >
+            <Button type="link">
+              price
+              <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Space>
       </div>
     );
+  };
+
+  const onSearch = (value: string) => {
+    getProductsBySearch(value)
+      .then((res) => {
+        if (res) {
+          setData(res.body.results);
+        }
+      })
+      .catch(console.error);
   };
 
   return (
@@ -358,7 +382,7 @@ const CatalogPage: React.FC = () => {
             background: "#fff",
           }}
         >
-          <Sorting />
+          <SortingAndSearch />
           <ListProduct data={data} />
         </Content>
       </Layout>
