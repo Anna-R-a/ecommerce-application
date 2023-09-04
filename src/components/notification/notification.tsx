@@ -5,7 +5,7 @@ export const notify = (text: string, type: TypeOptions) =>
   toast(text, {
     type,
     position: "top-center",
-    autoClose: 5000,
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

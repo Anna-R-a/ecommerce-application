@@ -59,9 +59,12 @@ const subMenuWithAuth = [
     key: "/login",
   },
   {
-    label: "Profile",
+    label: (
+      <Link to="/profile" className="profil">
+        Profile
+      </Link>
+    ),
     key: "/profile",
-    disabled: true,
   },
 ];
 

@@ -97,10 +97,12 @@ const RegistrationPage: React.FC = () => {
       mapRegDataToRequest(values, [defaultShipping, defaultBilling]),
     )
       .then(() => {
-        signInCustomer(values);
-        localStorage.setItem("isLogged", "true");
-        notify("Registration Successful!", "success");
-        setTimeout(goHome, 1500);
+        signInCustomer(values).then((res) => {
+          localStorage.setItem("isLogged", "true");
+          localStorage.setItem("id", res.body.customer.id);
+          notify("Registration Successful!", "success");
+          setTimeout(goHome, 1500);
+        });
       })
       .catch((error) => {
         const errorCode = error.body.statusCode;
