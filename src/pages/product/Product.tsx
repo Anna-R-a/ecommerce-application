@@ -110,7 +110,7 @@ const ProductPage: React.FC = () => {
                 {priceDiscounted ? `- ${discount} %` : ""}
               </p>
             </div>
-            <Button type="primary">Add to cart</Button>
+            <Button type="primary" className="button_primary">Add to cart</Button>
           </Card>
         </Col>
       </Row>

@@ -32,6 +32,7 @@ function App() {
         <Route path="/catalog/:key" element={<CatalogPage />} />
         <Route path="/catalog/:key/:key" element={<CatalogPage />} />
         <Route path="/products/:key" element={<ProductPage />} />
+        <Route path="/products/" element={<CatalogPage />} />
         <Route
           path="/profile"
           element={

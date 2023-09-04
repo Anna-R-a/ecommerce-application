@@ -59,8 +59,22 @@
   color: var(--default-color) !important;
 }
 
-.ant-checkbox-group {
-  /* flex-direction: column; */
+.ant-space-item:first-child {
+  color: var(--dark-color) !important;
+  font-weight: bold;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--medium-color) !important;
+  border-color: var(--medium-color) !important;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: var(--medium-color) !important;
+}
+
+.ant-checkbox-wrapper:hover .ant-checkbox-inner {
+  border-color: var(--medium-color) !important;
 }
 
 .ant-layout-sider-children {
