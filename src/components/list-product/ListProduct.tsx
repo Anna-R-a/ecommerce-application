@@ -1,28 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, List } from "antd";
+import { Card, List } from "antd";
 import { ProductProjection } from "@commercetools/platform-sdk";
-import { ShoppingCartOutlined } from "@ant-design/icons";
-import { getProductsFromCategory } from "../../api/api";
 import "./ListProduct.css";
 
 const { Meta } = Card;
 
-const ListProduct: React.FC = () => {
-  const currentCategory = "241d5c5d-f8cc-45be-866f-14af2c0c150c";
-  const [categoryId, setCategoryId] = useState(currentCategory);
+type Props = { data: ProductProjection[] };
 
-  const [data, setData] = useState<ProductProjection[]>([]);
-
-  useEffect(() => {
-    getProductsFromCategory(categoryId)
-      .then((res) => {
-        console.log(res.body.results);
-        setData(res.body.results);
-      })
-      .catch(console.error);
-  }, [categoryId]);
-
+const ListProduct: React.FC<Props> = (props: Props) => {
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
 
@@ -68,28 +54,26 @@ const ListProduct: React.FC = () => {
         xxl: 4,
       }}
       pagination={{ position: "bottom", align: "center" }}
-      dataSource={data}
+      dataSource={props.data}
       renderItem={(item) => (
         <List.Item>
-          <Link
-            to={`/catalog/${item.key}`}
-            // key={item.key}
-            className="product__link"
-          >
+          <Link to={`/products/${item.key}`} key={item.key} className="product__link">
             <Card
               className="card__item"
               cover={<img alt={name(item)} src={image(item)} />}
-              actions={[
-                <Button
-                  type="primary"
-                  key="shoppingCart"
-                  title="In cart"
-                  size="middle"
-                  className="button_primary"
-                >
-                  <ShoppingCartOutlined key="shoppingCart" />
-                </Button>,
-              ]}
+              actions={
+                [
+                  // <Button
+                  //   type="primary"
+                  //   key="shoppingCart"
+                  //   title="In cart"
+                  //   size="middle"
+                  //   className="button_primary"
+                  // >
+                  //   <ShoppingCartOutlined key="shoppingCart" />
+                  // </Button>,
+                ]
+              }
             >
               <Meta title={name(item)} description={description(item)} />
               <div className="product__price">
