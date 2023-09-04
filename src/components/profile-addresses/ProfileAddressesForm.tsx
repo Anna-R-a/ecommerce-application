@@ -1,66 +1,73 @@
-import { Button, Cascader, Form, Input } from "antd"
-import { postCodesRegEx, residences } from "../../pages/registration/DataForRegistrationForm"
-import { useState } from "react"
-import { Address, ClientResponse, Customer } from "@commercetools/platform-sdk"
-import { notify } from "../notification/notification"
-import { updateCustomer } from "../../api/customer/updateCustomer"
-import React from "react"
-import { queryCustomer } from "../../api/customer/queryCustomer"
+import { Button, Cascader, Form, Input } from "antd";
+import {
+  postCodesRegEx,
+  residences,
+} from "../../pages/registration/DataForRegistrationForm";
+import { useState } from "react";
+import { Address, ClientResponse, Customer } from "@commercetools/platform-sdk";
+import { notify } from "../notification/notification";
+import { updateCustomer } from "../../api/customer/updateCustomer";
+import React from "react";
+import { queryCustomer } from "../../api/customer/queryCustomer";
 
+export const ProfileAddressesForm = ({
+  country,
+  city,
+  streetName,
+  postalCode,
+  id,
+}: Address) => {
+  const [customer, setCustomer] = useState<ClientResponse<Customer>>();
+  const [countryChanged, setCountryChanged] = useState("");
+  const [version, setVersion] = useState(0);
 
+  React.useEffect(() => {
+    const getCustomer = async () => {
+      const id = localStorage.getItem("id");
+      if (id) {
+        setCustomer(await queryCustomer(id));
+      }
+    };
+    getCustomer();
+  }, [version]);
 
-export const ProfileAddressesForm = ({country, city, streetName, postalCode, id }: Address) => {
-    const [customer, setCustomer] = useState<ClientResponse<Customer>>();
-    const [countryChanged, setCountryChanged] = useState('')
-    const [version, setVersion] = useState(0);
+  const onFinish = (values: Address) => {
+    const version = customer?.body.version;
+    const customerId = customer?.body.id;
+    if (version && customerId) {
+      updateCustomer(customerId, version, [
+        {
+          action: "changeAddress",
+          addressId: id,
+          address: {
+            country: values.country[0],
+            city: values.city,
+            streetName: values.streetName,
+            postalCode: values.postalCode,
+          },
+        },
+      ]).then(() => {
+        notify("General data changed", "success");
+        setVersion((v) => v + 1);
+      });
+    }
+  };
 
-    React.useEffect(() => {
-        const getCustomer = async () => {
-          const id = localStorage.getItem("id");
-          if (id) {
-            setCustomer(await queryCustomer(id));
-          }
-        };
-        getCustomer();
-      }, [version]);
-
-    const onFinish = (values: Address) => {
-        const version = customer?.body.version;
-        const customerId = customer?.body.id;
-        if (version && customerId) {
-          updateCustomer(customerId, version, [
-                {
-                action: "changeAddress",
-                addressId: id,
-                address: {
-                    country: values.country[0],
-                    city: values.city,
-                    streetName: values.streetName,
-                    postalCode: values.postalCode,
-                }
-              }
-          ]).then(() => {
-            notify("General data changed", "success");
-            setVersion((v) => v + 1);
-          });
-        }
-      };
-
-    return (
+  return (
     <>
-        <Form name={id}
+      <Form
+        name={id}
         onFinish={onFinish}
-        onValuesChange={(values)=>{
-            if(values.country){
-                setCountryChanged(values.country)
-
-            }
+        onValuesChange={(values) => {
+          if (values.country) {
+            setCountryChanged(values.country);
+          }
         }}
-        >
-            <Form.Item 
-            name="country"
-            label="Country"
-            rules={[
+      >
+        <Form.Item
+          name="country"
+          label="Country"
+          rules={[
             {
               type: "array",
               required: true,
@@ -125,15 +132,13 @@ export const ProfileAddressesForm = ({country, city, streetName, postalCode, id 
           <Input style={{ width: "100%" }} />
         </Form.Item>
         <Button
-            type="primary"
-            htmlType="submit"
-            className="registration-form-button button_primary"
-          >
-            Change address
-          </Button>
-        </Form>
+          type="primary"
+          htmlType="submit"
+          className="registration-form-button button_primary"
+        >
+          Change address
+        </Button>
+      </Form>
     </>
-    )
-}
-
-
+  );
+};
