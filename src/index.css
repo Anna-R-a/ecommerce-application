@@ -47,6 +47,11 @@ h1 {
   margin: 15px auto;
 }
 
+h2 {
+  font-size: 2rem;
+  color: var(--dark-color);
+}
+
 .icon {
   color: var(--dark-color) !important;
 }

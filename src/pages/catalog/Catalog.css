@@ -27,7 +27,7 @@
 }
 
 .sider-menu.ant-menu {
-  border-inline-end: 0px!important;
+  border-inline-end: 0px !important;
 }
 
 .sider-menu.ant-menu .ant-menu-submenu-title {
@@ -39,7 +39,10 @@
   color: var(--background-color);
 }
 
-.sider-menu.ant-menu .ant-menu-submenu-selected .ant-menu-submenu-title a.menu__link {
+.sider-menu.ant-menu
+  .ant-menu-submenu-selected
+  .ant-menu-submenu-title
+  a.menu__link {
   color: var(--default-color);
 }
 
@@ -53,9 +56,15 @@
 }
 
 .sider-menu .ant-menu-submenu-title:hover a.menu__link {
-  color: var(--default-color)!important;
+  color: var(--default-color) !important;
 }
 
 .ant-checkbox-group {
   /* flex-direction: column; */
+}
+
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

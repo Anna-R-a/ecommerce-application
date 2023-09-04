@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Checkbox, Layout, Menu, Space } from "antd";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Layout,
+  Menu,
+  Space,
+  Typography,
+} from "antd";
 import type { CheckboxOptionType, MenuProps } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { CheckboxValueType } from "antd/es/checkbox/Group";
 // import SiderMenu from "../../components/sider-menu/SiderMenu";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
   getProductType,
-  getProducts,
   getProductsAttributes,
   getProductsFromCategory,
 } from "../../api/api";
 import { MenuInfo } from "rc-menu/lib/interface";
 import {
   AttributeDefinition,
-  AttributeGroup,
-  AttributePlainEnumValue,
   Category,
   ProductProjection,
 } from "@commercetools/platform-sdk";
 import "./Catalog.css";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
 
 const { Sider, Content } = Layout;
 
@@ -99,8 +105,6 @@ const CatalogPage: React.FC = () => {
     }
   }, [filter, key, selectCategory]);
 
-  // const rootSubmenuKeys: string[] = [];
-
   const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     console.log("keys", keys);
@@ -130,7 +134,6 @@ const CatalogPage: React.FC = () => {
           onTitleClick: ({ key }: { key: string }) => setSelectCategory(key),
         };
         treeCategories?.push(menuItem);
-        // rootSubmenuKeys.push(item.id);
       }
     });
     allCategories.forEach((item) => {
@@ -230,7 +233,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     console.log("nameFilter", nameFilter);
     checkedValues.length === 0
@@ -324,11 +327,56 @@ const CatalogPage: React.FC = () => {
       </>
     );
   };
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: "Item 1",
+    },
+    {
+      key: "2",
+      label: "Item 2",
+    },
+    {
+      key: "3",
+      label: "Item 3",
+    },
+  ];
+
+  // const sortPrice = (event: MouseEventHandler<HTMLElement>): void => {
+  //   console.log("event", event);
+  // }
+  // function sortPrice(event: MouseEvent<Element, NativeMouseEvent>): void {
+  //   throw new Error("Function not implemented.");
+  // }
+
+  const Sorting: React.FC = () => (
+    <>
+      {/* <Button type="link" onClick={sortPrice}>
+        by Price
+        <DownOutlined />
+      </Button> */}
+      <Dropdown
+        menu={{
+          items,
+          selectable: true,
+          defaultSelectedKeys: ["3"],
+        }}
+      >
+        <Typography.Link>
+          <Space style={{ padding: "10px" }}>
+            by Price
+            <DownOutlined />
+          </Space>
+        </Typography.Link>
+      </Dropdown>
+    </>
+  );
 
   return (
     <Layout style={{ width: "100%" }} className="catalog__wrapper">
       {/* <SiderMenu /> */}
       <Sider width={200} style={{ background: "#fff" }}>
+        <h2>Farmer Goods</h2>
         <Menu
           mode="inline"
           openKeys={openKeys}
@@ -352,6 +400,7 @@ const CatalogPage: React.FC = () => {
             background: "#fff",
           }}
         >
+          <Sorting />
           <ListProduct data={data} />
         </Content>
       </Layout>
