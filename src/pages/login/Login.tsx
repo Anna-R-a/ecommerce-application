@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="container">
       <ToastContainer />
       <h1>Log In</h1>
       <Form
@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };
 

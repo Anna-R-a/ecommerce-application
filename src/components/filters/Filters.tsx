@@ -40,11 +40,11 @@ export const Filters: React.FC<Props> = (props: Props) => {
         })
         .catch(console.error);
     } else {
-      getProductsFromCategory([selectCategory])
-        .then((res) => {
-          setData(res.body.results);
-        })
-        .catch(console.error);
+      // getProductsFromCategory([selectCategory], selectSorting)
+      //   .then((res) => {
+      //     setData(res.body.results);
+      //   })
+      //   .catch(console.error);
     }
   }, [filter, selectCategory]);
 
@@ -60,7 +60,7 @@ export const Filters: React.FC<Props> = (props: Props) => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     setFilter((prev) => {
       prev = prev.length === 1 && prev[0].name === nameFilter ? [] : prev;

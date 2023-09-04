@@ -78,7 +78,7 @@ const ProductPage: React.FC = () => {
               showThumbs={images.length > 1}
               showIndicators={images.length > 1}
               useKeyboardArrows
-              onClickItem={(index) => {
+              onClickItem={(index: React.SetStateAction<number>) => {
                 setSlide(index);
                 showModal();
               }}

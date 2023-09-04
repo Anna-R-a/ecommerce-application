@@ -6,13 +6,45 @@ export const getProducts = () => {
   return apiRootAnonymous.products().get().execute();
 };
 
-export const getProductsFromCategory = async (categoryId: string[]) => {
+// export const getProductsFromCategory = async (categoryId: string[]) => {
+//   return apiRootAnonymous
+//     .productProjections()
+//     .search()
+//     .get({
+//       queryArgs: {
+//         filter: [`categories.id:"${categoryId.join('","')}"`],
+//       },
+//     })
+//     .execute();
+// };
+
+export const getProductsFromCategory = async (
+  categoryId: string[],
+  sorting: { name: string; price: string },
+  filter: { name: string; value: CheckboxValueType[] }[]
+) => {
+  const sortingOptions = [];
+  const filterOptions = [`categories.id:"${categoryId.join('","')}"`];
+  const filterAttributes = filter.map((item) => {
+    return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
+  });
+  if (filter.length > 0) {
+    filterOptions.push(...filterAttributes);
+  }
+
+  sorting.name
+    ? sortingOptions.push(`name.en ${sorting.name}`)
+    : sorting.price
+    ? sortingOptions.push(`price ${sorting.price}`)
+    : sortingOptions.push("createdAt asc");
+
   return apiRootAnonymous
     .productProjections()
     .search()
     .get({
       queryArgs: {
-        filter: [`categories.id:"${categoryId.join('","')}"`],
+        filter: filterOptions,
+        sort: sortingOptions,
       },
     })
     .execute();
@@ -33,7 +65,7 @@ export const getProductsFromCategory = async (categoryId: string[]) => {
 // };
 
 export const getProductsAttributes = async (
-  filter: { name: string; value: CheckboxValueType[] }[],
+  filter: { name: string; value: CheckboxValueType[] }[]
 ) => {
   const filterOptions = filter.map((item) => {
     return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
