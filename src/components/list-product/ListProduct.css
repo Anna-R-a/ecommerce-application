@@ -1,0 +1,44 @@
+.card__item {
+  min-width: 220px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product__price {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  padding-top: 10px;
+}
+
+.price__basic {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.price__discounted {
+  text-decoration: line-through;
+  color: var(--text-secondary-color);
+  margin-left: 5px;
+}
+
+.discount {
+  color: var(--secondary-color);
+  margin-left: 5px;
+}
+
+.ant-card .button_primary {
+  width: 60%;
+}
+
+.product__link .ant-card:hover {
+  box-shadow: 0px 2px 35px 14px rgba(13, 13, 13, 0.04);
+  cursor: pointer;
+}
+
+.product__link .ant-card:hover .ant-card-meta-title,
+.product__link .ant-card:hover .product__price {
+  color: var(--secondary-color);
+}

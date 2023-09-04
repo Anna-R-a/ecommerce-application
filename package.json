@@ -63,6 +63,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^8.0.3",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "react-responsive-carousel": "^3.2.23"
   }
 }

@@ -1,11 +1,12 @@
-import "./Profile.css";
+import React from "react";
+import ProfileTabs from "../../components/profile-tabs/profileTabs";
 
-const ProfilePage = () => {
+const ProfilPage: React.FC = () => {
   return (
     <>
-      <h1>Profile Page</h1>
+      <ProfileTabs />
     </>
   );
 };
 
-export default ProfilePage;
+export default ProfilPage;

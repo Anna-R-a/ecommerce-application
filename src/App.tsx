@@ -7,11 +7,12 @@ import {
 import HomePage from "./pages/home/Home";
 import LoginPage from "./pages/login/Login";
 import RegistrationPage from "./pages/registration/Registration";
-// import CatalogPage from "./pages/catalog/catalog";
+import CatalogPage from "./pages/catalog/Catalog";
 import ProfilePage from "./pages/profile/Profile";
 import NotFoundPage from "./pages/notFound/NotFound";
 
 import "./App.css";
+import ProductPage from "./pages/product/Product";
 
 function App() {
   return (
@@ -27,7 +28,11 @@ function App() {
           }
         />
         <Route path="/registration" element={<RegistrationPage />} />
-        {/* <Route path="/catalog" element={<CatalogPage />} /> */}
+        <Route path="/catalog" element={<CatalogPage />} />
+        <Route path="/catalog/:key" element={<CatalogPage />} />
+        <Route path="/catalog/:key/:key" element={<CatalogPage />} />
+        <Route path="/products/:key" element={<ProductPage />} />
+        <Route path="/products/" element={<CatalogPage />} />
         <Route
           path="/profile"
           element={

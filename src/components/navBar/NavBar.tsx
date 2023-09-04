@@ -16,9 +16,12 @@ const itemsNav: MenuProps["items"] = [
     key: "/",
   },
   {
-    label: "Catalog",
+    label: (
+      <Link to="/catalog" className="nav__link">
+        Catalog
+      </Link>
+    ),
     key: "/catalog",
-    disabled: true,
   },
   {
     label: "About Us",
@@ -55,18 +58,13 @@ const subMenuWithAuth = [
     ),
     key: "/login",
   },
-  // {
-  //   label: (
-  //     <Link to="/registration" className="nav__link">
-  //       Registration
-  //     </Link>
-  //   ),
-  //   key: "/registration",
-  // },
   {
-    label: "Profile",
+    label: (
+      <Link to="/profile" className="profil">
+        Profile
+      </Link>
+    ),
     key: "/profile",
-    disabled: true,
   },
 ];
 

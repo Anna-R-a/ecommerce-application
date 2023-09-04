@@ -19,8 +19,9 @@ const LoginPage: React.FC = () => {
 
   const onFinish = (values: MyCustomerSignin) => {
     signInCustomer(values)
-      .then(() => {
+      .then((res) => {
         localStorage.setItem("isLogged", "true");
+        localStorage.setItem("id", res.body.customer.id);
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
       })
@@ -49,7 +50,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="container">
       <ToastContainer />
       <h1>Log In</h1>
       <Form
@@ -107,7 +108,7 @@ const LoginPage: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </>
+    </div>
   );
 };
 
