@@ -31,27 +31,34 @@ export const ProfilePasswordForm: React.FC = () => {
   const onFinish = (values: PasswordDataForm) => {
     const customerVersion = customer?.body.version;
     const id = customer?.body.id;
-    const {currentPassword, newPassword} = values;
+    const { currentPassword, newPassword } = values;
     if (customerVersion && id) {
       updatePassword({
         id: id,
         version: customerVersion,
         newPassword,
         currentPassword,
-      }).then(() => {
-        form.resetFields()
-        setVersion((v) => v + 1);
-        notify("Password changed", "success");
-      }).catch(()=>{
-        notify("Password change failed", "warning");
-      });
+      })
+        .then(() => {
+          form.resetFields();
+          setVersion((v) => v + 1);
+          notify("Password changed", "success");
+        })
+        .catch(() => {
+          notify("Password change failed", "warning");
+        });
     }
   };
 
   return (
     <>
       {isLoading && (
-        <Form name="form_password" layout="vertical" onFinish={onFinish} form={form}>
+        <Form
+          name="form_password"
+          layout="vertical"
+          onFinish={onFinish}
+          form={form}
+        >
           <Form.Item
             name="currentPassword"
             label="Current Password"

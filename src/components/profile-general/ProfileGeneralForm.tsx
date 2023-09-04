@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import { updateCustomer } from "../../api/customer/updateCustomer";
 import { Moment } from "moment";
 import { notify } from "../notification/notification";
-import { ToastContainer } from "react-toastify";
 
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
