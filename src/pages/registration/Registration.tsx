@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { RangePickerProps } from "antd/es/date-picker";
 import {
@@ -118,7 +118,7 @@ const RegistrationPage: React.FC = () => {
   };
 
   return (
-    <Fragment>
+    <div className="container">
       <ToastContainer />
       <h1>Registration</h1>
 
@@ -440,7 +440,7 @@ const RegistrationPage: React.FC = () => {
           </div>
         </Form.Item>
       </Form>
-    </Fragment>
+    </div>
   );
 };
 

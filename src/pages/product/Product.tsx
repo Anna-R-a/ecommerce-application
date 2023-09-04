@@ -78,7 +78,7 @@ const ProductPage: React.FC = () => {
               showThumbs={images.length > 1}
               showIndicators={images.length > 1}
               useKeyboardArrows
-              onClickItem={(index) => {
+              onClickItem={(index: React.SetStateAction<number>) => {
                 setSlide(index);
                 showModal();
               }}
@@ -110,7 +110,9 @@ const ProductPage: React.FC = () => {
                 {priceDiscounted ? `- ${discount} %` : ""}
               </p>
             </div>
-            <Button type="primary">Add to cart</Button>
+            <Button type="primary" className="button_primary">
+              Add to cart
+            </Button>
           </Card>
         </Col>
       </Row>
