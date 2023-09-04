@@ -8,9 +8,9 @@ export const PageLayout = () => {
   return (
     <>
       <Header />
-      <Breadcrumbs />
       <main className="main">
         <div className="wrapper">
+          <Breadcrumbs />
           <Outlet />
         </div>
       </main>
