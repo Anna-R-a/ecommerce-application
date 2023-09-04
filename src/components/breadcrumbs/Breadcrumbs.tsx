@@ -32,10 +32,10 @@ const Breadcrumbs = () => {
       </div>
     );
   };
-
   if (location.pathname !== "/") {
     return <>{<BreadcrumbElem />}</>;
   } else return <></>;
 };
 
 export default Breadcrumbs;
+
