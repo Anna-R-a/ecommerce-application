@@ -57,7 +57,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       dataSource={props.data}
       renderItem={(item) => (
         <List.Item>
-          <Link to={`/products/${item.key}`} className="product__link">
+          <Link to={`/products/${item.key}`} key={item.key} className="product__link">
             <Card
               className="card__item"
               cover={<img alt={name(item)} src={image(item)} />}
