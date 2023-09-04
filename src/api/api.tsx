@@ -6,17 +6,22 @@ export const getProducts = () => {
   return apiRootAnonymous.products().get().execute();
 };
 
-// export const getProductsFromCategory = async (categoryId: string[]) => {
-//   return apiRootAnonymous
-//     .productProjections()
-//     .search()
-//     .get({
-//       queryArgs: {
-//         filter: [`categories.id:"${categoryId.join('","')}"`],
-//       },
-//     })
-//     .execute();
-// };
+export const getProductsBySearch = async (text: string) => {
+  if (text) {
+    return apiRootAnonymous
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          offset: 0,
+          "text.en": text,
+          fuzzy: true,
+          fuzzyLevel: 1,
+        },
+      })
+      .execute();
+  }
+};
 
 export const getProductsFromCategory = async (
   categoryId: string[],
