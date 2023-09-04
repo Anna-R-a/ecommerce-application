@@ -21,7 +21,7 @@ export const getProducts = () => {
 export const getProductsFromCategory = async (
   categoryId: string[],
   sorting: { name: string; price: string },
-  filter: { name: string; value: CheckboxValueType[] }[]
+  filter: { name: string; value: CheckboxValueType[] }[],
 ) => {
   const sortingOptions = [];
   const filterOptions = [`categories.id:"${categoryId.join('","')}"`];
@@ -65,7 +65,7 @@ export const getProductsFromCategory = async (
 // };
 
 export const getProductsAttributes = async (
-  filter: { name: string; value: CheckboxValueType[] }[]
+  filter: { name: string; value: CheckboxValueType[] }[],
 ) => {
   const filterOptions = filter.map((item) => {
     return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;

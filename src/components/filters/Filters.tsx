@@ -60,7 +60,7 @@ export const Filters: React.FC<Props> = (props: Props) => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     setFilter((prev) => {
       prev = prev.length === 1 && prev[0].name === nameFilter ? [] : prev;
