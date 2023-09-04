@@ -19,6 +19,31 @@
 .catalog__wrapper {
   width: 100%;
   display: flex;
+  flex-wrap: wrap !important;
+  background: var(--background-color) !important;
+}
+
+.sider__wrapper {
+  background: var(--background-color) !important;
+}
+
+@media (max-width: 550px) {
+  .catalog__wrapper {
+    flex-direction: column !important;
+  }
+  .sider__wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .filter-group .ant-space-item:first-child {
+    text-align: center;
+  }
+  .ant-checkbox-group {
+    justify-content: center;
+  }
+  .ant-layout {
+    width: 100% !important;
+  }
 }
 
 .menu__link {
@@ -90,6 +115,7 @@
   flex-wrap: wrap;
   color: var(--text-secondary-color);
   padding-bottom: 8px;
+  min-width: 300px;
 }
 
 .ant-input-affix-wrapper:hover,

@@ -18,7 +18,6 @@ import {
   Category,
   ProductProjection,
 } from "@commercetools/platform-sdk";
-import { AudioOutlined } from "@ant-design/icons";
 import "./Catalog.css";
 
 const { Sider, Content } = Layout;
@@ -356,9 +355,9 @@ const CatalogPage: React.FC = () => {
   };
 
   return (
-    <Layout style={{ width: "100%" }} className="catalog__wrapper">
+    <Layout className="catalog__wrapper">
       {/* <SiderMenu /> */}
-      <Sider width={200} style={{ background: "#fff" }}>
+      <Sider width={200} className="sider__wrapper">
         <h2>Farmer Goods</h2>
         <Menu
           mode="inline"

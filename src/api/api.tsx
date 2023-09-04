@@ -9,17 +9,17 @@ export const getProducts = () => {
 export const getProductsBySearch = async (text: string) => {
   if (text) {
     return apiRootAnonymous
-    .productProjections()
-    .search()
-    .get({
-      queryArgs: {
-        offset: 0,
-        "text.en": text,
-        fuzzy: true,
-        fuzzyLevel: 1,
-      },
-    })
-    .execute();
+      .productProjections()
+      .search()
+      .get({
+        queryArgs: {
+          offset: 0,
+          "text.en": text,
+          fuzzy: true,
+          fuzzyLevel: 1,
+        },
+      })
+      .execute();
   }
 };
 
