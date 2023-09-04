@@ -1,4 +1,4 @@
-import { Button, Cascader, Form, Input } from "antd";
+import { Button, Cascader, Form, Input, Radio, RadioChangeEvent } from "antd";
 import {
   postCodesRegEx,
   residences,
@@ -14,6 +14,7 @@ export const ProfileEmptyAddressesForm = () => {
   const [form] = Form.useForm();
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [country, setCountry] = useState("");
+  const [valueAddress, setValueAddress] = useState('shipping');
 
   React.useEffect(() => {
     const getCustomer = async () => {
@@ -39,11 +40,32 @@ export const ProfileEmptyAddressesForm = () => {
             postalCode: values.postalCode,
           },
         },
-      ]).then(() => {
+      ]).then((res) => {
+        const id = res.body.addresses[res.body.addresses.length - 1].id;
+        if(valueAddress === 'shipping' && id){
+          updateCustomer(customerId, version + 1, [
+            {
+              action: "addShippingAddressId",
+              addressId: id,
+            } 
+          ])
+        } else if(valueAddress === 'billing' && id){
+          updateCustomer(customerId, version + 1, [
+            {
+              action: "addBillingAddressId",
+              addressId: id,
+            } 
+          ])
+        }
         form.resetFields();
         notify("General data changed", "success");
       });
     }
+  };
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value);
+    setValueAddress(e.target.value);
   };
 
   return (
@@ -118,6 +140,10 @@ export const ProfileEmptyAddressesForm = () => {
       >
         <Input style={{ width: "100%" }} />
       </Form.Item>
+      <Radio.Group onChange={onChange} defaultValue={valueAddress}>
+        <Radio value="shipping">shipping adress</Radio>
+        <Radio value="billing">billing adress</Radio>
+      </Radio.Group>
       <Button
         type="primary"
         htmlType="submit"
