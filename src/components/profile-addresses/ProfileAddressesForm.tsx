@@ -6,17 +6,22 @@ import {
 import { useState } from "react";
 import { Address, ClientResponse, Customer } from "@commercetools/platform-sdk";
 import { notify } from "../notification/notification";
-import { updateCustomer } from "../../api/customer/updateCustomer";
 import React from "react";
 import { queryCustomer } from "../../api/customer/queryCustomer";
+import { updateCustomer } from "../../api/customer/updateCustomer";
+
+type ProfileAddressesFormProps = Address & {
+  updateAdresses: () => void;
+};
 
 export const ProfileAddressesForm = ({
+  updateAdresses,
   country,
   city,
   streetName,
   postalCode,
   id,
-}: Address) => {
+}: ProfileAddressesFormProps) => {
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [countryChanged, setCountryChanged] = useState("");
   const [version, setVersion] = useState(0);
@@ -47,6 +52,7 @@ export const ProfileAddressesForm = ({
           },
         },
       ]).then(() => {
+        updateAdresses();
         notify("General data changed", "success");
         setVersion((v) => v + 1);
       });

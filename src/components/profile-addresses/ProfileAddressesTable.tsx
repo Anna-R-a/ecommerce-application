@@ -5,10 +5,43 @@ import { Button, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { ProfileAddressesForm } from "./ProfileAddressesForm";
 import { ProfileEmptyAddressesForm } from "./ProfileEmptyAddressForm";
+import { notify } from "../notification/notification";
+import { updateCustomer } from "../../api/customer/updateCustomer";
+
+interface DataType {
+  key: string;
+  city: string;
+  streetName: string;
+  country: string;
+  postalCode: string;
+}
+
+function mapToDataType(data: Address[]) {
+  const result: DataType[] = [];
+  data.forEach((adress) => {
+    result.push({
+      key: adress.id || "",
+      city: adress.city || "",
+      streetName: adress.streetName || "",
+      country: adress.country || "",
+      postalCode: adress.postalCode || "",
+    });
+  });
+  return result;
+}
 
 export const ProfileAddressesTable: React.FC = () => {
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [click, setClick] = useState(false);
+  const [version, setVersion] = useState(0);
+
+  const updateAdresses = async () => {
+    const id = localStorage.getItem("id");
+    if (id) {
+      setCustomer(await queryCustomer(id));
+    }
+    setVersion((v) => v + 1);
+  };
 
   React.useEffect(() => {
     const getCustomer = async () => {
@@ -18,29 +51,7 @@ export const ProfileAddressesTable: React.FC = () => {
       }
     };
     getCustomer();
-  }, []);
-
-  interface DataType {
-    key: string;
-    city: string;
-    streetName: string;
-    country: string;
-    postalCode: string;
-  }
-
-  function mapToDataType(data: Address[]) {
-    const result: DataType[] = [];
-    data.forEach((adress) => {
-      result.push({
-        key: adress.id || "",
-        city: adress.city || "",
-        streetName: adress.streetName || "",
-        country: adress.country || "",
-        postalCode: adress.postalCode || "",
-      });
-    });
-    return result;
-  }
+  }, [version]);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -108,15 +119,72 @@ export const ProfileAddressesTable: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_, record) => {
+        const deleteAdress = () => {
+          const version = customer?.body.version;
+          const customerId = customer?.body.id;
+          if (version && customerId) {
+            updateCustomer(customerId, version, [
+              {
+                action: "removeAddress",
+                addressId: record.key,
+              },
+            ]).then(() => {
+              notify("Address deleted", "success");
+              setVersion((v) => v + 1);
+            });
+          }
+        };
+
+        const setDefault = () => {
+          const version = customer?.body.version;
+          const customerId = customer?.body.id;
+          if (
+            customer?.body.shippingAddressIds?.includes(record.key) &&
+            version &&
+            customerId
+          ) {
+            updateCustomer(customerId, version, [
+              {
+                action: "setDefaultShippingAddress",
+                addressId: record.key,
+              },
+            ]).then(() => {
+              notify("Address as default shipping", "success");
+              setVersion((v) => v + 1);
+            });
+          }
+          if (
+            customer?.body.billingAddressIds?.includes(record.key) &&
+            version &&
+            customerId
+          ) {
+            updateCustomer(customerId, version, [
+              {
+                action: "setDefaultBillingAddress",
+                addressId: record.key,
+              },
+            ]).then(() => {
+              notify("Address as default billing", "success");
+              setVersion((v) => v + 1);
+            });
+          }
+        };
+
         if (
           record.key === customer?.body.defaultShippingAddressId ||
           record.key === customer?.body.defaultBillingAddressId
         ) {
           return (
-            <Space size="middle">
-              <Button disabled>as default shipping</Button>
-              <Button disabled>as default billing</Button>
-              <Button>Delete</Button>
+            <Space size="small">
+              <Button disabled>as default</Button>
+              <Button onClick={deleteAdress}>Delete</Button>
+            </Space>
+          );
+        } else {
+          return (
+            <Space size="small">
+              <Button onClick={setDefault}>as default</Button>
+              <Button onClick={deleteAdress}>Delete</Button>
             </Space>
           );
         }
@@ -125,7 +193,7 @@ export const ProfileAddressesTable: React.FC = () => {
   ];
 
   const onClick = () => {
-    setClick(true);
+    setClick((v) => !v);
   };
 
   const AddressesTable = () => (
@@ -140,13 +208,19 @@ export const ProfileAddressesTable: React.FC = () => {
             streetName={record.streetName || ""}
             postalCode={record.postalCode || ""}
             id={record.key || ""}
+            updateAdresses={updateAdresses}
           />
         ),
       }}
       footer={() => {
         return (
           <>
-            {click && <ProfileEmptyAddressesForm />}
+            {click && (
+              <ProfileEmptyAddressesForm
+                updateAdresses={updateAdresses}
+                setClick={onClick}
+              />
+            )}
             {!click && <Button onClick={onClick}>add new address</Button>}
           </>
         );
