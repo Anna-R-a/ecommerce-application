@@ -12,7 +12,7 @@ import { notify } from "../notification/notification";
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
 function toArr(
-  str: string | number | (string | number)[],
+  str: string | number | (string | number)[]
 ): (string | number)[] {
   return Array.isArray(str) ? str : [str];
 }
@@ -170,7 +170,12 @@ export const ProfileGeneralForm: React.FC = () => {
             />
           </MyFormItem>
 
-          <Button type="primary" htmlType="submit" disabled={disabled}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={disabled}
+            className="button_primary"
+          >
             Save changes
           </Button>
         </Form>

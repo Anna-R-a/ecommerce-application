@@ -214,15 +214,23 @@ export const ProfileAddressesTable: React.FC = () => {
       }}
       footer={() => {
         return (
-          <>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             {click && (
               <ProfileEmptyAddressesForm
                 updateAdresses={updateAdresses}
                 setClick={onClick}
               />
             )}
-            {!click && <Button onClick={onClick}>add new address</Button>}
-          </>
+            {!click && (
+              <Button
+                type="primary"
+                onClick={onClick}
+                className="button_primary"
+              >
+                add new address
+              </Button>
+            )}
+          </div>
         );
       }}
     />

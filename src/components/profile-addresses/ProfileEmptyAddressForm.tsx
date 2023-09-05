@@ -153,8 +153,8 @@ export const ProfileEmptyAddressesForm = ({
         <Input style={{ width: "100%" }} />
       </Form.Item>
       <Radio.Group onChange={onChange} defaultValue={valueAddress}>
-        <Radio value="shipping">shipping adress</Radio>
-        <Radio value="billing">billing adress</Radio>
+        <Radio value="shipping">shipping address</Radio>
+        <Radio value="billing">billing address</Radio>
       </Radio.Group>
       <Button
         type="primary"
