@@ -73,7 +73,7 @@ export const ProfilePasswordForm: React.FC = () => {
               },
               {
                 pattern: new RegExp(
-                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/
+                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
                 ),
                 message:
                   "Password must be at least one uppercase and lowercase letter, digit and special character",
@@ -98,7 +98,7 @@ export const ProfilePasswordForm: React.FC = () => {
               },
               {
                 pattern: new RegExp(
-                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/
+                  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
                 ),
                 message:
                   "Password must be at least one uppercase and lowercase letter, digit and special character",
@@ -126,7 +126,9 @@ export const ProfilePasswordForm: React.FC = () => {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error("The new password that you entered do not match!")
+                    new Error(
+                      "The new password that you entered do not match!",
+                    ),
                   );
                 },
               }),
