@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
 export const ProtectedRouteProfile = ({ children }: ProtectedRouteProps) => {
   const isLogged = localStorage.getItem("isLogged");
   if (!isLogged) {
-    return <Navigate to="/registration" />;
+    return <Navigate to="/login" />;
   }
   return children;
 };
