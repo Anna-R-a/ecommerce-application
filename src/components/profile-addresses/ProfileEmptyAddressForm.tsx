@@ -10,7 +10,15 @@ import { Address, ClientResponse, Customer } from "@commercetools/platform-sdk";
 import { updateCustomer } from "../../api/customer/updateCustomer";
 import { notify } from "../notification/notification";
 
-export const ProfileEmptyAddressesForm = () => {
+type ProfileAddressesEmptyFormProps = {
+  updateAdresses: () => void;
+  setClick: () => void;
+};
+
+export const ProfileEmptyAddressesForm = ({
+  updateAdresses,
+  setClick,
+}: ProfileAddressesEmptyFormProps) => {
   const [form] = Form.useForm();
   const [customer, setCustomer] = useState<ClientResponse<Customer>>();
   const [country, setCountry] = useState("");
@@ -40,31 +48,35 @@ export const ProfileEmptyAddressesForm = () => {
             postalCode: values.postalCode,
           },
         },
-      ]).then((res) => {
-        const id = res.body.addresses[res.body.addresses.length - 1].id;
-        if (valueAddress === "shipping" && id) {
-          updateCustomer(customerId, version + 1, [
-            {
-              action: "addShippingAddressId",
-              addressId: id,
-            },
-          ]);
-        } else if (valueAddress === "billing" && id) {
-          updateCustomer(customerId, version + 1, [
-            {
-              action: "addBillingAddressId",
-              addressId: id,
-            },
-          ]);
-        }
-        form.resetFields();
-        notify("General data changed", "success");
-      });
+      ])
+        .then((res) => {
+          const id = res.body.addresses[res.body.addresses.length - 1].id;
+          if (valueAddress === "shipping" && id) {
+            updateCustomer(customerId, version + 1, [
+              {
+                action: "addShippingAddressId",
+                addressId: id,
+              },
+            ]);
+          } else if (valueAddress === "billing" && id) {
+            updateCustomer(customerId, version + 1, [
+              {
+                action: "addBillingAddressId",
+                addressId: id,
+              },
+            ]);
+          }
+          form.resetFields();
+          notify("General data changed", "success");
+        })
+        .then(() => {
+          updateAdresses();
+          setClick();
+        });
     }
   };
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
     setValueAddress(e.target.value);
   };
 
@@ -141,8 +153,8 @@ export const ProfileEmptyAddressesForm = () => {
         <Input style={{ width: "100%" }} />
       </Form.Item>
       <Radio.Group onChange={onChange} defaultValue={valueAddress}>
-        <Radio value="shipping">shipping adress</Radio>
-        <Radio value="billing">billing adress</Radio>
+        <Radio value="shipping">shipping address</Radio>
+        <Radio value="billing">billing address</Radio>
       </Radio.Group>
       <Button
         type="primary"

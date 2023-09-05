@@ -136,7 +136,12 @@ export const ProfilePasswordForm: React.FC = () => {
           >
             <Input.Password />
           </Form.Item>
-          <Button type="primary" htmlType="submit" disabled={disabled}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={disabled}
+            className="button_primary"
+          >
             Save new password
           </Button>
         </Form>

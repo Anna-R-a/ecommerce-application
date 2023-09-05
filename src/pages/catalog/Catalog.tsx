@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Checkbox, Dropdown, Layout, Menu, Space, Input } from "antd";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  Layout,
+  Menu,
+  Space,
+  Input,
+  Slider,
+} from "antd";
 import type { CheckboxOptionType, MenuProps } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
@@ -8,6 +17,7 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
+  getProductPrices,
   getProductType,
   getProductsBySearch,
   getProductsFromCategory,
@@ -39,7 +49,7 @@ type Filter = {
 };
 
 const CatalogPage: React.FC = () => {
-  const { key } = useParams();
+  const { keyCatalog } = useParams();
 
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
@@ -49,7 +59,7 @@ const CatalogPage: React.FC = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
   const [data, setData] = useState<ProductProjection[]>([]);
 
-  const [filter, setFilter] = useState<
+  const [totalFilter, setTotalFilter] = useState<
     { name: string; value: CheckboxValueType[] }[]
   >([]);
 
@@ -57,35 +67,53 @@ const CatalogPage: React.FC = () => {
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [selectSorting, setSelectSorting] = useState({ name: "", price: "" });
 
+  // delete filters when category change
   useEffect(() => {
-    const allCategoriesID = [
-      "241d5c5d-f8cc-45be-866f-14af2c0c150c",
-      "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
-      "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
-    ];
-    // get Products for display in ListProduct
-    if (!key) {
+    setTotalFilter([]);
+    setSelectFilters([]);
+  }, [selectCategory]);
+
+  // get Products for display in ListProduct
+  useEffect(() => {
+    // if catalog page
+    if (!keyCatalog) {
       localStorage.setItem("currentCategory", "");
-      //setFilter([]);
       setSelectCategory("");
       setOpenKeys([""]);
-      getProductsFromCategory(allCategoriesID, selectSorting, filter)
+      //setTotalFilter([]);
+      const allCategoriesID = [
+        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
+        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
+        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
+      ];
+      getProductsFromCategory(allCategoriesID, selectSorting, totalFilter)
         .then((res) => {
           setData(res.body.results);
         })
         .catch(console.error);
     } else {
+      // if others pages
       localStorage.setItem("currentCategory", selectCategory);
-      getProductsFromCategory([selectCategory], selectSorting, filter)
+      getProductsFromCategory([selectCategory], selectSorting, totalFilter)
         .then((res) => {
           console.log("res", res);
           setData(res.body.results);
         })
         .catch(console.error);
     }
-    // get ProductType for display filter
-    if (key === "berries" || key === "fruits" || key === "vegetables") {
-      getProductType(key)
+  }, [totalFilter, keyCatalog, selectCategory, selectSorting]);
+
+  // get ProductType for display filter on parent categories only
+  useEffect(() => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+    setValuesRanger([0, 15]);
+    if (
+      keyCatalog === "berries" ||
+      keyCatalog === "fruits" ||
+      keyCatalog === "vegetables"
+    ) {
+      getProductType(keyCatalog)
         .then((res) => {
           if (res.body.attributes) {
             getFilterAttribute(res.body.attributes);
@@ -95,10 +123,10 @@ const CatalogPage: React.FC = () => {
     } else {
       setFiltersCategory([]);
     }
-  }, [filter, key, selectCategory, selectSorting]);
+  }, [keyCatalog]);
 
+  // get Categories for display SiderMenu
   useEffect(() => {
-    // get Categories for display SiderMenu
     getCategories()
       .then((res) => {
         const structureMenu = createStructureMenu(res.body.results);
@@ -173,12 +201,6 @@ const CatalogPage: React.FC = () => {
   };
 
   const onFilters = (checkedValues: CheckboxValueType[]) => {
-    if (checkedValues.length > 0) {
-      setSelectFilters(checkedValues);
-    } else {
-      setSelectFilters([]);
-    }
-    console.log("checkedValues", checkedValues);
     let nameFilter = "";
     filtersCategory.forEach((item) => {
       item.value.forEach((value) => {
@@ -187,6 +209,13 @@ const CatalogPage: React.FC = () => {
         }
       });
     });
+
+    if (checkedValues.length > 0) {
+      setSelectFilters(checkedValues);
+    } else {
+      setSelectFilters([]);
+    }
+    setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
 
@@ -194,37 +223,48 @@ const CatalogPage: React.FC = () => {
     nameFilter: string,
     checkedValues: CheckboxValueType[],
   ) => {
-    console.log("nameFilter", nameFilter);
+    console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
-      ? setFilter([])
-      : setFilter([{ name: nameFilter, value: checkedValues }]);
+      ? setTotalFilter([])
+      : setTotalFilter([{ name: nameFilter, value: checkedValues }]);
 
-    //setFilter((prev) => {
-    // prev = prev.length === 1 && prev[0].name === nameFilter ? [] : prev;
-    // if (prev.length > 1) {
-    //   const selectPrev: { name: string; value: CheckboxValueType[] }[] = [];
+    // setTotalFilter((prev) => {
+    //   if (prev.length > 0) {
+    //   let allFilters: { name: string; value: CheckboxValueType[] }[] = [];
+    //   let identicalFilter = false;
     //   prev.forEach((item) => {
-    //     if (item.name !== nameFilter) {
-    //       selectPrev.push(item);
+    //     if (item.name === nameFilter) {
+    //       allFilters.push({ name: nameFilter, value: checkedValues });
+    //       identicalFilter = true;
+    //     } else {
+    //       allFilters.push(item);
     //     }
     //   });
-    //   prev = [...selectPrev];
-    // }
-    // return checkedValues.length === 0
-    //   ? prev
-    //   : [...prev, { name: nameFilter, value: checkedValues }];
-    //});
-    // const selectFilter: CheckboxValueType[] = [];
-
-    // setSelectFilters([]);
-    // filter.forEach((item) => {
-    //   console.log("filter", filter);
-    //selectFilter.concat(item.value);
-    // setSelectFilters((prev) => {
-    //   return prev.concat(item.value);
-    // })
+    //   console.log("allFilters1", allFilters);
+    //   if (identicalFilter) {
+    //     console.log("allFilters2", allFilters);
+    //     return [...allFilters];
+    //   } else {
+    //     allFilters = [...prev, { name: nameFilter, value: checkedValues }];
+    //     console.log("allFilters3", allFilters);
+    //     return allFilters;
+    //   }
+    //   } else {
+    //     return [{ name: nameFilter, value: checkedValues }];
+    //   }
     // });
-    // console.log("filter2", filter);
+    //console.log("allFilters4", allFilters);
+
+    // const selectFilter: CheckboxValueType[] = [];
+    // //setSelectFilters([]);
+    // setSelectFilters((prev) => {
+    //   allFilters.forEach((item) => {
+    //     selectFilter.push(...item.value);
+    //   });
+    //   console.log('selectFilter', selectFilter);
+    //   return selectFilter;
+    // });
+    // console.log("filter2", totalFilter);
   };
 
   const getFilterAttribute = (attributes: AttributeDefinition[]) => {
@@ -273,7 +313,7 @@ const CatalogPage: React.FC = () => {
 
   const handleClickName: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: e.key, price: "" });
-    getProductsFromCategory([selectCategory], selectSorting, filter)
+    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
       .then((res) => {
         setData(res.body.results);
       })
@@ -282,7 +322,7 @@ const CatalogPage: React.FC = () => {
 
   const handleClickPrice: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: "", price: e.key });
-    getProductsFromCategory([selectCategory], selectSorting, filter)
+    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
       .then((res) => {
         setData(res.body.results);
       })
@@ -354,6 +394,34 @@ const CatalogPage: React.FC = () => {
       .catch(console.error);
   };
 
+  const [valuesRanger, setValuesRanger] = useState<[number, number]>([0, 15]);
+
+  const Ranger: React.FC = () => {
+    const handleChange = (newValues: [number, number]) =>
+      setValuesRanger(newValues);
+    const onAfterChange = (values: [number, number]) => {
+      getProductPrices(values).then((res) => {
+        setData(res.body.results);
+      });
+    };
+
+    return (
+      <div className="slider-price">
+        <p className="slider-price__title">Price</p>
+        <Slider
+          className="slider-range"
+          range={{ draggableTrack: true }}
+          defaultValue={[0, 15]}
+          min={0}
+          max={15}
+          value={valuesRanger}
+          onChange={handleChange}
+          onAfterChange={onAfterChange}
+        />
+      </div>
+    );
+  };
+
   return (
     <Layout className="catalog__wrapper">
       {/* <SiderMenu /> */}
@@ -371,6 +439,7 @@ const CatalogPage: React.FC = () => {
           onClick={onClickMenu}
         />
         <Filters />
+        <Ranger />
       </Sider>
       <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
         <Content

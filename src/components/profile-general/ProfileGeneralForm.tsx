@@ -170,7 +170,12 @@ export const ProfileGeneralForm: React.FC = () => {
             />
           </MyFormItem>
 
-          <Button type="primary" htmlType="submit" disabled={disabled}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={disabled}
+            className="button_primary"
+          >
             Save changes
           </Button>
         </Form>

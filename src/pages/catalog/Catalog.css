@@ -140,3 +140,21 @@
   color: var(--background-color) !important;
   background-color: var(--light-color) !important;
 }
+
+.slider-price {
+  width: 100%;
+  padding: 10px;
+}
+
+.slider-price__title {
+  color: var(--dark-color) !important;
+  font-weight: bold;
+}
+
+.slider-price .ant-slider-track {
+  background-color: var(--medium-color) !important;
+}
+
+.slider-price .ant-slider-handle::after {
+  box-shadow: 0 0 0 2px var(--light-color) !important;
+}
