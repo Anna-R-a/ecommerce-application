@@ -48,6 +48,7 @@ export const getProductsFromCategory = async (
     .search()
     .get({
       queryArgs: {
+        limit: 100,
         filter: filterOptions,
         sort: sortingOptions,
       },
@@ -55,19 +56,20 @@ export const getProductsFromCategory = async (
     .execute();
 };
 
-// export const getProductGroups = async (childPathArgs: { key: string }) => {
-//    const res = apiRoot.attributeGroups().withKey(childPathArgs).get().execute();
-
-//    return apiRootAnonymous
-//    .productProjections()
-//    .search()
-//    .get({
-//      queryArgs: {
-//        filter: `variants.attributes.${(await res).body.attributes[0]}.key:"${item.value.join('","')}"`,
-//      },
-//    })
-//    .execute();
-// };
+export const getProductPrices = async ([key1, key2]: [number, number]) => {
+  return apiRootAnonymous
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        limit: 100,
+        "filter.query": [
+          `variants.price.centAmount:range ( ${key1 * 100} to ${key2 * 100})`,
+        ],
+      },
+    })
+    .execute();
+};
 
 export const getProductsAttributes = async (
   filter: { name: string; value: CheckboxValueType[] }[],
