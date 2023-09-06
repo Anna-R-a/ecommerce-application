@@ -80,7 +80,7 @@ export const ProfileAddressesForm = ({
               message: "Please select your Country!",
             },
           ]}
-          initialValue={country}
+          initialValue={[country]}
         >
           <Cascader options={residences} />
         </Form.Item>
