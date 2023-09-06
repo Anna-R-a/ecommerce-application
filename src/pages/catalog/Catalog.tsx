@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Button,
@@ -13,7 +13,6 @@ import {
 import type { CheckboxOptionType, MenuProps } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-// import SiderMenu from "../../components/sider-menu/SiderMenu";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
