@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Button,
@@ -210,18 +210,26 @@ const CatalogPage: React.FC = () => {
       });
     });
 
-    if (checkedValues.length > 0) {
-      setSelectFilters(checkedValues);
-    } else {
-      setSelectFilters([]);
-    }
+    // if (checkedValues.length > 0) {
+    //   setSelectFilters(checkedValues);
+    // } else {
+    //   setSelectFilters([]);
+    // }
     setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
 
+  useEffect(() => {
+    let selectFilter: CheckboxValueType[] = [];
+    totalFilter.forEach((item) => {
+      selectFilter.push(...item.value);
+    });
+    setSelectFilters(selectFilter);
+  }, [totalFilter]);
+
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
@@ -229,7 +237,6 @@ const CatalogPage: React.FC = () => {
       : setTotalFilter([{ name: nameFilter, value: checkedValues }]);
 
     // setTotalFilter((prev) => {
-    //   if (prev.length > 0) {
     //   let allFilters: { name: string; value: CheckboxValueType[] }[] = [];
     //   let identicalFilter = false;
     //   prev.forEach((item) => {
@@ -240,31 +247,13 @@ const CatalogPage: React.FC = () => {
     //       allFilters.push(item);
     //     }
     //   });
-    //   console.log("allFilters1", allFilters);
     //   if (identicalFilter) {
-    //     console.log("allFilters2", allFilters);
     //     return [...allFilters];
     //   } else {
     //     allFilters = [...prev, { name: nameFilter, value: checkedValues }];
-    //     console.log("allFilters3", allFilters);
     //     return allFilters;
     //   }
-    //   } else {
-    //     return [{ name: nameFilter, value: checkedValues }];
-    //   }
     // });
-    //console.log("allFilters4", allFilters);
-
-    // const selectFilter: CheckboxValueType[] = [];
-    // //setSelectFilters([]);
-    // setSelectFilters((prev) => {
-    //   allFilters.forEach((item) => {
-    //     selectFilter.push(...item.value);
-    //   });
-    //   console.log('selectFilter', selectFilter);
-    //   return selectFilter;
-    // });
-    // console.log("filter2", totalFilter);
   };
 
   const getFilterAttribute = (attributes: AttributeDefinition[]) => {
@@ -289,24 +278,26 @@ const CatalogPage: React.FC = () => {
   const Filters: React.FC = () => {
     return (
       <>
-        {filtersCategory.map((item) => (
-          <Space
-            direction="vertical"
-            size="middle"
-            style={{ display: "flex", padding: "10px" }}
-            key={item.keyField}
-            className="filter-group"
-          >
-            <span>{item.labelField}</span>
-            <Checkbox.Group
-              key={item.labelField}
-              name={item.keyField}
-              options={item.value}
-              value={selectFilters}
-              onChange={onFilters}
-            />
-          </Space>
-        ))}
+        {filtersCategory.map((item) => {
+          return (
+            <Space
+              direction="vertical"
+              size="middle"
+              style={{ display: "flex", padding: "10px" }}
+              key={item.keyField}
+              className="filter-group"
+            >
+              <span>{item.labelField}</span>
+              <Checkbox.Group
+                key={item.labelField}
+                name={item.keyField}
+                options={item.value}
+                value={selectFilters}
+                onChange={onFilters}
+              />
+            </Space>
+          );
+        })}
       </>
     );
   };
@@ -422,6 +413,12 @@ const CatalogPage: React.FC = () => {
     );
   };
 
+  const onClearFilters = () => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+    setValuesRanger([0, 15]);
+  };
+
   return (
     <Layout className="catalog__wrapper">
       {/* <SiderMenu /> */}
@@ -440,6 +437,13 @@ const CatalogPage: React.FC = () => {
         />
         <Filters />
         <Ranger />
+        <Button
+          type="primary"
+          onClick={onClearFilters}
+          className="button_primary"
+        >
+          Clear
+        </Button>
       </Sider>
       <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
         <Content

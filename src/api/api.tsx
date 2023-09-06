@@ -31,7 +31,10 @@ export const getProductsFromCategory = async (
   const sortingOptions = [];
   const filterOptions = [`categories.id:"${categoryId.join('","')}"`];
   const filterAttributes = filter.map((item) => {
-    return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
+    if (item.value.length > 0) {
+      return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
+    }
+    return ``;
   });
   if (filter.length > 0) {
     filterOptions.push(...filterAttributes);

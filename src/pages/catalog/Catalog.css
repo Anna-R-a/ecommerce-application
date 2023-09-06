@@ -158,3 +158,7 @@
 .slider-price .ant-slider-handle::after {
   box-shadow: 0 0 0 2px var(--light-color) !important;
 }
+
+.sider__wrapper .button_primary {
+  width: 100px;
+}
