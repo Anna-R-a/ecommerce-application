@@ -164,6 +164,7 @@ export const ProfileGeneralForm: React.FC = () => {
             ]}
           >
             <DatePicker
+            onChange={onChange}
               disabledDate={disabledDate}
               style={{ width: "100%" }}
               defaultPickerValue={dayjs(customer?.body.dateOfBirth, dateFormat)}
