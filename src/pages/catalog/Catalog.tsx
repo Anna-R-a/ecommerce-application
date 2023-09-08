@@ -208,12 +208,6 @@ const CatalogPage: React.FC = () => {
         }
       });
     });
-
-    // if (checkedValues.length > 0) {
-    //   setSelectFilters(checkedValues);
-    // } else {
-    //   setSelectFilters([]);
-    // }
     setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
@@ -234,25 +228,6 @@ const CatalogPage: React.FC = () => {
     checkedValues.length === 0
       ? setTotalFilter([])
       : setTotalFilter([{ name: nameFilter, value: checkedValues }]);
-
-    // setTotalFilter((prev) => {
-    //   let allFilters: { name: string; value: CheckboxValueType[] }[] = [];
-    //   let identicalFilter = false;
-    //   prev.forEach((item) => {
-    //     if (item.name === nameFilter) {
-    //       allFilters.push({ name: nameFilter, value: checkedValues });
-    //       identicalFilter = true;
-    //     } else {
-    //       allFilters.push(item);
-    //     }
-    //   });
-    //   if (identicalFilter) {
-    //     return [...allFilters];
-    //   } else {
-    //     allFilters = [...prev, { name: nameFilter, value: checkedValues }];
-    //     return allFilters;
-    //   }
-    // });
   };
 
   const getFilterAttribute = (attributes: AttributeDefinition[]) => {
@@ -420,7 +395,6 @@ const CatalogPage: React.FC = () => {
 
   return (
     <Layout className="catalog__wrapper">
-      {/* <SiderMenu /> */}
       <Sider width={200} className="sider__wrapper">
         <h2>Farmer Goods</h2>
         <Menu
