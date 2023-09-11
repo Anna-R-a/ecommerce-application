@@ -2,18 +2,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* flex-direction: column; */
-  /* width: 100%; */
-  /* max-width: 250px; */
-  max-height: 200px;
-  /* height: 200px; */
   flex: 1 1 200px;
   margin: 0 !important;
   margin-inline: 0 !important;
 }
 
+.list__products .ant-col,
+.list__products .ant-row > * {
+  display: flex;
+}
+
+.list__products .ant-list-item.product__item {
+  flex: 1 1 auto;
+  display: block;
+}
+
 .ant-card-meta-title {
   font-size: 15px !important;
+}
+
+.ant-card-body {
+  width: 100%;
 }
 
 .catalog__wrapper {

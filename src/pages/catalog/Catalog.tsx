@@ -222,7 +222,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0

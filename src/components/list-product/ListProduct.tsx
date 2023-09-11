@@ -55,8 +55,9 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       }}
       pagination={{ position: "bottom", align: "center" }}
       dataSource={props.data}
+      className="list__products"
       renderItem={(item) => (
-        <List.Item>
+        <List.Item className="product__item">
           <Link
             to={`/products/${item.key}`}
             key={item.key}
