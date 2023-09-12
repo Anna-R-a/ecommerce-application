@@ -101,10 +101,10 @@ const ProductPage: React.FC = () => {
           <Card className="price-block">
             <div className="price-info">
               <p className="price-text">
-                {`${priceDiscounted || price} $/kg    `}
+                {`$ ${priceDiscounted || price} per kg`}
               </p>
               <p className="price-discounted">
-                {priceDiscounted ? `${price} $/kg` : ""}
+                {priceDiscounted ? `$ ${price} per kg` : ""}
               </p>
               <p className="discount">
                 {priceDiscounted ? `- ${discount} %` : ""}

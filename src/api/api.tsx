@@ -74,22 +74,22 @@ export const getProductPrices = async ([key1, key2]: [number, number]) => {
     .execute();
 };
 
-export const getProductsAttributes = async (
-  filter: { name: string; value: CheckboxValueType[] }[],
-) => {
-  const filterOptions = filter.map((item) => {
-    return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
-  });
-  return apiRootAnonymous
-    .productProjections()
-    .search()
-    .get({
-      queryArgs: {
-        filter: filterOptions,
-      },
-    })
-    .execute();
-};
+// export const getProductsAttributes = async (
+//   filter: { name: string; value: CheckboxValueType[] }[],
+// ) => {
+//   const filterOptions = filter.map((item) => {
+//     return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
+//   });
+//   return apiRootAnonymous
+//     .productProjections()
+//     .search()
+//     .get({
+//       queryArgs: {
+//         filter: filterOptions,
+//       },
+//     })
+//     .execute();
+// };
 
 export const getProductType = async (key: string) => {
   return apiRootAnonymous.productTypes().withKey({ key: key }).get().execute();
@@ -99,16 +99,16 @@ export const getCategories = async () => {
   return apiRootAnonymous.categories().get().execute();
 };
 
-export const getCategoriesStructure = async () => {
-  return apiRootAnonymous
-    .categories()
-    .get({
-      queryArgs: {
-        expand: ["parent"],
-      },
-    })
-    .execute();
-};
+// export const getCategoriesStructure = async () => {
+//   return apiRootAnonymous
+//     .categories()
+//     .get({
+//       queryArgs: {
+//         expand: ["parent"],
+//       },
+//     })
+//     .execute();
+// };
 
 export const getCustomers = async () => {
   return apiRoot.customers().get().execute();

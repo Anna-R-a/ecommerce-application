@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, List } from "antd";
+import { Button, Card, List } from "antd";
 import { ProductProjection } from "@commercetools/platform-sdk";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import "./ListProduct.css";
 
 const { Meta } = Card;
-
 type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
@@ -21,7 +21,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45,
+        45
       )}...`;
       return descriptionShort;
     }
@@ -42,6 +42,10 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const discount = (price: number, priceDiscounted: number) =>
     Math.round(((price - priceDiscounted) * 100) / price);
 
+  const addToCart = () => {
+    console.log("addToCart");
+  };
+
   return (
     <List
       grid={{
@@ -53,35 +57,40 @@ const ListProduct: React.FC<Props> = (props: Props) => {
         xl: 4,
         xxl: 4,
       }}
-      pagination={{ position: "bottom", align: "center" }}
+      pagination={{ position: "bottom", align: "center", pageSize: 12 }}
       dataSource={props.data}
       className="list__products"
       renderItem={(item) => (
         <List.Item className="product__item">
-          <Link
+          {/* <Link
             to={`/products/${item.key}`}
             key={item.key}
             className="product__link"
+          > */}
+          <Card
+            className="card__item"
+            cover={<a href={`/products/${item.key}`}><img alt={name(item)} src={image(item)} /></a>}
+            actions={[
+              <Button
+                type="primary"
+                key="shoppingCart"
+                title="In cart"
+                size="middle"
+                className="button_primary"
+                onClick={addToCart}
+              >
+                <ShoppingCartOutlined key="shoppingCart" /> Add to cart
+              </Button>,
+            ]}
           >
-            <Card
-              className="card__item"
-              cover={<img alt={name(item)} src={image(item)} />}
-              actions={
-                [
-                  // <Button
-                  //   type="primary"
-                  //   key="shoppingCart"
-                  //   title="In cart"
-                  //   size="middle"
-                  //   className="button_primary"
-                  // >
-                  //   <ShoppingCartOutlined key="shoppingCart" />
-                  // </Button>,
-                ]
-              }
+            <Link
+              to={`/products/${item.key}`}
+              key={item.key}
+              className="product__link"
             >
               <Meta title={name(item)} description={description(item)} />
               <div className="product__price">
+
                 <span className="price__basic">
                   {`$ ${priceDiscounted(item) || price(item)}`}
                 </span>
@@ -94,8 +103,9 @@ const ListProduct: React.FC<Props> = (props: Props) => {
                     : ""}
                 </span>
               </div>
-            </Card>
-          </Link>
+            </Link>
+          </Card>
+          {/* </Link> */}
         </List.Item>
       )}
     />
