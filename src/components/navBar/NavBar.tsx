@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Menu, Button, Drawer } from "antd";
-import { UserOutlined, MenuOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  MenuOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { MenuInfo } from "rc-menu/lib/interface";
 import "./NavBar.css";
 
@@ -60,7 +64,7 @@ const subMenuWithAuth = [
   },
   {
     label: (
-      <Link to="/profile" className="profil">
+      <Link to="/profile" className="profile">
         Profile
       </Link>
     ),
@@ -92,6 +96,23 @@ const handlerLogInOut = (info: MenuInfo) => {
 export const UserBar: React.FC = () => {
   const location = useLocation();
 
+  const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
+  const countGoodsOnCart = totalLineItemQuantity ? totalLineItemQuantity : '0';
+  const [ countOnCart, setCountOnCart] = useState(countGoodsOnCart);
+
+  // useEffect(() => {
+  //   localStorage.setItem("totalLineItemQuantity", countOnCart);
+    //const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
+    //const countGoods = totalLineItemQuantity ? +totalLineItemQuantity : 0;
+    //const activeCart = localStorage.getItem("activeCart");
+    //if (activeCart) {
+      //const countGoodsOnCart = JSON.parse(activeCart).totalLineItemQuantity;
+      // console.log("countOnCart", countOnCart);
+      // setCountOnCart(countGoodsOnCart);
+      //console.log("countOnCart", countOnCart);
+    //}
+  // }, [countGoodsOnCart, countOnCart])
+
   const itemsUserBar: MenuProps["items"] = [
     {
       label: "",
@@ -104,13 +125,20 @@ export const UserBar: React.FC = () => {
   ];
 
   return (
-    <Menu
-      className="user-bar"
-      mode="horizontal"
-      items={itemsUserBar}
-      selectedKeys={[location.pathname]}
-      onClick={handlerLogInOut}
-    />
+    <div className="user-bar">
+      <Link to={"/cart"}>
+        <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
+        <span className="shoppingCart__count">{countOnCart}</span>
+      </Link>
+
+      <Menu
+        className="user-bar__navigation"
+        mode="horizontal"
+        items={itemsUserBar}
+        selectedKeys={[location.pathname]}
+        onClick={handlerLogInOut}
+      />
+    </div>
   );
 };
 
@@ -167,7 +195,7 @@ export const NavDrawer: React.FC = () => {
         />
 
         <Menu
-          className="user-bar"
+          className="user-bar__navigation"
           mode="inline"
           defaultOpenKeys={["SubMenu"]}
           items={itemsUserBar}

@@ -6,7 +6,7 @@ import {
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 import { createTokenCache } from "../token/tokenCache";
 
-type AnonymousAuthMiddlewareOptions = {
+type AuthMiddlewareOptions = {
   host: string;
   projectKey: string;
   credentials: {
@@ -22,17 +22,16 @@ type AnonymousAuthMiddlewareOptions = {
 
 const tokenCache = createTokenCache();
 
-export const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+export const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   credentials: {
     clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
     clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
-    // anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
   },
   scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch: fetch,
-  tokenCache,
+  //tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -40,19 +39,14 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
-export const anonymousClient = new ClientBuilder()
-  .withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
-  .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
+const ctpClient = new ClientBuilder()
+  .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();
 
-export const apiRootAnonymous = createApiBuilderFromCtpClient(
-  anonymousClient,
+export const apiRootClient = createApiBuilderFromCtpClient(
+  ctpClient
 ).withProjectKey({
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
 });
-
-export const getProjectAnonymous = () => {
-  return apiRootAnonymous.get().execute();
-};

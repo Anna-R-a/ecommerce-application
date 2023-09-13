@@ -12,7 +12,7 @@ import {
 
 export function mapRegDataToRequest(
   data: RegistrationData,
-  defaultAddresses: DefaultAddressesParams,
+  defaultAddresses: DefaultAddressesParams
 ): CustomerDraft {
   const {
     email,

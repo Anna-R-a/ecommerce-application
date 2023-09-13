@@ -1,9 +1,10 @@
-import React from "react";
+import React, { MouseEventHandler, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, List } from "antd";
 import { ProductProjection } from "@commercetools/platform-sdk";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import "./ListProduct.css";
+import { addProductToCart, createCart, getActiveCart } from "../../api/api";
 
 const { Meta } = Card;
 type Props = { data: ProductProjection[] };
@@ -42,8 +43,51 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const discount = (price: number, priceDiscounted: number) =>
     Math.round(((price - priceDiscounted) * 100) / price);
 
-  const addToCart = () => {
-    console.log("addToCart");
+
+    const buttonRef = useRef(null);
+
+  const addToCart = async (event: any) => {
+    console.log("addToCart", event);
+    let productId = "";
+    if (event.target.title) {
+      productId = event.target.title;
+      event.target.setAttribute("disabled", "disabled");
+    } else if (event.target.parentElement.title) {
+      productId = event.target.parentElement.title;
+      event.target.parentElement.setAttribute("disabled", "disabled");
+    } else if (
+      event.target.parentElement.parentElement.parentElement.parentElement.title
+    ) {
+      console.log(
+        "event.target.parentElement.title",
+        event.target.parentElement.parentElement.title
+      );
+      productId =
+        event.target.parentElement.parentElement.parentElement.parentElement
+          .title;
+    }
+
+    try {
+      const activeCart = await getActiveCart();
+      console.log("activeCart", activeCart);
+      if (activeCart.statusCode === 200) {
+        console.log("statusCode === 200");
+        const fullCart = await addProductToCart(activeCart.body, productId);
+        localStorage.setItem("activeCart", JSON.stringify(fullCart));
+        localStorage.setItem("totalLineItemQuantity", `${fullCart.body.totalLineItemQuantity}`);
+        console.log("fullCart", fullCart.body);
+      }
+    } catch (err: any) {
+      if (err.statusCode === 404) {
+        await createCart();
+        const activeCart = await getActiveCart();
+
+        const fullCart = await addProductToCart(activeCart.body, productId);
+        localStorage.setItem("activeCart", JSON.stringify(fullCart));
+        localStorage.setItem("totalLineItemQuantity", `${fullCart.body.totalLineItemQuantity}`);
+        console.log("fullCart new", fullCart.body.lineItems);
+      }
+    }
   };
 
   return (
@@ -62,19 +106,19 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       className="list__products"
       renderItem={(item) => (
         <List.Item className="product__item">
-          {/* <Link
-            to={`/products/${item.key}`}
-            key={item.key}
-            className="product__link"
-          > */}
           <Card
             className="card__item"
-            cover={<a href={`/products/${item.key}`}><img alt={name(item)} src={image(item)} /></a>}
+            cover={
+              <a href={`/products/${item.key}`}>
+                <img alt={name(item)} src={image(item)} />
+              </a>
+            }
             actions={[
               <Button
+                ref={buttonRef}
                 type="primary"
-                key="shoppingCart"
-                title="In cart"
+                key={item.key}
+                title={item.id}
                 size="middle"
                 className="button_primary"
                 onClick={addToCart}
@@ -90,7 +134,6 @@ const ListProduct: React.FC<Props> = (props: Props) => {
             >
               <Meta title={name(item)} description={description(item)} />
               <div className="product__price">
-
                 <span className="price__basic">
                   {`$ ${priceDiscounted(item) || price(item)}`}
                 </span>
@@ -105,7 +148,6 @@ const ListProduct: React.FC<Props> = (props: Props) => {
               </div>
             </Link>
           </Card>
-          {/* </Link> */}
         </List.Item>
       )}
     />

@@ -1,14 +1,17 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
+import { getTokenClient } from "./client/withTokenClient";
+import { Cart } from "@commercetools/platform-sdk";
+import { apiRootClient } from "./client/defaultFlow";
 
 export const getProducts = () => {
-  return apiRootAnonymous.products().get().execute();
+  return apiRootClient.products().get().execute();
 };
 
 export const getProductsBySearch = async (text: string) => {
   if (text) {
-    return apiRootAnonymous
+    return apiRootClient
       .productProjections()
       .search()
       .get({
@@ -26,7 +29,7 @@ export const getProductsBySearch = async (text: string) => {
 export const getProductsFromCategory = async (
   categoryId: string[],
   sorting: { name: string; price: string },
-  filter: { name: string; value: CheckboxValueType[] }[],
+  filter: { name: string; value: CheckboxValueType[] }[]
 ) => {
   const sortingOptions = [];
   const filterOptions = [`categories.id:"${categoryId.join('","')}"`];
@@ -46,7 +49,7 @@ export const getProductsFromCategory = async (
     ? sortingOptions.push(`price ${sorting.price}`)
     : sortingOptions.push("createdAt asc");
 
-  return apiRootAnonymous
+  return apiRootClient
     .productProjections()
     .search()
     .get({
@@ -60,7 +63,7 @@ export const getProductsFromCategory = async (
 };
 
 export const getProductPrices = async ([key1, key2]: [number, number]) => {
-  return apiRootAnonymous
+  return apiRootClient
     .productProjections()
     .search()
     .get({
@@ -74,41 +77,58 @@ export const getProductPrices = async ([key1, key2]: [number, number]) => {
     .execute();
 };
 
-// export const getProductsAttributes = async (
-//   filter: { name: string; value: CheckboxValueType[] }[],
-// ) => {
-//   const filterOptions = filter.map((item) => {
-//     return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
-//   });
-//   return apiRootAnonymous
-//     .productProjections()
-//     .search()
-//     .get({
-//       queryArgs: {
-//         filter: filterOptions,
-//       },
-//     })
-//     .execute();
-// };
-
 export const getProductType = async (key: string) => {
-  return apiRootAnonymous.productTypes().withKey({ key: key }).get().execute();
+  return apiRootClient.productTypes().withKey({ key: key }).get().execute();
 };
 
 export const getCategories = async () => {
-  return apiRootAnonymous.categories().get().execute();
+  return apiRootClient.categories().get().execute();
 };
 
-// export const getCategoriesStructure = async () => {
-//   return apiRootAnonymous
-//     .categories()
-//     .get({
-//       queryArgs: {
-//         expand: ["parent"],
-//       },
-//     })
-//     .execute();
-// };
+export const createCart = async () => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+  return tokenClient
+    .me()
+    .carts()
+    .post({
+      body: {
+        currency: "USD",
+      },
+    })
+    .execute();
+};
+
+export const getActiveCart = async () => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+  console.log("tokenClient", tokenClient);
+  return tokenClient.me().activeCart().get().execute();
+};
+
+export const addProductToCart = async (cart: Cart, productId: string) => {
+  // const activeCart = await getActiveCart();
+  //   const cartId = activeCart.body.id;
+  //   const cartVersion = activeCart.body.version;
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+  return tokenClient
+    .me()
+    .carts()
+    .withId({ ID: cart.id })
+    .post({
+      body: {
+        version: cart.version,
+        actions: [
+          {
+            action: "addLineItem",
+            productId: productId,
+          },
+        ],
+      },
+    })
+    .execute();
+};
 
 export const getCustomers = async () => {
   return apiRoot.customers().get().execute();

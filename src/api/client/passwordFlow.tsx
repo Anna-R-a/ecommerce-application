@@ -9,6 +9,7 @@ import {
   MyCustomerSignin,
   createApiBuilderFromCtpClient,
 } from "@commercetools/platform-sdk";
+import { authMiddlewareOptions } from "./createClient";
 
 const tokenCache = createTokenCache();
 
