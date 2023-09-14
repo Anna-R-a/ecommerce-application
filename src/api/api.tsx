@@ -2,7 +2,6 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
 import { getTokenClient } from "./client/withTokenClient";
-import { Cart } from "@commercetools/platform-sdk";
 import { apiRootClient } from "./client/defaultFlow";
 
 export const getProducts = () => {
@@ -88,6 +87,7 @@ export const getCategories = async () => {
 export const createCart = async () => {
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
   return tokenClient
     .me()
     .carts()
@@ -102,23 +102,25 @@ export const createCart = async () => {
 export const getActiveCart = async () => {
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
-  console.log("tokenClient", tokenClient);
+
   return tokenClient.me().activeCart().get().execute();
 };
 
-export const addProductToCart = async (cart: Cart, productId: string) => {
-  // const activeCart = await getActiveCart();
-  //   const cartId = activeCart.body.id;
-  //   const cartVersion = activeCart.body.version;
+export const addProductToCart = async (productId: string) => {
+  const activeCart = await getActiveCart();
+  const cartId = activeCart.body.id;
+  const cartVersion = activeCart.body.version;
+
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
   return tokenClient
     .me()
     .carts()
-    .withId({ ID: cart.id })
+    .withId({ ID: cartId })
     .post({
       body: {
-        version: cart.version,
+        version: cartVersion,
         actions: [
           {
             action: "addLineItem",
@@ -128,14 +130,6 @@ export const addProductToCart = async (cart: Cart, productId: string) => {
       },
     })
     .execute();
-};
-
-export const getCustomers = async () => {
-  return apiRoot.customers().get().execute();
-};
-
-export const getProjectDetails = () => {
-  return apiRoot.get().execute();
 };
 
 export const getProductDetails = async (childPathArgs: { key: string }) => {

@@ -18,6 +18,7 @@ const LoginPage: React.FC = () => {
   };
 
   const onFinish = (values: MyCustomerSignin) => {
+
     signInCustomer(values)
       .then((res) => {
         localStorage.setItem("isLogged", "true");

@@ -97,21 +97,66 @@ export const UserBar: React.FC = () => {
   const location = useLocation();
 
   const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
-  const countGoodsOnCart = totalLineItemQuantity ? totalLineItemQuantity : '0';
-  const [ countOnCart, setCountOnCart] = useState(countGoodsOnCart);
+  const countGoodsOnCart = totalLineItemQuantity ? totalLineItemQuantity : "0";
+  const [countOnCart, setCountOnCart] = useState(countGoodsOnCart);
+
+
+
+  
+  // const useLocalStorageEffect = (callback: (arg1: string, arg2: string, arg3: string) => {}, deps = []) => {
+  //   if (!_.isFunction(callback)) {
+  //     throw new Error('Callback in useLocalStorageEffect is not a function')
+  //   }
+  
+  //   if (!_.isArray(deps)) {
+  //     throw new Error('Depends in useLocalStorageEffect is not a Array')
+  //   }
+  
+  //   const storageListener = (event: Event) => {
+  //     const getLS: never | undefined = _.get(event, 'key');
+  //     if (_.size(deps) > 0 && getLS && deps.includes(getLS)) {
+  //       return callback(
+  //         _.get(event, 'key', ''),
+  //         JSON.parse(_.get(event, 'newValue', '')),
+  //         JSON.parse(_.get(event, 'oldValue', ''))
+  //       )
+  //     }
+  
+  //     if (_.isArray(deps) && _.size(deps) === 0) {
+  //       return callback(
+  //         _.get(event, 'key', ''),
+  //         JSON.parse(_.get(event, 'newValue', '')),
+  //         JSON.parse(_.get(event, 'oldValue', ''))
+  //       )
+  //     }
+  //   }
+  
+  //   useEffect(() => {
+  //     window.addEventListener('storage', storageListener, false)
+  
+  //     return () => window.removeEventListener('storage', storageListener)
+  //   }, [countOnCart])
+  // }
 
   // useEffect(() => {
   //   localStorage.setItem("totalLineItemQuantity", countOnCart);
-    //const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
-    //const countGoods = totalLineItemQuantity ? +totalLineItemQuantity : 0;
-    //const activeCart = localStorage.getItem("activeCart");
-    //if (activeCart) {
-      //const countGoodsOnCart = JSON.parse(activeCart).totalLineItemQuantity;
-      // console.log("countOnCart", countOnCart);
-      // setCountOnCart(countGoodsOnCart);
-      //console.log("countOnCart", countOnCart);
-    //}
-  // }, [countGoodsOnCart, countOnCart])
+  // const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
+  // const countGoods = totalLineItemQuantity ? +totalLineItemQuantity : 0;
+  // const activeCart = localStorage.getItem("activeCart");
+  // if (activeCart) {
+  // const countGoodsOnCart = JSON.parse(activeCart).totalLineItemQuantity;
+  // console.log("countOnCart", countOnCart);
+  // setCountOnCart(countGoodsOnCart);
+  // console.log("countOnCart", countOnCart);
+  // }
+  // console.log("totalLineItemQuantity", totalLineItemQuantity);
+  // if (totalLineItemQuantity) {
+  //   setCountOnCart(totalLineItemQuantity);
+  // } else {
+  //   setCountOnCart('0');
+  // }
+
+  // }, [totalLineItemQuantity])
 
   const itemsUserBar: MenuProps["items"] = [
     {

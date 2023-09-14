@@ -41,7 +41,7 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export const anonymousClient = new ClientBuilder()
-  .withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
+  //.withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
   .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()

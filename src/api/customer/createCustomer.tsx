@@ -29,7 +29,7 @@ export function mapRegDataToRequest(
     streetBilling,
     postcodeBilling,
   } = data;
-  console.log(data);
+
   const addressShipping: BaseAddress = {
     key: "addressShipping",
     country: countryShipping[0],
@@ -85,3 +85,28 @@ export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
     })
     .execute();
 };
+
+// export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
+//   const activeCart = localStorage.getItem("activeCart");
+//   let activeCartBody;
+//   let anonymousId;
+//   if (activeCart) {
+//     activeCartBody = JSON.parse(activeCart).body;
+//     anonymousId = activeCartBody.anonymousId;
+//     console.log("activeCartBody.id", activeCartBody.id);
+//   }
+//   return await createPasswordClient({ email, password })
+//     .me()
+//     .login()
+//     .post({
+//       body: {
+//         password,
+//         email,
+//         anonymousId,
+//         anonymousCartId: activeCartBody.id,
+//         activeCartSignInMode: "MergeWithExistingCustomerCart",
+//         updateProductData: true,
+//       },
+//     })
+//     .execute();
+// };

@@ -6,14 +6,15 @@ import {
 } from "@commercetools/sdk-client-v2";
 import { createTokenCache } from "../token/tokenCache";
 import {
+  CustomerSignin,
   MyCustomerSignin,
   createApiBuilderFromCtpClient,
 } from "@commercetools/platform-sdk";
-import { authMiddlewareOptions } from "./createClient";
+//import { authMiddlewareOptions } from "./createClient";
 
 const tokenCache = createTokenCache();
 
-const getPasswordParams = ({ email, password }: MyCustomerSignin) => {
+const getPasswordParams = ({ email, password }: CustomerSignin) => {
   return {
     host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
@@ -45,7 +46,7 @@ export const createPasswordClient = ({ email, password }: MyCustomerSignin) => {
     .build();
 
   const apiRootPassword = createApiBuilderFromCtpClient(
-    passwordClient,
+    passwordClient
   ).withProjectKey({
     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   });

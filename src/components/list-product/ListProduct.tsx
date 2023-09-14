@@ -1,15 +1,22 @@
-import React, { MouseEventHandler, useRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, List } from "antd";
-import { ProductProjection } from "@commercetools/platform-sdk";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  LineItem,
+  ProductProjection,
+} from "@commercetools/platform-sdk";
+import { addProductToCart, createCart } from "../../api/api";
 import "./ListProduct.css";
-import { addProductToCart, createCart, getActiveCart } from "../../api/api";
 
 const { Meta } = Card;
 type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
+  const activeCart = localStorage.getItem("activeCart");
+  const productsOnCart = activeCart ? JSON.parse(activeCart).lineItems : [];
+  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
+
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
 
@@ -43,51 +50,35 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const discount = (price: number, priceDiscounted: number) =>
     Math.round(((price - priceDiscounted) * 100) / price);
 
+  const onDisabledButton = (id: string): boolean => {
+    let disabled = false;
+    cart.map((itemOnCart) =>
+      itemOnCart.productId === id ? (disabled = true) : false
+    );
+    return disabled;
+  };
 
-    const buttonRef = useRef(null);
+  const disableButtonByClick = (target: Element) => {
+    target.closest(".button_primary")?.setAttribute("disabled", "disabled");
+  };
 
   const addToCart = async (event: any) => {
-    console.log("addToCart", event);
-    let productId = "";
-    if (event.target.title) {
-      productId = event.target.title;
-      event.target.setAttribute("disabled", "disabled");
-    } else if (event.target.parentElement.title) {
-      productId = event.target.parentElement.title;
-      event.target.parentElement.setAttribute("disabled", "disabled");
-    } else if (
-      event.target.parentElement.parentElement.parentElement.parentElement.title
-    ) {
-      console.log(
-        "event.target.parentElement.title",
-        event.target.parentElement.parentElement.title
-      );
-      productId =
-        event.target.parentElement.parentElement.parentElement.parentElement
-          .title;
-    }
+    const { target } = event;
+    const productId = target.closest(".button_primary")?.dataset.id;
+    disableButtonByClick(target);
 
-    try {
-      const activeCart = await getActiveCart();
-      console.log("activeCart", activeCart);
-      if (activeCart.statusCode === 200) {
-        console.log("statusCode === 200");
-        const fullCart = await addProductToCart(activeCart.body, productId);
-        localStorage.setItem("activeCart", JSON.stringify(fullCart));
-        localStorage.setItem("totalLineItemQuantity", `${fullCart.body.totalLineItemQuantity}`);
-        console.log("fullCart", fullCart.body);
-      }
-    } catch (err: any) {
-      if (err.statusCode === 404) {
-        await createCart();
-        const activeCart = await getActiveCart();
-
-        const fullCart = await addProductToCart(activeCart.body, productId);
-        localStorage.setItem("activeCart", JSON.stringify(fullCart));
-        localStorage.setItem("totalLineItemQuantity", `${fullCart.body.totalLineItemQuantity}`);
-        console.log("fullCart new", fullCart.body.lineItems);
-      }
+    const activeCartLS = localStorage.getItem("activeCart");
+    if (!activeCartLS) {
+      await createCart();
     }
+    const fullCart = await addProductToCart(productId);
+    setCart(fullCart.body.lineItems);
+
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    localStorage.setItem(
+      "totalLineItemQuantity",
+      `${fullCart.body.totalLineItemQuantity}`
+    );
   };
 
   return (
@@ -115,10 +106,10 @@ const ListProduct: React.FC<Props> = (props: Props) => {
             }
             actions={[
               <Button
-                ref={buttonRef}
                 type="primary"
                 key={item.key}
-                title={item.id}
+                data-id={item.id}
+                disabled={onDisabledButton(item.id)}
                 size="middle"
                 className="button_primary"
                 onClick={addToCart}
