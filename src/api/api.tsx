@@ -1,8 +1,9 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
-import { apiRoot } from "./client/createClient";
+import { apiRoot, httpMiddlewareOptions } from "./client/createClient";
 import { getTokenClient } from "./client/withTokenClient";
 import { apiRootClient } from "./client/defaultFlow";
+import { ClientBuilder, ExistingTokenMiddlewareOptions } from "@commercetools/sdk-client-v2";
 
 export const getProducts = () => {
   return apiRootClient.products().get().execute();
@@ -103,16 +104,30 @@ export const getActiveCart = async () => {
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
 
+  // const cartCustomer = localStorage.getItem("cart-customer");
+  // if (cartCustomer) {
+  //   const activeCart = localStorage.getItem("activeCart");
+  //   const idCart = activeCart ? JSON.parse(activeCart).id : "";
+  //   console.log("idCart", idCart);
+  //   tokenClient.me().carts().replicate().post({body:{
+  //     reference:{
+  //       id: idCart,
+  //       typeId:"cart"
+  //     }
+  //   }}).execute();
+  // }
+
   return tokenClient.me().activeCart().get().execute();
 };
 
+
 export const addProductToCart = async (productId: string) => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
   const activeCart = await getActiveCart();
   const cartId = activeCart.body.id;
   const cartVersion = activeCart.body.version;
-
-  const tokenLoggedClient = getTokenClient();
-  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
 
   return tokenClient
     .me()

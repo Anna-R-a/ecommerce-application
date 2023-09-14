@@ -100,18 +100,15 @@ export const UserBar: React.FC = () => {
   const countGoodsOnCart = totalLineItemQuantity ? totalLineItemQuantity : "0";
   const [countOnCart, setCountOnCart] = useState(countGoodsOnCart);
 
-
-
-  
   // const useLocalStorageEffect = (callback: (arg1: string, arg2: string, arg3: string) => {}, deps = []) => {
   //   if (!_.isFunction(callback)) {
   //     throw new Error('Callback in useLocalStorageEffect is not a function')
   //   }
-  
+
   //   if (!_.isArray(deps)) {
   //     throw new Error('Depends in useLocalStorageEffect is not a Array')
   //   }
-  
+
   //   const storageListener = (event: Event) => {
   //     const getLS: never | undefined = _.get(event, 'key');
   //     if (_.size(deps) > 0 && getLS && deps.includes(getLS)) {
@@ -121,7 +118,7 @@ export const UserBar: React.FC = () => {
   //         JSON.parse(_.get(event, 'oldValue', ''))
   //       )
   //     }
-  
+
   //     if (_.isArray(deps) && _.size(deps) === 0) {
   //       return callback(
   //         _.get(event, 'key', ''),
@@ -130,10 +127,10 @@ export const UserBar: React.FC = () => {
   //       )
   //     }
   //   }
-  
+
   //   useEffect(() => {
   //     window.addEventListener('storage', storageListener, false)
-  
+
   //     return () => window.removeEventListener('storage', storageListener)
   //   }, [countOnCart])
   // }

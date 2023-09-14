@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, List } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import {
-  LineItem,
-  ProductProjection,
-} from "@commercetools/platform-sdk";
+import { LineItem, ProductProjection } from "@commercetools/platform-sdk";
 import { addProductToCart, createCart } from "../../api/api";
 import "./ListProduct.css";
 
@@ -14,7 +11,8 @@ type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
   const activeCart = localStorage.getItem("activeCart");
-  const productsOnCart = activeCart ? JSON.parse(activeCart).lineItems : [];
+  const cartCustomer = localStorage.getItem("cart-customer");
+  const productsOnCart = cartCustomer ? JSON.parse(cartCustomer).lineItems : activeCart ? JSON.parse(activeCart).lineItems : [];
   const [cart, setCart] = useState<LineItem[]>(productsOnCart);
 
   const image = (item: ProductProjection) =>
@@ -29,7 +27,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45
+        45,
       )}...`;
       return descriptionShort;
     }
@@ -53,7 +51,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const onDisabledButton = (id: string): boolean => {
     let disabled = false;
     cart.map((itemOnCart) =>
-      itemOnCart.productId === id ? (disabled = true) : false
+      itemOnCart.productId === id ? (disabled = true) : false,
     );
     return disabled;
   };
@@ -68,16 +66,22 @@ const ListProduct: React.FC<Props> = (props: Props) => {
     disableButtonByClick(target);
 
     const activeCartLS = localStorage.getItem("activeCart");
-    if (!activeCartLS) {
+    const cartCustomer = localStorage.getItem("cart-customer");
+    if (!activeCartLS && !cartCustomer) {
       await createCart();
     }
     const fullCart = await addProductToCart(productId);
     setCart(fullCart.body.lineItems);
 
-    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+
     localStorage.setItem(
       "totalLineItemQuantity",
-      `${fullCart.body.totalLineItemQuantity}`
+      `${fullCart.body.totalLineItemQuantity}`,
     );
   };
 

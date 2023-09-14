@@ -1,6 +1,7 @@
 import {
   //AuthMiddlewareOptions,
   ClientBuilder,
+  ExistingTokenMiddlewareOptions,
   HttpMiddlewareOptions,
   //TokenCache,
 } from "@commercetools/sdk-client-v2";
@@ -10,7 +11,6 @@ import {
   MyCustomerSignin,
   createApiBuilderFromCtpClient,
 } from "@commercetools/platform-sdk";
-//import { authMiddlewareOptions } from "./createClient";
 
 const tokenCache = createTokenCache();
 
@@ -37,9 +37,16 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
+const accessToken = localStorage.getItem("accessToken");
+const authorization = accessToken ? JSON.parse(accessToken).access_token : null;
+const options: ExistingTokenMiddlewareOptions = {
+  force: true,
+};
+
 export const createPasswordClient = ({ email, password }: MyCustomerSignin) => {
   const passwordClient = new ClientBuilder()
     //.withClientCredentialsFlow(authMiddlewareOptions)
+    .withExistingTokenFlow(authorization, options)
     .withPasswordFlow(getPasswordParams({ email, password }))
     .withHttpMiddleware(httpMiddlewareOptions)
     .withLoggerMiddleware()

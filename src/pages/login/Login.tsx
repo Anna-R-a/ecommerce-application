@@ -18,11 +18,11 @@ const LoginPage: React.FC = () => {
   };
 
   const onFinish = (values: MyCustomerSignin) => {
-
     signInCustomer(values)
       .then((res) => {
         localStorage.setItem("isLogged", "true");
         localStorage.setItem("id", res.body.customer.id);
+        localStorage.setItem("cart-customer", JSON.stringify(res.body.cart));
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
       })
