@@ -1,14 +1,40 @@
+.ant-list-item.card-member {
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
 .card-member a.card-member__title {
   color: var(--dark-color) !important;
 }
 
 .card-member a.card-member__title:hover {
-  color: var(--medium-color) !important;
+  color: var(--secondary-color) !important;
 }
 
-.photo__member {
+.card-member .ant-list-item-main {
+  min-width: 350px;
+}
+
+.card-member .ant-list-item-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card-member .ant-space {
+  align-items: flex-start;
+}
+
+.card-member__photo {
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
+}
+
+.gratitude__list .ant-row {
+  display: flex;
+  justify-content: center;
+  padding: 16px 24px;
 }
 
 .rsschool {
@@ -26,4 +52,23 @@
 .rsschool__link:hover {
   padding: 1px;
   box-shadow: 3px 3px 0 rgba(146, 191, 193, 0.2);
+  transition-duration: .3s;
+}
+
+.text {
+  padding: 16px 24px;
+}
+
+@media (max-width: 710px) {
+  .ant-list-item.card-member {
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 16px 0;
+  }
+  .card-member .ant-list-item-extra {
+    margin-inline-start: 0px;
+  }
+  .text {
+    padding: 16px 0;
+  }
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Carousel, Card, Col, Row, Button, Space } from "antd";
+//import { Link } from "react-router-dom";
+import { Carousel, Card, Col, Row } from "antd";
 import Meta from "antd/es/card/Meta";
 import {
   CarOutlined,
@@ -50,31 +50,31 @@ const Advantages: React.FC = () => (
   </Row>
 );
 
-const Navigation: React.FC = () => (
-  <Space direction="horizontal" className="navigation__home">
-    <Link to="/">
-      <Button type="primary" className="button_primary" block>
-        Home
-      </Button>
-    </Link>
-    <Link to="/login">
-      <Button type="primary" className="button_primary" block>
-        Login page
-      </Button>
-    </Link>
-    <Link to="/registration">
-      <Button type="primary" className="button_primary" block>
-        Registration
-      </Button>
-    </Link>
-  </Space>
-);
+// const Navigation: React.FC = () => (
+//   <Space direction="horizontal" className="navigation__home">
+//     <Link to="/">
+//       <Button type="primary" className="button_primary" block>
+//         Home
+//       </Button>
+//     </Link>
+//     <Link to="/login">
+//       <Button type="primary" className="button_primary" block>
+//         Login page
+//       </Button>
+//     </Link>
+//     <Link to="/registration">
+//       <Button type="primary" className="button_primary" block>
+//         Registration
+//       </Button>
+//     </Link>
+//   </Space>
+// );
 
 const HomePage: React.FC = () => {
   return (
     <>
       <CarouselHome />
-      <Navigation />
+      {/* <Navigation /> */}
       <h1>Only FRESH Farmer Goods</h1>
       <Advantages />
     </>
