@@ -1,9 +1,7 @@
 import {
-  //AuthMiddlewareOptions,
   ClientBuilder,
   ExistingTokenMiddlewareOptions,
   HttpMiddlewareOptions,
-  //TokenCache,
 } from "@commercetools/sdk-client-v2";
 import { createTokenCache } from "../token/tokenCache";
 import {
@@ -53,7 +51,7 @@ export const createPasswordClient = ({ email, password }: MyCustomerSignin) => {
     .build();
 
   const apiRootPassword = createApiBuilderFromCtpClient(
-    passwordClient
+    passwordClient,
   ).withProjectKey({
     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   });

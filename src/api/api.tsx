@@ -1,9 +1,8 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
-import { apiRoot, httpMiddlewareOptions } from "./client/createClient";
+import { apiRoot } from "./client/createClient";
 import { getTokenClient } from "./client/withTokenClient";
 import { apiRootClient } from "./client/defaultFlow";
-import { ClientBuilder, ExistingTokenMiddlewareOptions } from "@commercetools/sdk-client-v2";
 
 export const getProducts = () => {
   return apiRootClient.products().get().execute();
@@ -29,7 +28,7 @@ export const getProductsBySearch = async (text: string) => {
 export const getProductsFromCategory = async (
   categoryId: string[],
   sorting: { name: string; price: string },
-  filter: { name: string; value: CheckboxValueType[] }[]
+  filter: { name: string; value: CheckboxValueType[] }[],
 ) => {
   const sortingOptions = [];
   const filterOptions = [`categories.id:"${categoryId.join('","')}"`];
@@ -119,7 +118,6 @@ export const getActiveCart = async () => {
 
   return tokenClient.me().activeCart().get().execute();
 };
-
 
 export const addProductToCart = async (productId: string) => {
   const tokenLoggedClient = getTokenClient();

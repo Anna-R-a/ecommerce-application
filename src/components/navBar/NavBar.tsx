@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Menu, Button, Drawer } from "antd";
@@ -8,6 +8,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { MenuInfo } from "rc-menu/lib/interface";
+import { Context } from "../context/Context";
 import "./NavBar.css";
 
 const itemsNav: MenuProps["items"] = [
@@ -86,74 +87,24 @@ export const Nav: React.FC = () => {
   );
 };
 
-const handlerLogInOut = (info: MenuInfo) => {
-  const isLogged = localStorage.getItem("isLogged");
-  if (isLogged && info.key === "/login") {
-    localStorage.clear();
-  }
-};
+// const handlerLogInOut = (info: MenuInfo) => {
+//   const isLogged = localStorage.getItem("isLogged");
+//   if (isLogged && info.key === "/login") {
+//     localStorage.clear();
+//   }
+// };
 
 export const UserBar: React.FC = () => {
   const location = useLocation();
+  const [context, setContext] = useContext(Context);
 
-  const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
-  const countGoodsOnCart = totalLineItemQuantity ? totalLineItemQuantity : "0";
-  const [countOnCart, setCountOnCart] = useState(countGoodsOnCart);
-
-  // const useLocalStorageEffect = (callback: (arg1: string, arg2: string, arg3: string) => {}, deps = []) => {
-  //   if (!_.isFunction(callback)) {
-  //     throw new Error('Callback in useLocalStorageEffect is not a function')
-  //   }
-
-  //   if (!_.isArray(deps)) {
-  //     throw new Error('Depends in useLocalStorageEffect is not a Array')
-  //   }
-
-  //   const storageListener = (event: Event) => {
-  //     const getLS: never | undefined = _.get(event, 'key');
-  //     if (_.size(deps) > 0 && getLS && deps.includes(getLS)) {
-  //       return callback(
-  //         _.get(event, 'key', ''),
-  //         JSON.parse(_.get(event, 'newValue', '')),
-  //         JSON.parse(_.get(event, 'oldValue', ''))
-  //       )
-  //     }
-
-  //     if (_.isArray(deps) && _.size(deps) === 0) {
-  //       return callback(
-  //         _.get(event, 'key', ''),
-  //         JSON.parse(_.get(event, 'newValue', '')),
-  //         JSON.parse(_.get(event, 'oldValue', ''))
-  //       )
-  //     }
-  //   }
-
-  //   useEffect(() => {
-  //     window.addEventListener('storage', storageListener, false)
-
-  //     return () => window.removeEventListener('storage', storageListener)
-  //   }, [countOnCart])
-  // }
-
-  // useEffect(() => {
-  //   localStorage.setItem("totalLineItemQuantity", countOnCart);
-  // const totalLineItemQuantity = localStorage.getItem("totalLineItemQuantity");
-  // const countGoods = totalLineItemQuantity ? +totalLineItemQuantity : 0;
-  // const activeCart = localStorage.getItem("activeCart");
-  // if (activeCart) {
-  // const countGoodsOnCart = JSON.parse(activeCart).totalLineItemQuantity;
-  // console.log("countOnCart", countOnCart);
-  // setCountOnCart(countGoodsOnCart);
-  // console.log("countOnCart", countOnCart);
-  // }
-  // console.log("totalLineItemQuantity", totalLineItemQuantity);
-  // if (totalLineItemQuantity) {
-  //   setCountOnCart(totalLineItemQuantity);
-  // } else {
-  //   setCountOnCart('0');
-  // }
-
-  // }, [totalLineItemQuantity])
+  const handlerLogInOut = (info: MenuInfo) => {
+    const isLogged = localStorage.getItem("isLogged");
+    if (isLogged && info.key === "/login") {
+      localStorage.clear();
+      setContext(0);
+    }
+  };
 
   const itemsUserBar: MenuProps["items"] = [
     {
@@ -170,7 +121,7 @@ export const UserBar: React.FC = () => {
     <div className="user-bar">
       <Link to={"/cart"}>
         <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
-        <span className="shoppingCart__count">{countOnCart}</span>
+        <span className="shoppingCart__count">{context}</span>
       </Link>
 
       <Menu
@@ -187,6 +138,15 @@ export const UserBar: React.FC = () => {
 export const NavDrawer: React.FC = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [, setContext] = useContext(Context);
+
+  const handlerLogInOut = (info: MenuInfo) => {
+    const isLogged = localStorage.getItem("isLogged");
+    if (isLogged && info.key === "/login") {
+      localStorage.clear();
+      setContext(0);
+    }
+  };
 
   const showDrawer = () => {
     setOpen(true);

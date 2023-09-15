@@ -5,7 +5,6 @@ import {
 } from "@commercetools/platform-sdk";
 import { apiRoot } from "../client/createClient";
 import { createPasswordClient } from "../client/passwordFlow";
-import { apiRootAnonymous } from "../client/anonymousFlow";
 import {
   RegistrationData,
   DefaultAddressesParams,
@@ -13,7 +12,7 @@ import {
 
 export function mapRegDataToRequest(
   data: RegistrationData,
-  defaultAddresses: DefaultAddressesParams,
+  defaultAddresses: DefaultAddressesParams
 ): CustomerDraft {
   const {
     email,
