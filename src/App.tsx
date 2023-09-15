@@ -24,9 +24,7 @@ const activeCart =
     : null;
 
 function App() {
-  const [context, setContext] = useState(
-    activeCart ? activeCart.body : null,
-  );
+  const [context, setContext] = useState(activeCart ? activeCart.body : null);
 
   return (
     <Context.Provider value={[context, setContext]}>

@@ -118,7 +118,11 @@ export const UserBar: React.FC = () => {
       <Link to={"/cart"}>
         <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
         <span className="shoppingCart__count">
-          { !context ? 0 : context.totalLineItemQuantity ? context.totalLineItemQuantity : 0 }
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
         </span>
       </Link>
 
@@ -175,7 +179,11 @@ export const NavDrawer: React.FC = () => {
       <Link to={"/cart"}>
         <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
         <span className="shoppingCart__count">
-          { !context ? 0 : context.totalLineItemQuantity ? context.totalLineItemQuantity : 0 }
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
         </span>
       </Link>
       <Button
