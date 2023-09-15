@@ -1,69 +1,74 @@
-.navigation >.ant-menu-item:hover::after,
-.navigation >.ant-menu-item-selected::after {
-    border-bottom-color: var(--dark-color)!important;
+.navigation > .ant-menu-item:hover::after,
+.navigation > .ant-menu-item-selected::after {
+  border-bottom-color: var(--dark-color) !important;
 }
 
-.navigation >.ant-menu-item-selected {
-    color: var(--dark-color)!important;
+.navigation > .ant-menu-item-selected {
+  color: var(--dark-color) !important;
+}
+
+.navigation > * {
+  opacity: 1 !important;
+  position: relative !important;
 }
 
 .navigation,
 .user-bar__navigation {
-    border-inline-end: none!important;
+  border-inline-end: none !important;
 }
 
 .ant-menu-submenu-arrow {
-    display: none!important;
+  display: none !important;
 }
 
 .user-bar {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .user-bar > * {
-    display: flex;
-    align-items: flex-start;
-    text-decoration: none;
+  display: flex;
+  align-items: flex-start;
+  text-decoration: none;
 }
 
 .shoppingCart {
-    color: var(--dark-color);
+  color: var(--dark-color);
 }
 
 .shoppingCart__count {
-    color: var(--secondary-color);
-    font-size: 1.2rem;
-    margin-left: 2px;
+  color: var(--secondary-color);
+  font-size: 1.2rem;
+  margin-left: 2px;
 }
 
 .hamburger {
-    display: block;
-    margin: 0 20px;
-    color: var(--dark-color);
-    border-color: var(--light-color);
+  display: block;
+  margin: 0 20px;
+  color: var(--dark-color);
+  border-color: var(--light-color);
 }
 
-.user-bar__navigation >.ant-menu-submenu {
-    padding: 0 20px;
+.user-bar__navigation > .ant-menu-submenu {
+  padding: 0 20px;
 }
 
-.user-bar__navigation >.ant-menu-submenu::after {
-    border-bottom: none!important;
+.user-bar__navigation > .ant-menu-submenu::after {
+  border-bottom: none !important;
 }
 
 .ant-menu-sub .ant-menu-item {
-    background-color: var(--dark-color);
-    color: var(--background-color);
+  background-color: var(--dark-color);
+  color: var(--background-color);
 }
 
 .ant-drawer-body .ant-menu-item.ant-menu-item-selected,
 .ant-menu-sub .ant-menu-item.ant-menu-item-selected,
 .ant-menu-sub .ant-menu-item:active {
-    background-color: var(--cover-color)!important;
-    color: var(--default-color)!important;
+  background-color: var(--cover-color) !important;
+  color: var(--default-color) !important;
 }
 
 .ant-menu-inline {
-    background: none!important;
+  background: none !important;
 }

@@ -11,10 +11,12 @@ import CatalogPage from "./pages/catalog/Catalog";
 import ProfilePage from "./pages/profile/Profile";
 import NotFoundPage from "./pages/notFound/NotFound";
 import ProductPage from "./pages/product/Product";
-import "./App.css";
+import CartPage from "./pages/cart/Cart";
+import AboutPage from "./pages/about/About";
 import { useState } from "react";
 import { Context } from "./components/context/Context";
 import { getActiveCart } from "./api/api";
+import "./App.css";
 
 const activeCart =
   localStorage.getItem("activeCart") || localStorage.getItem("cart-customer")
@@ -23,7 +25,7 @@ const activeCart =
 
 function App() {
   const [context, setContext] = useState(
-    activeCart ? activeCart.body.totalLineItemQuantity : 0,
+    activeCart ? activeCart.body.totalLineItemQuantity : 0
   );
 
   return (
@@ -47,7 +49,7 @@ function App() {
             element={<CatalogPage />}
           />
           <Route path="/products/:key" element={<ProductPage />} />
-          <Route path="/products/" element={<CatalogPage />} />
+          <Route path="/products" element={<CatalogPage />} />
           <Route
             path="/profile"
             element={
@@ -56,6 +58,8 @@ function App() {
               </ProtectedRouteProfile>
             }
           />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

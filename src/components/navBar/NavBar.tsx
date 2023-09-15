@@ -29,9 +29,12 @@ const itemsNav: MenuProps["items"] = [
     key: "/catalog",
   },
   {
-    label: "About Us",
+    label: (
+      <Link to="/about" className="nav__link">
+        About
+      </Link>
+    ),
     key: "/about",
-    disabled: true,
   },
 ];
 
