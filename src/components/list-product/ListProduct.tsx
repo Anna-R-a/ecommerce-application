@@ -4,23 +4,18 @@ import { Button, Card, List } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { LineItem, ProductProjection } from "@commercetools/platform-sdk";
 import { addProductToCart, createCart } from "../../api/api";
-import "./ListProduct.css";
 import { Context } from "../context/Context";
+import "./ListProduct.css";
 
 const { Meta } = Card;
 type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
-  const [, setContext] = useContext(Context);
+  const [context, setContext] = useContext(Context);
 
-  const activeCart = localStorage.getItem("activeCart");
-  const cartCustomer = localStorage.getItem("cart-customer");
-  const productsOnCart = cartCustomer
-    ? JSON.parse(cartCustomer).lineItems
-    : activeCart
-    ? JSON.parse(activeCart).lineItems
-    : [];
-  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
+  const [cart, setCart] = useState<LineItem[]>(
+    context ? context.lineItems : []
+  );
 
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
@@ -34,7 +29,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45,
+        45
       )}...`;
       return descriptionShort;
     }
@@ -58,7 +53,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const onDisabledButton = (id: string): boolean => {
     let disabled = false;
     cart.map((itemOnCart) =>
-      itemOnCart.productId === id ? (disabled = true) : false,
+      itemOnCart.productId === id ? (disabled = true) : false
     );
     return disabled;
   };
@@ -79,18 +74,14 @@ const ListProduct: React.FC<Props> = (props: Props) => {
     }
     const fullCart = await addProductToCart(productId);
     setCart(fullCart.body.lineItems);
-    setContext(fullCart.body.totalLineItemQuantity);
+    console.log("fullCart.body", fullCart.body);
+    setContext(fullCart.body);
 
     if (cartCustomer) {
       localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
     } else {
       localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
     }
-
-    // localStorage.setItem(
-    //   "totalLineItemQuantity",
-    //   `${fullCart.body.totalLineItemQuantity}`,
-    // );
   };
 
   return (

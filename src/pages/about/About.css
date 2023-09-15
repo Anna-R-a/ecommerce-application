@@ -50,9 +50,8 @@
 }
 
 .rsschool__link:hover {
-  padding: 1px;
-  box-shadow: 3px 3px 0 rgba(146, 191, 193, 0.2);
-  transition-duration: .3s;
+  transition-duration: .2s;
+  box-shadow: 0 0.5em 0.5em -0.4em var(--light-color);;
 }
 
 .text {

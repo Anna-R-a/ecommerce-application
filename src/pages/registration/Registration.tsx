@@ -110,7 +110,7 @@ const RegistrationPage: React.FC = () => {
           localStorage.setItem("cart-customer", JSON.stringify(cartCustomer));
           localStorage.removeItem("activeCart");
 
-          setContext(0);
+          setContext(cartCustomer);
           notify("Registration Successful!", "success");
           setTimeout(goHome, 1500);
         });
