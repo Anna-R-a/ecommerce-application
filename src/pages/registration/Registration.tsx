@@ -76,15 +76,15 @@ const RegistrationPage: React.FC = () => {
       ]);
       form.setFieldValue(
         "cityBilling",
-        `${form.getFieldValue("cityShipping")}`,
+        `${form.getFieldValue("cityShipping")}`
       );
       form.setFieldValue(
         "streetBilling",
-        `${form.getFieldValue("streetShipping")}`,
+        `${form.getFieldValue("streetShipping")}`
       );
       form.setFieldValue(
         "postcodeBilling",
-        `${form.getFieldValue("postcodeShipping")}`,
+        `${form.getFieldValue("postcodeShipping")}`
       );
     } else {
       setVisibilityBilling("block");
@@ -98,7 +98,7 @@ const RegistrationPage: React.FC = () => {
   const onFinish = (values: RegistrationData) => {
     setIsLoading(true);
     createCustomer(
-      mapRegDataToRequest(values, [defaultShipping, defaultBilling]),
+      mapRegDataToRequest(values, [defaultShipping, defaultBilling])
     )
       .then(() => {
         signInCustomer(values).then(async (res) => {
@@ -184,7 +184,7 @@ const RegistrationPage: React.FC = () => {
             },
             {
               pattern: new RegExp(
-                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/
               ),
               message:
                 "Password must be at least one uppercase and lowercase letter, digit and special character",
@@ -211,7 +211,7 @@ const RegistrationPage: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!"),
+                  new Error("The new password that you entered do not match!")
                 );
               },
             }),
