@@ -1,0 +1,29 @@
+
+.card-member a.card-member__title {
+  color: var(--dark-color) !important;
+}
+
+.card-member a.card-member__title:hover {
+  color: var(--medium-color) !important;
+}
+
+.photo__member {
+  border-radius: 50%;
+}
+
+.rsschool {
+  width: 100px;
+  height: 40px;
+}
+
+.rsschool__link {
+  display: block;
+  width: 100px;
+  height: 40px;
+  background: url("./../../assets/rsschool.svg");
+}
+
+.rsschool__link:hover {
+  padding: 1px;
+  box-shadow: 3px 3px 0 rgba(146, 191, 193, 0.2);
+}
