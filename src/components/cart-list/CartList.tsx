@@ -77,12 +77,15 @@ function mapToDataType(data: LineItem[]) {
 
 const CartList = () => {
   const [productsList, setProductList] = useState<LineItem[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
   React.useEffect(() => {
     if (
       localStorage.getItem("activeCart") ||
       localStorage.getItem("cart-customer")
     ) {
       getActiveCart().then((res) => {
+        setTotalPrice(res.body.totalPrice.centAmount)
         setProductList(res.body.lineItems);
       });
     }
@@ -90,7 +93,11 @@ const CartList = () => {
 
   console.log(productsList);
 
-  return <Table columns={columns} dataSource={mapToDataType(productsList)} />;
+  return <Table columns={columns} dataSource={mapToDataType(productsList)} footer={()=>{
+    return (
+      <p style={{fontSize: 18 }}>Total Sum: {(totalPrice/100).toFixed(2).toString()} $</p>
+    )
+  }}/>;
 };
 
 export default CartList;
