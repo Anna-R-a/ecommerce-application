@@ -34,7 +34,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45
+        45,
       )}...`;
       return descriptionShort;
     }
@@ -58,7 +58,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const onDisabledButton = (id: string): boolean => {
     let disabled = false;
     cart.map((itemOnCart) =>
-      itemOnCart.productId === id ? (disabled = true) : false
+      itemOnCart.productId === id ? (disabled = true) : false,
     );
     return disabled;
   };

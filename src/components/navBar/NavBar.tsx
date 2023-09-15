@@ -138,7 +138,7 @@ export const UserBar: React.FC = () => {
 export const NavDrawer: React.FC = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [, setContext] = useContext(Context);
+  const [context, setContext] = useContext(Context);
 
   const handlerLogInOut = (info: MenuInfo) => {
     const isLogged = localStorage.getItem("isLogged");
@@ -173,7 +173,11 @@ export const NavDrawer: React.FC = () => {
   ];
 
   return (
-    <>
+    <div className="user-bar">
+      <Link to={"/cart"}>
+        <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
+        <span className="shoppingCart__count">{context}</span>
+      </Link>
       <Button
         type="default"
         onClick={showDrawer}
@@ -205,6 +209,6 @@ export const NavDrawer: React.FC = () => {
           onClick={onClose}
         />
       </Drawer>
-    </>
+    </div>
   );
 };

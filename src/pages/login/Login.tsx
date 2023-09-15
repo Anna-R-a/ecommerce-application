@@ -8,7 +8,6 @@ import { signInCustomer } from "../../api/customer/createCustomer";
 import { ToastContainer } from "react-toastify";
 import { notify } from "../../components/notification/notification";
 import { Context } from "../../components/context/Context";
-import { createCart, getActiveCart } from "../../api/api";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
@@ -25,14 +24,7 @@ const LoginPage: React.FC = () => {
       .then(async (res) => {
         localStorage.setItem("isLogged", "true");
         localStorage.setItem("id", res.body.customer.id);
-        let cartCustomer;
-        if (!res.body.cart) {
-          createCart();
-          cartCustomer = (await getActiveCart()).body;
-        } else {
-          cartCustomer = res.body.cart;
-        }
-        localStorage.setItem("cart-customer", JSON.stringify(cartCustomer));
+        localStorage.setItem("cart-customer", JSON.stringify(res.body.cart));
         localStorage.removeItem("activeCart");
 
         setContext(res.body.cart?.totalLineItemQuantity);
@@ -44,7 +36,7 @@ const LoginPage: React.FC = () => {
         if (errorCode.toString().slice(0, 1) === "4") {
           notify(
             "Account with the given email and password not found. Try again or register your account!",
-            "error"
+            "error",
           );
         }
         if (errorCode.toString().slice(0, 1) === "5") {
@@ -59,7 +51,7 @@ const LoginPage: React.FC = () => {
     return regexp.test(value)
       ? Promise.resolve()
       : Promise.reject(
-          "Password must be at least 8 characters, one uppercase and lowercase letter, digit and special character"
+          "Password must be at least 8 characters, one uppercase and lowercase letter, digit and special character",
         );
   }
 

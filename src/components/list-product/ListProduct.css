@@ -46,3 +46,20 @@
 .product__item .ant-card-cover * {
   width: 100%;
 }
+
+.ant-pagination-item.ant-pagination-item-active {
+  border-color: var(--dark-color);
+}
+
+.ant-pagination-item.ant-pagination-item-active:hover {
+  border-color: var(--secondary-color);
+}
+
+.ant-pagination-item.ant-pagination-item-active a {
+  color: var(--dark-color);
+}
+
+.ant-pagination-item.ant-pagination-item-active a:hover {
+  color: var(--secondary-color);
+}
+

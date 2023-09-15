@@ -23,7 +23,7 @@ const activeCart =
 
 function App() {
   const [context, setContext] = useState(
-    activeCart ? activeCart.body.totalLineItemQuantity : 0
+    activeCart ? activeCart.body.totalLineItemQuantity : 0,
   );
 
   return (

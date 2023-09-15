@@ -38,6 +38,7 @@
 }
 
 .hamburger {
+    display: block;
     margin: 0 20px;
     color: var(--dark-color);
     border-color: var(--light-color);

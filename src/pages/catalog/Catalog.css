@@ -53,6 +53,9 @@
   .ant-layout {
     width: 100% !important;
   }
+  .ant-layout-content {
+    padding: 24px !important;
+  }
 }
 
 .menu__link {
@@ -170,4 +173,8 @@
 
 .sider__wrapper .button_primary {
   width: 100px;
+}
+
+main.ant-layout-content {
+  padding: 24px 0 24px 24px;
 }

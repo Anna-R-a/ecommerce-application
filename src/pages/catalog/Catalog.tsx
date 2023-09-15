@@ -416,10 +416,9 @@ const CatalogPage: React.FC = () => {
           Clear
         </Button>
       </Sider>
-      <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
+      <Layout style={{ background: "#fff" }}>
         <Content
           style={{
-            padding: 24,
             margin: 0,
             minHeight: 280,
             background: "#fff",
