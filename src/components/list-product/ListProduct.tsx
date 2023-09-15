@@ -14,7 +14,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const [context, setContext] = useContext(Context);
 
   const [cart, setCart] = useState<LineItem[]>(
-    context ? context.lineItems : [],
+    context ? context.lineItems : []
   );
 
   const image = (item: ProductProjection) =>
@@ -29,7 +29,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
       wrapper.innerHTML = descriptionFull;
       const descriptionShort = `${wrapper.childNodes[0].textContent?.slice(
         0,
-        45,
+        45
       )}...`;
       return descriptionShort;
     }
@@ -53,7 +53,7 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const onDisabledButton = (id: string): boolean => {
     let disabled = false;
     cart.map((itemOnCart) =>
-      itemOnCart.productId === id ? (disabled = true) : false,
+      itemOnCart.productId === id ? (disabled = true) : false
     );
     return disabled;
   };
@@ -67,21 +67,13 @@ const ListProduct: React.FC<Props> = (props: Props) => {
     const productId = target.closest(".button_primary")?.dataset.id;
     disableButtonByClick(target);
 
-    const activeCartLS = localStorage.getItem("activeCart");
-    const cartCustomer = localStorage.getItem("cart-customer");
-    if (!activeCartLS && !cartCustomer) {
+    if (!context) {
       await createCart();
     }
     const fullCart = await addProductToCart(productId);
     setCart(fullCart.body.lineItems);
-    console.log("fullCart.body", fullCart.body);
     setContext(fullCart.body);
-
-    if (cartCustomer) {
-      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    } else {
-      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    }
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
   };
 
   return (

@@ -19,7 +19,7 @@ import { getActiveCart } from "./api/api";
 import "./App.css";
 
 const activeCart =
-  localStorage.getItem("activeCart") || localStorage.getItem("cart-customer")
+  localStorage.getItem("activeCart")
     ? await getActiveCart()
     : null;
 

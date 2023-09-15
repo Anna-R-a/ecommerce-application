@@ -13,6 +13,7 @@ import Meta from "antd/es/card/Meta";
 
 const data = [
   {
+    key: "anna",
     href: "https://github.com/Anna-R-a",
     title: "Hanna Ratnikava",
     avatar: "https://github.com/Anna-R-a",
@@ -28,6 +29,7 @@ const data = [
       "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
   },
   {
+    key: "nastya",
     href: "https://github.com/AciaKr",
     title: "Nastassia Krasutskaya",
     avatar: "https://xsgames.co/randomusers/avatar.php?g=pixel&key",
@@ -43,6 +45,7 @@ const data = [
       "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
   },
   {
+    key: "sergey",
     href: "https://github.com/SergeyVolkov03",
     title: "Sergey Volkov",
     avatar: "https://xsgames.co/randomusers/avatar.php?g=pixel&key",
@@ -101,14 +104,9 @@ const AboutPage: React.FC = () => {
         className="card-member"
         size="large"
         dataSource={data}
-        // footer={
-        //   <div>
-        //     <b>ant design</b> footer part
-        //   </div>
-        // }
         renderItem={(item) => (
           <List.Item
-            key={item.title}
+            key={item.key}
             className="card-member"
             actions={[
               <IconText
@@ -144,7 +142,6 @@ const AboutPage: React.FC = () => {
             <List.Item.Meta
               className="card-member__meta"
               avatar={<GithubOutlined style={{ color: "#3c7375" }} />}
-              //avatar={<GithubOutlined size={20} />}
               title={
                 <a className="card-member__title" href={item.href}>
                   {item.title}
@@ -190,11 +187,7 @@ const AboutPage: React.FC = () => {
         renderItem={(item) => (
           <List.Item className="product__item">
             <Card className="card__item">
-              <Link
-                to={item.href}
-                //key={item.key}
-                className="product__link"
-              >
+              <Link to={item.href} className="product__link">
                 <Meta
                   avatar={<Avatar src={item.avatar} />}
                   title={item.title}
