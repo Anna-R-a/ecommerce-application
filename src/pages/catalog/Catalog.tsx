@@ -95,7 +95,6 @@ const CatalogPage: React.FC = () => {
       localStorage.setItem("currentCategory", selectCategory);
       getProductsFromCategory([selectCategory], selectSorting, totalFilter)
         .then((res) => {
-          console.log("res", res);
           setData(res.body.results);
         })
         .catch(console.error);
@@ -147,7 +146,6 @@ const CatalogPage: React.FC = () => {
 
   const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    console.log("keys", keys);
     if (latestOpenKey) {
       setOpenKeys([latestOpenKey]);
       setSelectCategory(latestOpenKey);
@@ -222,7 +220,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
@@ -418,10 +416,9 @@ const CatalogPage: React.FC = () => {
           Clear
         </Button>
       </Sider>
-      <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
+      <Layout style={{ background: "#fff" }}>
         <Content
           style={{
-            padding: 24,
             margin: 0,
             minHeight: 280,
             background: "#fff",

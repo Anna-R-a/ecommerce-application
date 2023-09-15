@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, List } from "antd";
-import { ProductProjection } from "@commercetools/platform-sdk";
+import { Button, Card, List } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { LineItem, ProductProjection } from "@commercetools/platform-sdk";
+import { addProductToCart, createCart } from "../../api/api";
 import "./ListProduct.css";
+import { Context } from "../context/Context";
 
 const { Meta } = Card;
-
 type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
+  const [, setContext] = useContext(Context);
+
+  const activeCart = localStorage.getItem("activeCart");
+  const cartCustomer = localStorage.getItem("cart-customer");
+  const productsOnCart = cartCustomer
+    ? JSON.parse(cartCustomer).lineItems
+    : activeCart
+    ? JSON.parse(activeCart).lineItems
+    : [];
+  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
+
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
 
@@ -42,6 +55,44 @@ const ListProduct: React.FC<Props> = (props: Props) => {
   const discount = (price: number, priceDiscounted: number) =>
     Math.round(((price - priceDiscounted) * 100) / price);
 
+  const onDisabledButton = (id: string): boolean => {
+    let disabled = false;
+    cart.map((itemOnCart) =>
+      itemOnCart.productId === id ? (disabled = true) : false,
+    );
+    return disabled;
+  };
+
+  const disableButtonByClick = (target: Element) => {
+    target.closest(".button_primary")?.setAttribute("disabled", "disabled");
+  };
+
+  const addToCart = async (event: any) => {
+    const { target } = event;
+    const productId = target.closest(".button_primary")?.dataset.id;
+    disableButtonByClick(target);
+
+    const activeCartLS = localStorage.getItem("activeCart");
+    const cartCustomer = localStorage.getItem("cart-customer");
+    if (!activeCartLS && !cartCustomer) {
+      await createCart();
+    }
+    const fullCart = await addProductToCart(productId);
+    setCart(fullCart.body.lineItems);
+    setContext(fullCart.body.totalLineItemQuantity);
+
+    if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+
+    // localStorage.setItem(
+    //   "totalLineItemQuantity",
+    //   `${fullCart.body.totalLineItemQuantity}`,
+    // );
+  };
+
   return (
     <List
       grid={{
@@ -53,31 +104,36 @@ const ListProduct: React.FC<Props> = (props: Props) => {
         xl: 4,
         xxl: 4,
       }}
-      pagination={{ position: "bottom", align: "center" }}
+      pagination={{ position: "bottom", align: "center", pageSize: 12 }}
       dataSource={props.data}
+      className="list__products"
       renderItem={(item) => (
-        <List.Item>
-          <Link
-            to={`/products/${item.key}`}
-            key={item.key}
-            className="product__link"
+        <List.Item className="product__item">
+          <Card
+            className="card__item"
+            cover={
+              <a href={`/products/${item.key}`}>
+                <img alt={name(item)} src={image(item)} />
+              </a>
+            }
+            actions={[
+              <Button
+                type="primary"
+                key={item.key}
+                data-id={item.id}
+                disabled={onDisabledButton(item.id)}
+                size="middle"
+                className="button_primary"
+                onClick={addToCart}
+              >
+                <ShoppingCartOutlined key="shoppingCart" /> Add to cart
+              </Button>,
+            ]}
           >
-            <Card
-              className="card__item"
-              cover={<img alt={name(item)} src={image(item)} />}
-              actions={
-                [
-                  // <Button
-                  //   type="primary"
-                  //   key="shoppingCart"
-                  //   title="In cart"
-                  //   size="middle"
-                  //   className="button_primary"
-                  // >
-                  //   <ShoppingCartOutlined key="shoppingCart" />
-                  // </Button>,
-                ]
-              }
+            <Link
+              to={`/products/${item.key}`}
+              key={item.key}
+              className="product__link"
             >
               <Meta title={name(item)} description={description(item)} />
               <div className="product__price">
@@ -93,8 +149,8 @@ const ListProduct: React.FC<Props> = (props: Props) => {
                     : ""}
                 </span>
               </div>
-            </Card>
-          </Link>
+            </Link>
+          </Card>
         </List.Item>
       )}
     />

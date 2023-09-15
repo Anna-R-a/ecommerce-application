@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { RangePickerProps } from "antd/es/date-picker";
 import {
@@ -29,6 +29,8 @@ import {
 } from "../../api/customer/createCustomer";
 import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
+import { Context } from "../../components/context/Context";
+import { createCart, getActiveCart } from "../../api/api";
 import "./Registration.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -52,6 +54,8 @@ const RegistrationPage: React.FC = () => {
 
   let navigate = useNavigate();
 
+  const [, setContext] = useContext(Context);
+
   const goHome = () => {
     navigate("/");
   };
@@ -72,15 +76,15 @@ const RegistrationPage: React.FC = () => {
       ]);
       form.setFieldValue(
         "cityBilling",
-        `${form.getFieldValue("cityShipping")}`,
+        `${form.getFieldValue("cityShipping")}`
       );
       form.setFieldValue(
         "streetBilling",
-        `${form.getFieldValue("streetShipping")}`,
+        `${form.getFieldValue("streetShipping")}`
       );
       form.setFieldValue(
         "postcodeBilling",
-        `${form.getFieldValue("postcodeShipping")}`,
+        `${form.getFieldValue("postcodeShipping")}`
       );
     } else {
       setVisibilityBilling("block");
@@ -94,12 +98,19 @@ const RegistrationPage: React.FC = () => {
   const onFinish = (values: RegistrationData) => {
     setIsLoading(true);
     createCustomer(
-      mapRegDataToRequest(values, [defaultShipping, defaultBilling]),
+      mapRegDataToRequest(values, [defaultShipping, defaultBilling])
     )
       .then(() => {
-        signInCustomer(values).then((res) => {
+        signInCustomer(values).then(async (res) => {
+          await createCart();
+          const cartCustomer = (await getActiveCart()).body;
+          console.log("cartCustomer", cartCustomer);
           localStorage.setItem("isLogged", "true");
           localStorage.setItem("id", res.body.customer.id);
+          localStorage.setItem("cart-customer", JSON.stringify(cartCustomer));
+          localStorage.removeItem("activeCart");
+
+          setContext(0);
           notify("Registration Successful!", "success");
           setTimeout(goHome, 1500);
         });
@@ -173,7 +184,7 @@ const RegistrationPage: React.FC = () => {
             },
             {
               pattern: new RegExp(
-                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/,
+                /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=(.*[a-zA-Z]){2})(?=.*?[#?!@$%^&*-])\S*$/
               ),
               message:
                 "Password must be at least one uppercase and lowercase letter, digit and special character",
@@ -200,7 +211,7 @@ const RegistrationPage: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!"),
+                  new Error("The new password that you entered do not match!")
                 );
               },
             }),

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyCustomerSignin } from "@commercetools/platform-sdk";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
@@ -7,11 +7,13 @@ import { RuleObject } from "antd/es/form";
 import { signInCustomer } from "../../api/customer/createCustomer";
 import { ToastContainer } from "react-toastify";
 import { notify } from "../../components/notification/notification";
+import { Context } from "../../components/context/Context";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
 
 const LoginPage: React.FC = () => {
   let navigate = useNavigate();
+  const [, setContext] = useContext(Context);
 
   const goHome = () => {
     navigate("/");
@@ -19,9 +21,13 @@ const LoginPage: React.FC = () => {
 
   const onFinish = (values: MyCustomerSignin) => {
     signInCustomer(values)
-      .then((res) => {
+      .then(async (res) => {
         localStorage.setItem("isLogged", "true");
         localStorage.setItem("id", res.body.customer.id);
+        localStorage.setItem("cart-customer", JSON.stringify(res.body.cart));
+        localStorage.removeItem("activeCart");
+
+        setContext(res.body.cart?.totalLineItemQuantity);
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
       })

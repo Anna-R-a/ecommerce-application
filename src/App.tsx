@@ -11,41 +11,59 @@ import CatalogPage from "./pages/catalog/Catalog";
 import ProfilePage from "./pages/profile/Profile";
 import NotFoundPage from "./pages/notFound/NotFound";
 import ProductPage from "./pages/product/Product";
+import CartPage from "./pages/cart/Cart";
+import AboutPage from "./pages/about/About";
+import { useState } from "react";
+import { Context } from "./components/context/Context";
+import { getActiveCart } from "./api/api";
 import "./App.css";
 
+const activeCart =
+  localStorage.getItem("activeCart") || localStorage.getItem("cart-customer")
+    ? await getActiveCart()
+    : null;
+
 function App() {
+  const [context, setContext] = useState(
+    activeCart ? activeCart.body.totalLineItemQuantity : 0
+  );
+
   return (
-    <Routes>
-      <Route element={<PageLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/login"
-          element={
-            <ProtectedRouteLogin>
-              <LoginPage />
-            </ProtectedRouteLogin>
-          }
-        />
-        <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/catalog" element={<CatalogPage />} />
-        <Route path="/catalog/:keyCatalog" element={<CatalogPage />} />
-        <Route
-          path="/catalog/:keyCatalog/:keyCatalog"
-          element={<CatalogPage />}
-        />
-        <Route path="/products/:key" element={<ProductPage />} />
-        <Route path="/products/" element={<CatalogPage />} />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRouteProfile>
-              <ProfilePage />
-            </ProtectedRouteProfile>
-          }
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <Context.Provider value={[context, setContext]}>
+      <Routes>
+        <Route element={<PageLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRouteLogin>
+                <LoginPage />
+              </ProtectedRouteLogin>
+            }
+          />
+          <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/catalog/:keyCatalog" element={<CatalogPage />} />
+          <Route
+            path="/catalog/:keyCatalog/:keyCatalog"
+            element={<CatalogPage />}
+          />
+          <Route path="/products/:key" element={<ProductPage />} />
+          <Route path="/products" element={<CatalogPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRouteProfile>
+                <ProfilePage />
+              </ProtectedRouteProfile>
+            }
+          />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </Context.Provider>
   );
 }
 

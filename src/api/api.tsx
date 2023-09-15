@@ -1,14 +1,16 @@
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
+import { getTokenClient } from "./client/withTokenClient";
+import { apiRootClient } from "./client/defaultFlow";
 
 export const getProducts = () => {
-  return apiRootAnonymous.products().get().execute();
+  return apiRootClient.products().get().execute();
 };
 
 export const getProductsBySearch = async (text: string) => {
   if (text) {
-    return apiRootAnonymous
+    return apiRootClient
       .productProjections()
       .search()
       .get({
@@ -46,7 +48,7 @@ export const getProductsFromCategory = async (
     ? sortingOptions.push(`price ${sorting.price}`)
     : sortingOptions.push("createdAt asc");
 
-  return apiRootAnonymous
+  return apiRootClient
     .productProjections()
     .search()
     .get({
@@ -60,7 +62,7 @@ export const getProductsFromCategory = async (
 };
 
 export const getProductPrices = async ([key1, key2]: [number, number]) => {
-  return apiRootAnonymous
+  return apiRootClient
     .productProjections()
     .search()
     .get({
@@ -74,48 +76,73 @@ export const getProductPrices = async ([key1, key2]: [number, number]) => {
     .execute();
 };
 
-export const getProductsAttributes = async (
-  filter: { name: string; value: CheckboxValueType[] }[],
-) => {
-  const filterOptions = filter.map((item) => {
-    return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
-  });
-  return apiRootAnonymous
-    .productProjections()
-    .search()
-    .get({
-      queryArgs: {
-        filter: filterOptions,
-      },
-    })
-    .execute();
-};
-
 export const getProductType = async (key: string) => {
-  return apiRootAnonymous.productTypes().withKey({ key: key }).get().execute();
+  return apiRootClient.productTypes().withKey({ key: key }).get().execute();
 };
 
 export const getCategories = async () => {
-  return apiRootAnonymous.categories().get().execute();
+  return apiRootClient.categories().get().execute();
 };
 
-export const getCategoriesStructure = async () => {
-  return apiRootAnonymous
-    .categories()
-    .get({
-      queryArgs: {
-        expand: ["parent"],
+export const createCart = async () => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
+  return tokenClient
+    .me()
+    .carts()
+    .post({
+      body: {
+        currency: "USD",
       },
     })
     .execute();
 };
 
-export const getCustomers = async () => {
-  return apiRoot.customers().get().execute();
+export const getActiveCart = async () => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
+  // const cartCustomer = localStorage.getItem("cart-customer");
+  // if (cartCustomer) {
+  //   const activeCart = localStorage.getItem("activeCart");
+  //   const idCart = activeCart ? JSON.parse(activeCart).id : "";
+  //   console.log("idCart", idCart);
+  //   tokenClient.me().carts().replicate().post({body:{
+  //     reference:{
+  //       id: idCart,
+  //       typeId:"cart"
+  //     }
+  //   }}).execute();
+  // }
+
+  return tokenClient.me().activeCart().get().execute();
 };
 
-export const getProjectDetails = () => {
-  return apiRoot.get().execute();
+export const addProductToCart = async (productId: string) => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
+  const activeCart = await getActiveCart();
+  const cartId = activeCart.body.id;
+  const cartVersion = activeCart.body.version;
+
+  return tokenClient
+    .me()
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version: cartVersion,
+        actions: [
+          {
+            action: "addLineItem",
+            productId: productId,
+          },
+        ],
+      },
+    })
+    .execute();
 };
 
 export const getProductDetails = async (childPathArgs: { key: string }) => {
