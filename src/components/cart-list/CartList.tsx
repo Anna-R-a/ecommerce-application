@@ -21,13 +21,14 @@ interface DataType {
 function mapToDataType(data: LineItem[]) {
   const result: DataType[] = [];
   data.forEach((product) => {
+    const price = product.price.discounted?.value.centAmount || product.price.value.centAmount;
     result.push({
       key: product.id,
       name: product.name.en,
       image: product.variant.images?.[0].url || "",
       count: product.quantity,
       price:
-        (product.price.value.centAmount / 100).toFixed(2).toString() + " $",
+        (price/ 100).toFixed(2).toString() + " $",
       totalPrice:
         (product.totalPrice.centAmount / 100).toFixed(2).toString() + " $",
     });
@@ -98,7 +99,7 @@ const CartList = () => {
         const removeProduct = () => {
           removeProductFromCart(record.key).then(() => {
             setVersion((prev) => prev + 1);
-          });;
+          });
         };
 
         return (
