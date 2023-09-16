@@ -3,8 +3,6 @@ import { apiRootAnonymous } from "./client/anonymousFlow";
 import { apiRoot } from "./client/createClient";
 import { getTokenClient } from "./client/withTokenClient";
 import { apiRootClient } from "./client/defaultFlow";
-import { Body } from "node-fetch";
-import { version } from "yargs";
 
 export const getProducts = () => {
   return apiRootClient.products().get().execute();
@@ -112,11 +110,11 @@ export const deleteCart = async () => {
   return tokenClient
     .me()
     .carts()
-    .withId({ID: cartId})
+    .withId({ ID: cartId })
     .delete({
       queryArgs: {
         version: cartVersion,
-      }
+      },
     })
     .execute();
 };

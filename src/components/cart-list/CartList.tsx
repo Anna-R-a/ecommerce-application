@@ -135,43 +135,67 @@ const CartList = () => {
 
   return (
     <Table
+      locale={{
+        emptyText: (
+          <div className="empty-cart-text">
+            Your basket is empty. To select a product, go to the{" "}
+            <a href="/catalog">catalog</a>
+          </div>
+        ),
+      }}
       columns={columns}
       dataSource={mapToDataType(productsList)}
       footer={() => {
         const isDisabled = () => {
-          if(productsList.length === 0){
-            return true
+          if (productsList.length === 0) {
+            return true;
           }
-          return false
-        }
+          return false;
+        };
 
-        const clearCart = () =>{
-          if(localStorage.getItem('activeCart')){
+        const clearCart = () => {
+          if (localStorage.getItem("activeCart")) {
             deleteCart().then(() => {
-              localStorage.removeItem('activeCart')
-              setProductList([])
-            }
-            )
+              localStorage.removeItem("activeCart");
+              setProductList([]);
+            });
           }
-          if(localStorage.getItem('cart-customer')){
-            deleteCart().then(()=>{
-              createCart().then((res)=>{
-                  localStorage.setItem('cart-customer', JSON.stringify(res.body))
-              }).then(()=>{
-                setVersion(prev => prev + 1)
-              })
-            })
+          if (localStorage.getItem("cart-customer")) {
+            deleteCart().then(() => {
+              createCart()
+                .then((res) => {
+                  localStorage.setItem(
+                    "cart-customer",
+                    JSON.stringify(res.body),
+                  );
+                })
+                .then(() => {
+                  setVersion((prev) => prev + 1);
+                });
+            });
           }
-
-        }     
+        };
 
         return (
-        <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
-          <p style={{ fontSize: 18 }}>
-            Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
-          </p>
-          <Button className="button_primary" type="primary" disabled={isDisabled()} onClick={clearCart}>Clear cart</Button>
-        </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: 18 }}>
+              Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
+            </p>
+            <Button
+              className="button_primary"
+              type="primary"
+              disabled={isDisabled()}
+              onClick={clearCart}
+            >
+              Clear cart
+            </Button>
+          </div>
         );
       }}
     />

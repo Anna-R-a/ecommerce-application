@@ -1,3 +1,9 @@
 .cart-image{
     height: 40px;
 }
+
+.empty-cart-text{
+    width: 450px;
+    height: 100px;
+    font-size: 30px;
+}

@@ -20,8 +20,6 @@ type AuthMiddlewareOptions = {
   tokenCache?: TokenCache;
 };
 
-const tokenCache = createTokenCache();
-
 export const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
