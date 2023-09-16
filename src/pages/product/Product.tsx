@@ -161,27 +161,31 @@ const ProductPage: React.FC = () => {
               </p>
             </div>
             <div className="buttons">
-              
-                <Button
-                  type="primary"
-                  className="button button_remove"
-                  key={`${key}-add`}
-                  onClick={async () => {await removeItem(lineItemId).then(()=> notify("Product was removed successful!", "success"))}}
-                  disabled={isInCart(id) ? false : true}
-                >
-                  Remove from Cart
-                </Button>
-              
-                <Button
-                  type="primary"
-                  className="button button_add"
-                  key={`${key}-remove`}
-                  onClick={async () => {await addItem(id)}}
-                  disabled={isInCart(id) ? true : false}
-                >
-                  Add to Cart
-                </Button>
-              
+              <Button
+                type="primary"
+                className="button button_remove"
+                key={`${key}-add`}
+                onClick={async () => {
+                  await removeItem(lineItemId).then(() =>
+                    notify("Product was removed successful!", "success")
+                  ).catch(()=> notify("Removal operation fails", "error"));
+                }}
+                disabled={isInCart(id) ? false : true}
+              >
+                Remove from Cart
+              </Button>
+
+              <Button
+                type="primary"
+                className="button button_add"
+                key={`${key}-remove`}
+                onClick={async () => {
+                  await addItem(id);
+                }}
+                disabled={isInCart(id) ? true : false}
+              >
+                Add to Cart
+              </Button>
             </div>
           </Card>
         </Col>
