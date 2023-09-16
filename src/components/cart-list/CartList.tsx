@@ -4,6 +4,8 @@ import type { ColumnsType } from "antd/es/table";
 import { LineItem } from "@commercetools/platform-sdk";
 import {
   changeQuantityProductInCart,
+  createCart,
+  deleteCart,
   getActiveCart,
   removeProductFromCart,
 } from "../../api/api";
@@ -124,7 +126,7 @@ const CartList = () => {
       localStorage.getItem("activeCart") ||
       localStorage.getItem("cart-customer")
     ) {
-      getActiveCart().then((res) => {
+      getActiveCart().then((res: any) => {
         setTotalPrice(res.body.totalPrice.centAmount);
         setProductList(res.body.lineItems);
       });
@@ -136,10 +138,40 @@ const CartList = () => {
       columns={columns}
       dataSource={mapToDataType(productsList)}
       footer={() => {
+        const isDisabled = () => {
+          if(productsList.length === 0){
+            return true
+          }
+          return false
+        }
+
+        const clearCart = () =>{
+          if(localStorage.getItem('activeCart')){
+            deleteCart().then(() => {
+              localStorage.removeItem('activeCart')
+              setProductList([])
+            }
+            )
+          }
+          if(localStorage.getItem('cart-customer')){
+            deleteCart().then(()=>{
+              createCart().then((res)=>{
+                  localStorage.setItem('cart-customer', JSON.stringify(res.body))
+              }).then(()=>{
+                setVersion(prev => prev + 1)
+              })
+            })
+          }
+
+        }     
+
         return (
+        <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
           <p style={{ fontSize: 18 }}>
             Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
           </p>
+          <Button className="button_primary" type="primary" disabled={isDisabled()} onClick={clearCart}>Clear cart</Button>
+        </div>
         );
       }}
     />
