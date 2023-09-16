@@ -104,13 +104,12 @@ const RegistrationPage: React.FC = () => {
         signInCustomer(values).then(async (res) => {
           await createCart();
           const cartCustomer = (await getActiveCart()).body;
-          console.log("cartCustomer", cartCustomer);
+
           localStorage.setItem("isLogged", "true");
           localStorage.setItem("id", res.body.customer.id);
-          localStorage.setItem("cart-customer", JSON.stringify(cartCustomer));
-          localStorage.removeItem("activeCart");
+          localStorage.setItem("activeCart", JSON.stringify(cartCustomer));
 
-          setContext(0);
+          setContext(cartCustomer);
           notify("Registration Successful!", "success");
           setTimeout(goHome, 1500);
         });

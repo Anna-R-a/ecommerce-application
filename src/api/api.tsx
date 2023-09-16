@@ -103,19 +103,6 @@ export const getActiveCart = async () => {
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
 
-  // const cartCustomer = localStorage.getItem("cart-customer");
-  // if (cartCustomer) {
-  //   const activeCart = localStorage.getItem("activeCart");
-  //   const idCart = activeCart ? JSON.parse(activeCart).id : "";
-  //   console.log("idCart", idCart);
-  //   tokenClient.me().carts().replicate().post({body:{
-  //     reference:{
-  //       id: idCart,
-  //       typeId:"cart"
-  //     }
-  //   }}).execute();
-  // }
-
   return tokenClient.me().activeCart().get().execute();
 };
 

@@ -4,7 +4,6 @@ import {
   TokenCache,
 } from "@commercetools/sdk-client-v2";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import { createTokenCache } from "../token/tokenCache";
 
 type AuthMiddlewareOptions = {
   host: string;
@@ -20,8 +19,6 @@ type AuthMiddlewareOptions = {
   tokenCache?: TokenCache;
 };
 
-const tokenCache = createTokenCache();
-
 export const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
@@ -31,7 +28,6 @@ export const authMiddlewareOptions: AuthMiddlewareOptions = {
   },
   scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch: fetch,
-  //tokenCache,
 };
 
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
@@ -41,7 +37,6 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 
 const ctpClient = new ClientBuilder()
   .withClientCredentialsFlow(authMiddlewareOptions)
-  //.withAnonymousSessionFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();

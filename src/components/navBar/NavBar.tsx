@@ -90,13 +90,6 @@ export const Nav: React.FC = () => {
   );
 };
 
-// const handlerLogInOut = (info: MenuInfo) => {
-//   const isLogged = localStorage.getItem("isLogged");
-//   if (isLogged && info.key === "/login") {
-//     localStorage.clear();
-//   }
-// };
-
 export const UserBar: React.FC = () => {
   const location = useLocation();
   const [context, setContext] = useContext(Context);
@@ -105,7 +98,7 @@ export const UserBar: React.FC = () => {
     const isLogged = localStorage.getItem("isLogged");
     if (isLogged && info.key === "/login") {
       localStorage.clear();
-      setContext(0);
+      setContext(null);
     }
   };
 
@@ -124,7 +117,13 @@ export const UserBar: React.FC = () => {
     <div className="user-bar">
       <Link to={"/cart"}>
         <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
-        <span className="shoppingCart__count">{context}</span>
+        <span className="shoppingCart__count">
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
+        </span>
       </Link>
 
       <Menu
@@ -147,7 +146,7 @@ export const NavDrawer: React.FC = () => {
     const isLogged = localStorage.getItem("isLogged");
     if (isLogged && info.key === "/login") {
       localStorage.clear();
-      setContext(0);
+      setContext(null);
     }
   };
 
@@ -179,7 +178,13 @@ export const NavDrawer: React.FC = () => {
     <div className="user-bar">
       <Link to={"/cart"}>
         <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
-        <span className="shoppingCart__count">{context}</span>
+        <span className="shoppingCart__count">
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
+        </span>
       </Link>
       <Button
         type="default"

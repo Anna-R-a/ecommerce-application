@@ -24,10 +24,9 @@ const LoginPage: React.FC = () => {
       .then(async (res) => {
         localStorage.setItem("isLogged", "true");
         localStorage.setItem("id", res.body.customer.id);
-        localStorage.setItem("cart-customer", JSON.stringify(res.body.cart));
-        localStorage.removeItem("activeCart");
+        localStorage.setItem("activeCart", JSON.stringify(res.body.cart));
 
-        setContext(res.body.cart?.totalLineItemQuantity);
+        setContext(res.body.cart);
         notify("Login Successful!", "success");
         setTimeout(goHome, 1500);
       })

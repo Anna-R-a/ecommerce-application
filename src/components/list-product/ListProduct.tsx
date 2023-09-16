@@ -4,23 +4,18 @@ import { Button, Card, List } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { LineItem, ProductProjection } from "@commercetools/platform-sdk";
 import { addProductToCart, createCart } from "../../api/api";
-import "./ListProduct.css";
 import { Context } from "../context/Context";
+import "./ListProduct.css";
 
 const { Meta } = Card;
 type Props = { data: ProductProjection[] };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
-  const [, setContext] = useContext(Context);
+  const [context, setContext] = useContext(Context);
 
-  const activeCart = localStorage.getItem("activeCart");
-  const cartCustomer = localStorage.getItem("cart-customer");
-  const productsOnCart = cartCustomer
-    ? JSON.parse(cartCustomer).lineItems
-    : activeCart
-    ? JSON.parse(activeCart).lineItems
-    : [];
-  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
+  const [cart, setCart] = useState<LineItem[]>(
+    context ? context.lineItems : [],
+  );
 
   const image = (item: ProductProjection) =>
     item.masterVariant.images ? item.masterVariant.images[0].url : "";
@@ -72,25 +67,13 @@ const ListProduct: React.FC<Props> = (props: Props) => {
     const productId = target.closest(".button_primary")?.dataset.id;
     disableButtonByClick(target);
 
-    const activeCartLS = localStorage.getItem("activeCart");
-    const cartCustomer = localStorage.getItem("cart-customer");
-    if (!activeCartLS && !cartCustomer) {
+    if (!context) {
       await createCart();
     }
     const fullCart = await addProductToCart(productId);
     setCart(fullCart.body.lineItems);
-    setContext(fullCart.body.totalLineItemQuantity);
-
-    if (cartCustomer) {
-      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    } else {
-      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    }
-
-    // localStorage.setItem(
-    //   "totalLineItemQuantity",
-    //   `${fullCart.body.totalLineItemQuantity}`,
-    // );
+    setContext(fullCart.body);
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
   };
 
   return (
