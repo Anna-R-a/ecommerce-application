@@ -4,7 +4,6 @@ import {
   TokenCache,
 } from "@commercetools/sdk-client-v2";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import { createTokenCache } from "../token/tokenCache";
 
 type AuthMiddlewareOptions = {
   host: string;
