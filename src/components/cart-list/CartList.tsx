@@ -16,21 +16,24 @@ interface DataType {
   count: number;
   price: string;
   totalPrice: string;
+  productKey: string;
 }
 
 function mapToDataType(data: LineItem[]) {
   const result: DataType[] = [];
   data.forEach((product) => {
-    const price = product.price.discounted?.value.centAmount || product.price.value.centAmount;
+    const price =
+      product.price.discounted?.value.centAmount ||
+      product.price.value.centAmount;
     result.push({
       key: product.id,
       name: product.name.en,
       image: product.variant.images?.[0].url || "",
       count: product.quantity,
-      price:
-        (price/ 100).toFixed(2).toString() + " $",
+      price: (price / 100).toFixed(2).toString() + " $",
       totalPrice:
         (product.totalPrice.centAmount / 100).toFixed(2).toString() + " $",
+      productKey: product.productKey || "",
     });
   });
   return result;
@@ -46,6 +49,9 @@ const CartList = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (_, record) => {
+        return <a href={`/products/${record.productKey}`}>{record.name}</a>;
+      },
     },
     {
       title: "Image",
