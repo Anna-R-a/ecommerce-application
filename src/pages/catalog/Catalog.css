@@ -13,7 +13,7 @@
 }
 
 .list__products .ant-list-item.product__item {
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   display: block;
 }
 
@@ -177,4 +177,9 @@
 
 main.ant-layout-content {
   padding: 24px 0 24px 24px;
+}
+
+.sider__wrapper h2 {
+  padding: 0;
+  width: auto;
 }

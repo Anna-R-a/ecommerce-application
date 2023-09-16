@@ -18,10 +18,9 @@ import { Context } from "./components/context/Context";
 import { getActiveCart } from "./api/api";
 import "./App.css";
 
-const activeCart =
-  localStorage.getItem("activeCart")
-    ? await getActiveCart()
-    : null;
+const activeCart = localStorage.getItem("activeCart")
+  ? await getActiveCart()
+  : null;
 
 function App() {
   const [context, setContext] = useState(activeCart ? activeCart.body : null);
