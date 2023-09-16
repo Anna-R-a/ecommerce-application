@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, Modal, Row } from "antd";
-import { Product } from "@commercetools/platform-sdk";
-import { getProductDetails } from "../../api/api";
+import { LineItem, Product } from "@commercetools/platform-sdk";
+import {
+  addProductToCart,
+  createCart,
+  getActiveCart,
+  getProductDetails,
+  removeProductFromCart,
+} from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
+
+import { Context } from "../../components/context/Context";
+import { notify } from "../../components/notification/notification";
+import { ToastContainer } from "react-toastify";
 
 const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<Product>();
@@ -34,6 +44,7 @@ const ProductPage: React.FC = () => {
   }, [key]);
 
   const name = productData?.masterData?.current?.name?.en;
+  const id = productData?.id!;
   const images = productData?.masterData?.current?.masterVariant?.images?.length
     ? productData?.masterData?.current?.masterVariant?.images
     : [];
@@ -55,16 +66,55 @@ const ProductPage: React.FC = () => {
     : 0;
   const discount = Math.ceil((1 - priceDiscounted / price) * 100);
 
-  // const size =  productData?.masterData?.current?.masterVariant?.attributes
-  //   ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
-  //   :'';
+  const [, setContext] = useContext(Context);
+  const activeCart = localStorage.getItem("activeCart");
+  const cartCustomer = localStorage.getItem("cart-customer");
+  const productsOnCart = cartCustomer
+    ? JSON.parse(cartCustomer).lineItems
+    : activeCart
+    ? JSON.parse(activeCart).lineItems
+    : [];
+  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
 
-  // const color =  productData?.masterData?.current?.masterVariant?.attributes
-  // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
-  // :'';
+  const isInCart = (id: string) => {
+    return cart.find((item) => item.productId === id);
+  };
+  const lineItemId = isInCart(id)?.id!;
+
+  const addItem = async (productId: string) => {
+    if (!activeCart && !cartCustomer) {
+      await createCart();
+    }
+    const fullCart = await addProductToCart(productId).then(() =>
+      getActiveCart(),
+    );
+    setCart(fullCart.body.lineItems);
+    setContext(fullCart.body.totalLineItemQuantity);
+
+    if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+  };
+
+  const removeItem = async (lineItemId: string) => {
+    const fullCart = await removeProductFromCart(lineItemId).then(() =>
+      getActiveCart(),
+    );
+    setCart(fullCart.body.lineItems);
+    setContext(fullCart.body.totalLineItemQuantity);
+
+    if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+  };
 
   return (
     <>
+      <ToastContainer />
       <Row>
         <Col span={24}>
           <h1 className="name">{name}</h1>
@@ -110,9 +160,33 @@ const ProductPage: React.FC = () => {
                 {priceDiscounted ? `- ${discount} %` : ""}
               </p>
             </div>
-            <Button type="primary" className="button_primary">
-              Add to cart
-            </Button>
+            <div className="buttons">
+              <Button
+                type="primary"
+                className="button button_remove"
+                key={`${key}-add`}
+                onClick={async () => {
+                  await removeItem(lineItemId).then(() =>
+                    notify("Product was removed successful!", "success")
+                  ).catch(()=> notify("Removal operation fails", "error"));
+                }}
+                disabled={isInCart(id) ? false : true}
+              >
+                Remove from Cart
+              </Button>
+
+              <Button
+                type="primary"
+                className="button button_add"
+                key={`${key}-remove`}
+                onClick={async () => {
+                  await addItem(id);
+                }}
+                disabled={isInCart(id) ? true : false}
+              >
+                Add to Cart
+              </Button>
+            </div>
           </Card>
         </Col>
       </Row>
