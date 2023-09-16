@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, Modal, Row } from "antd";
 import { LineItem, Product } from "@commercetools/platform-sdk";
-import { addProductToCart, createCart, getActiveCart, getProductDetails } from "../../api/api";
+import { addProductToCart, createCart, getActiveCart, getProductDetails, removeProductFromCart } from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
-import { removeProductFromCart } from "../../api/cart/cartItems";
+
 import { Context } from "../../components/context/Context";
 
 const ProductPage: React.FC = () => {
@@ -58,15 +58,7 @@ const ProductPage: React.FC = () => {
     : 0;
   const discount = Math.ceil((1 - priceDiscounted / price) * 100);
 
-  // const size =  productData?.masterData?.current?.masterVariant?.attributes
-  //   ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
-  //   :'';
-
-  // const color =  productData?.masterData?.current?.masterVariant?.attributes
-  // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
-  // :'';
-
-  const [context, setContext] = useContext(Context);
+  const [, setContext] = useContext(Context);
   const activeCart = localStorage.getItem("activeCart");
   const cartCustomer = localStorage.getItem("cart-customer");
   const productsOnCart = cartCustomer
@@ -75,17 +67,16 @@ const ProductPage: React.FC = () => {
     ? JSON.parse(activeCart).lineItems
     : [];
   const [cart, setCart] = useState<LineItem[]>(productsOnCart);
-  console.log('cart', cart)
+
   const isInCart = (id: string) =>{
     return cart.find(item => item.productId === id);
   }
+  const lineItemId = isInCart(id)?.id!
 
   const addItem = async (productId: string) => {
     if (!activeCart && !cartCustomer) {
       await createCart();
   }
-  // const increseadCart = await addProductToCart(productId);
-  // const fullCart = increseadCart;
   const fullCart =  await addProductToCart(productId).then(()=> getActiveCart()) ;
   setCart(fullCart.body.lineItems);
   setContext(fullCart.body.totalLineItemQuantity);
@@ -97,10 +88,8 @@ const ProductPage: React.FC = () => {
     }
   }
 
-  const removeItem = async (productId: string) => {
-  // const decreseadCart = await removeProductFromCart(productId);
-  // const fullCart = decreseadCart;
-  const fullCart =  await removeProductFromCart(productId).then(()=> getActiveCart()) 
+  const removeItem = async (lineItemId: string) => {
+  const fullCart =  await removeProductFromCart(lineItemId).then(()=> getActiveCart()) 
   setCart(fullCart.body.lineItems);
   setContext(fullCart.body.totalLineItemQuantity);
   
@@ -161,42 +150,24 @@ const ProductPage: React.FC = () => {
             <div>
               {isInCart(id) 
             ? (<Button 
+              type="primary" 
+              className="button_primary" 
+              key={`${key}`}
+              onClick={async()=> await removeItem(lineItemId)}
+            >
+              Remove
+            </Button>)
+          : (<Button 
             type="primary" 
             className="button_primary" 
             key={`${key}`}
-            onClick={async()=> {await removeItem(id);
-              console.log('cart-remove', cart)}}
+            onClick={async()=> await addItem(id)}
           >
-            Remove
+            Add to cart
           </Button>)
-          : (<Button 
-          type="primary" 
-          className="button_primary" 
-          key={`${key}`}
-          onClick={async()=> {await addItem(id);
-          console.log('cart-add', cart)}}
-        >
-         Add to cart
-        </Button>)
               }
-            {/* <Button 
-              type="primary" 
-              className="button_primary" 
-              key={`${key}`}
-              onClick={async()=> await checkItem(id)}
-            >
-              {isInCart(id) ? "Remove" : "Add to cart"}
-            </Button> */}
             </div>
-            {/* <Button 
-              type="primary" 
-              className="button_primary" 
-              key={`${key}`}
-              onClick={()=>checkItem(id)}
-            >
-              Add to cart
-            </Button> */}
-          </Card>
+            </Card>
         </Col>
       </Row>
       <>
