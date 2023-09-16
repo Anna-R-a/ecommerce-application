@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, Modal, Row } from "antd";
-import { Product } from "@commercetools/platform-sdk";
-import { getProductDetails } from "../../api/api";
+import { LineItem, Product } from "@commercetools/platform-sdk";
+import { addProductToCart, createCart, getActiveCart, getProductDetails } from "../../api/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
+import { removeProductFromCart } from "../../api/cart/cartItems";
+import { Context } from "../../components/context/Context";
 
 const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<Product>();
@@ -34,6 +36,7 @@ const ProductPage: React.FC = () => {
   }, [key]);
 
   const name = productData?.masterData?.current?.name?.en;
+  const id = productData?.id!;
   const images = productData?.masterData?.current?.masterVariant?.images?.length
     ? productData?.masterData?.current?.masterVariant?.images
     : [];
@@ -62,6 +65,51 @@ const ProductPage: React.FC = () => {
   // const color =  productData?.masterData?.current?.masterVariant?.attributes
   // ? productData?.masterData?.current?.masterVariant?.attributes[1].value.label
   // :'';
+
+  const [context, setContext] = useContext(Context);
+  const activeCart = localStorage.getItem("activeCart");
+  const cartCustomer = localStorage.getItem("cart-customer");
+  const productsOnCart = cartCustomer
+    ? JSON.parse(cartCustomer).lineItems
+    : activeCart
+    ? JSON.parse(activeCart).lineItems
+    : [];
+  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
+  console.log('cart', cart)
+  const isInCart = (id: string) =>{
+    return cart.find(item => item.productId === id);
+  }
+
+  const addItem = async (productId: string) => {
+    if (!activeCart && !cartCustomer) {
+      await createCart();
+  }
+  // const increseadCart = await addProductToCart(productId);
+  // const fullCart = increseadCart;
+  const fullCart =  await addProductToCart(productId).then(()=> getActiveCart()) ;
+  setCart(fullCart.body.lineItems);
+  setContext(fullCart.body.totalLineItemQuantity);
+  
+  if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+  }
+
+  const removeItem = async (productId: string) => {
+  // const decreseadCart = await removeProductFromCart(productId);
+  // const fullCart = decreseadCart;
+  const fullCart =  await removeProductFromCart(productId).then(()=> getActiveCart()) 
+  setCart(fullCart.body.lineItems);
+  setContext(fullCart.body.totalLineItemQuantity);
+  
+  if (cartCustomer) {
+      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
+    } else {
+      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    }
+  }
 
   return (
     <>
@@ -110,9 +158,44 @@ const ProductPage: React.FC = () => {
                 {priceDiscounted ? `- ${discount} %` : ""}
               </p>
             </div>
-            <Button type="primary" className="button_primary">
+            <div>
+              {isInCart(id) 
+            ? (<Button 
+            type="primary" 
+            className="button_primary" 
+            key={`${key}`}
+            onClick={async()=> {await removeItem(id);
+              console.log('cart-remove', cart)}}
+          >
+            Remove
+          </Button>)
+          : (<Button 
+          type="primary" 
+          className="button_primary" 
+          key={`${key}`}
+          onClick={async()=> {await addItem(id);
+          console.log('cart-add', cart)}}
+        >
+         Add to cart
+        </Button>)
+              }
+            {/* <Button 
+              type="primary" 
+              className="button_primary" 
+              key={`${key}`}
+              onClick={async()=> await checkItem(id)}
+            >
+              {isInCart(id) ? "Remove" : "Add to cart"}
+            </Button> */}
+            </div>
+            {/* <Button 
+              type="primary" 
+              className="button_primary" 
+              key={`${key}`}
+              onClick={()=>checkItem(id)}
+            >
               Add to cart
-            </Button>
+            </Button> */}
           </Card>
         </Col>
       </Row>
