@@ -14,6 +14,8 @@ import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
 
 import { Context } from "../../components/context/Context";
+import { notify } from "../../components/notification/notification";
+import { ToastContainer } from "react-toastify";
 
 const ProductPage: React.FC = () => {
   const [productData, setProductData] = useState<Product>();
@@ -112,6 +114,7 @@ const ProductPage: React.FC = () => {
 
   return (
     <>
+      <ToastContainer />
       <Row>
         <Col span={24}>
           <h1 className="name">{name}</h1>
@@ -157,26 +160,28 @@ const ProductPage: React.FC = () => {
                 {priceDiscounted ? `- ${discount} %` : ""}
               </p>
             </div>
-            <div>
-              {isInCart(id) ? (
+            <div className="buttons">
+              
                 <Button
                   type="primary"
-                  className="button_primary"
-                  key={`${key}`}
-                  onClick={async () => await removeItem(lineItemId)}
+                  className="button button_remove"
+                  key={`${key}-add`}
+                  onClick={async () => {await removeItem(lineItemId).then(()=> notify("Product was removed successful!", "success"))}}
+                  disabled={isInCart(id) ? false : true}
                 >
-                  Remove
+                  Remove from Cart
                 </Button>
-              ) : (
+              
                 <Button
                   type="primary"
-                  className="button_primary"
-                  key={`${key}`}
-                  onClick={async () => await addItem(id)}
+                  className="button button_add"
+                  key={`${key}-remove`}
+                  onClick={async () => {await addItem(id)}}
+                  disabled={isInCart(id) ? true : false}
                 >
-                  Add to cart
+                  Add to Cart
                 </Button>
-              )}
+              
             </div>
           </Card>
         </Col>

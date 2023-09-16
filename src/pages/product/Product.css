@@ -63,6 +63,17 @@
   border-right: 8px solid #000000;
 }
 
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+}
+.button {
+  margin: 10px;
+  justify-content: center;
+}
+
 @media screen and (max-width: 920px) {
   .description-block {
     width: 50vw;
