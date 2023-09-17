@@ -76,3 +76,11 @@ h2 {
   background-color: var(--cover-color) !important;
   border-color: var(--cover-color) !important;
 }
+
+a {
+  color: var(--dark-color);
+}
+
+a:hover {
+  color: var(--medium-color);
+}

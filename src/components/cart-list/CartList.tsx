@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { LineItem } from "@commercetools/platform-sdk";
+import { Context } from "../context/Context";
 import {
   changeQuantityProductInCart,
   createCart,
@@ -42,7 +43,10 @@ function mapToDataType(data: LineItem[]) {
 }
 
 const CartList = () => {
-  const [productsList, setProductList] = useState<LineItem[]>([]);
+  const [context, setContext] = useContext(Context);
+  const [productsList, setProductList] = useState<LineItem[]>(
+    context ? context.lineItems : []
+  );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -100,7 +104,7 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              },
+              }
             );
           }
         };
@@ -113,26 +117,37 @@ const CartList = () => {
 
         return (
           <Space size="small">
-            <Button onClick={increseCount}>+</Button>
-            <Button onClick={decreseCount}>-</Button>
-            <Button onClick={removeProduct}>delete</Button>
+            <Button onClick={increseCount} className="button_default">+</Button>
+            <Button onClick={decreseCount} className="button_default">-</Button>
+            <Button onClick={removeProduct} className="button_default">delete</Button>
           </Space>
         );
       },
     },
   ];
 
+  // React.useEffect(() => {
+  //   if (
+  //     localStorage.getItem("activeCart") ||
+  //     localStorage.getItem("cart-customer")
+  //   ) {
+  //     getActiveCart().then((res: any) => {
+  //       setTotalPrice(res.body.totalPrice.centAmount);
+  //       setProductList(res.body.lineItems);
+  //       setContext(res.body);
+  //     });
+  //   }
+  // }, [version]);
+
   React.useEffect(() => {
-    if (
-      localStorage.getItem("activeCart") ||
-      localStorage.getItem("cart-customer")
-    ) {
+    if (context) {
       getActiveCart().then((res: any) => {
         setTotalPrice(res.body.totalPrice.centAmount);
         setProductList(res.body.lineItems);
+        setContext(res.body);
       });
     }
-  }, [version]);
+  }, [context, setContext, version]);
 
   return (
     <Table
@@ -141,7 +156,7 @@ const CartList = () => {
         emptyText: (
           <div className="empty-cart-text">
             Your basket is empty. To select a product, go to the{" "}
-            <a href="/catalog">catalog</a>
+            <a href="/catalog">Catalog</a>
           </div>
         ),
       }}
@@ -165,6 +180,7 @@ const CartList = () => {
               localStorage.removeItem("activeCart");
               setProductList([]);
               setTotalPrice(0);
+              setContext(null);
             });
           }
           if (localStorage.getItem("cart-customer")) {
@@ -173,7 +189,7 @@ const CartList = () => {
                 .then((res) => {
                   localStorage.setItem(
                     "cart-customer",
-                    JSON.stringify(res.body),
+                    JSON.stringify(res.body)
                   );
                 })
                 .then(() => {

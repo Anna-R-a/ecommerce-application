@@ -3,10 +3,15 @@
 }
 
 .empty-cart-text{
-    text-align: center;
-    max-width: 450px;
+    margin: 0 auto;
+    max-width: 350px;
     height: 150px;
-    font-size: 30px;
+    font-size: 2.6rem;
+}
+
+.button_default:hover {
+    color: var(--medium-color) !important;
+    border-color: var(--medium-color) !important;
 }
 
 .modal_button{
@@ -16,4 +21,8 @@
 
 .modal_button:hover {
     background-color: var(--light-color) !important;
+}
+
+.ant-table-wrapper {
+    width: 100%;
 }
