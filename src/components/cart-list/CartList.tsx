@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Space, Table } from "antd";
+import { Button, Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { LineItem } from "@commercetools/platform-sdk";
 import {
@@ -45,6 +45,7 @@ const CartList = () => {
   const [productsList, setProductList] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -135,6 +136,7 @@ const CartList = () => {
 
   return (
     <Table
+      scroll={{ x: true }}
       locale={{
         emptyText: (
           <div className="empty-cart-text">
@@ -153,7 +155,11 @@ const CartList = () => {
           return false;
         };
 
-        const clearCart = () => {
+        const showModal = () => {
+          setIsModalOpen(true);
+        };
+
+        const handleOk = () => {
           if (localStorage.getItem("activeCart")) {
             deleteCart().then(() => {
               localStorage.removeItem("activeCart");
@@ -175,6 +181,11 @@ const CartList = () => {
                 });
             });
           }
+          setIsModalOpen(false);
+        };
+
+        const handleCancel = () => {
+          setIsModalOpen(false);
         };
 
         return (
@@ -192,10 +203,18 @@ const CartList = () => {
               className="button_primary"
               type="primary"
               disabled={isDisabled()}
-              onClick={clearCart}
+              onClick={showModal}
             >
               Clear cart
             </Button>
+            <Modal
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okButtonProps={{ className: "modal_button" }}
+            >
+              <p>Do you really want to empty the cart?</p>
+            </Modal>
           </div>
         );
       }}

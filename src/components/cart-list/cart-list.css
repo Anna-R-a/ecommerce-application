@@ -7,3 +7,12 @@
     height: 100px;
     font-size: 30px;
 }
+
+.modal_button{
+    width: 60px;
+    background-color: var(--medium-color);
+}
+
+.modal_button:hover {
+    background-color: var(--light-color) !important;
+}
