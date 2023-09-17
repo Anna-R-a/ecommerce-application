@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Space, Table } from "antd";
+import { Button, Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { LineItem } from "@commercetools/platform-sdk";
 import {
   changeQuantityProductInCart,
+  createCart,
+  deleteCart,
   getActiveCart,
   removeProductFromCart,
 } from "../../api/api";
@@ -43,6 +45,7 @@ const CartList = () => {
   const [productsList, setProductList] = useState<LineItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -124,7 +127,7 @@ const CartList = () => {
       localStorage.getItem("activeCart") ||
       localStorage.getItem("cart-customer")
     ) {
-      getActiveCart().then((res) => {
+      getActiveCart().then((res: any) => {
         setTotalPrice(res.body.totalPrice.centAmount);
         setProductList(res.body.lineItems);
       });
@@ -133,13 +136,86 @@ const CartList = () => {
 
   return (
     <Table
+      scroll={{ x: true }}
+      locale={{
+        emptyText: (
+          <div className="empty-cart-text">
+            Your basket is empty. To select a product, go to the{" "}
+            <a href="/catalog">catalog</a>
+          </div>
+        ),
+      }}
       columns={columns}
       dataSource={mapToDataType(productsList)}
       footer={() => {
+        const isDisabled = () => {
+          if (productsList.length === 0) {
+            return true;
+          }
+          return false;
+        };
+
+        const showModal = () => {
+          setIsModalOpen(true);
+        };
+
+        const handleOk = () => {
+          if (localStorage.getItem("activeCart")) {
+            deleteCart().then(() => {
+              localStorage.removeItem("activeCart");
+              setProductList([]);
+              setTotalPrice(0);
+            });
+          }
+          if (localStorage.getItem("cart-customer")) {
+            deleteCart().then(() => {
+              createCart()
+                .then((res) => {
+                  localStorage.setItem(
+                    "cart-customer",
+                    JSON.stringify(res.body),
+                  );
+                })
+                .then(() => {
+                  setVersion((prev) => prev + 1);
+                });
+            });
+          }
+          setIsModalOpen(false);
+        };
+
+        const handleCancel = () => {
+          setIsModalOpen(false);
+        };
+
         return (
-          <p style={{ fontSize: 18 }}>
-            Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
-          </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: 18 }}>
+              Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
+            </p>
+            <Button
+              className="button_primary"
+              type="primary"
+              disabled={isDisabled()}
+              onClick={showModal}
+            >
+              Clear cart
+            </Button>
+            <Modal
+              open={isModalOpen}
+              onOk={handleOk}
+              onCancel={handleCancel}
+              okButtonProps={{ className: "modal_button" }}
+            >
+              <p>Do you really want to empty the cart?</p>
+            </Modal>
+          </div>
         );
       }}
     />

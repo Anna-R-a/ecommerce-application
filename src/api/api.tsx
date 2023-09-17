@@ -99,6 +99,26 @@ export const createCart = async () => {
     .execute();
 };
 
+export const deleteCart = async () => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
+  const activeCart = await getActiveCart();
+  const cartId = activeCart.body.id;
+  const cartVersion = activeCart.body.version;
+
+  return tokenClient
+    .me()
+    .carts()
+    .withId({ ID: cartId })
+    .delete({
+      queryArgs: {
+        version: cartVersion,
+      },
+    })
+    .execute();
+};
+
 export const getActiveCart = async () => {
   const tokenLoggedClient = getTokenClient();
   const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;

@@ -166,9 +166,11 @@ const ProductPage: React.FC = () => {
                 className="button button_remove"
                 key={`${key}-add`}
                 onClick={async () => {
-                  await removeItem(lineItemId).then(() =>
-                    notify("Product was removed successful!", "success")
-                  ).catch(()=> notify("Removal operation fails", "error"));
+                  await removeItem(lineItemId)
+                    .then(() =>
+                      notify("Product was removed successful!", "success"),
+                    )
+                    .catch(() => notify("Removal operation fails", "error"));
                 }}
                 disabled={isInCart(id) ? false : true}
               >
