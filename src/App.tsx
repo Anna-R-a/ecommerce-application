@@ -23,7 +23,6 @@ const activeCart = localStorage.getItem("activeCart")
   : null;
 
 function App() {
-  console.log("activeCart", activeCart);
   const [context, setContext] = useState(activeCart ? activeCart.body : null);
 
   return (

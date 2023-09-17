@@ -23,12 +23,12 @@ export const getTokenClient = () => {
   }
 
   const tokenClient = new ClientBuilder()
-    .withExistingTokenFlow(token, {
-      force: true,
-    })
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware()
-    .build();
+  .withExistingTokenFlow(token, {
+    force: true,
+  })
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware()
+  .build();
 
   const apiTokenClient = createApiBuilderFromCtpClient(
     tokenClient,

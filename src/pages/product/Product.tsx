@@ -4,7 +4,6 @@ import { LineItem, Product } from "@commercetools/platform-sdk";
 import {
   addProductToCart,
   createCart,
-  getActiveCart,
   getProductDetails,
   removeProductFromCart,
 } from "../../api/api";
@@ -23,15 +22,6 @@ const ProductPage: React.FC = () => {
   const [cart, setCart] = useState<LineItem[]>(
     context ? context.lineItems : [],
   );
-  //const [, setContext] = useContext(Context);
-  // const activeCart = localStorage.getItem("activeCart");
-  // const cartCustomer = localStorage.getItem("cart-customer");
-  // const productsOnCart = cartCustomer
-  //   ? JSON.parse(cartCustomer).lineItems
-  //   : activeCart
-  //   ? JSON.parse(activeCart).lineItems
-  //   : [];
-  //const [cart, setCart] = useState<LineItem[]>(productsOnCart);
 
   const [productData, setProductData] = useState<Product>();
   const { key } = useParams();
@@ -87,24 +77,6 @@ const ProductPage: React.FC = () => {
   const lineItemId = isInCart(id)?.id!;
 
   const addItem = async (productId: string) => {
-    // if (!activeCart && !cartCustomer) {
-    //   await createCart();
-    // }
-    // const fullCart = await addProductToCart(productId).then(() =>
-    //   getActiveCart(),
-    // );
-    // setCart(fullCart.body.lineItems);
-    // setContext(fullCart.body.totalLineItemQuantity);
-
-    // if (cartCustomer) {
-    //   localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    // } else {
-    //   localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    // }
-    // const { target } = event;
-    // const productId = target.closest(".button_primary")?.dataset.id;
-    // disableButtonByClick(target);
-
     if (!context) {
       await createCart();
     }
@@ -115,18 +87,10 @@ const ProductPage: React.FC = () => {
   };
 
   const removeItem = async (lineItemId: string) => {
-    // const fullCart = await removeProductFromCart(lineItemId).then(() =>
-    //   getActiveCart(),
-    // );
     const fullCart = await removeProductFromCart(lineItemId);
     setCart(fullCart.body.lineItems);
     setContext(fullCart.body);
-
-    // if (cartCustomer) {
-    //   localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    // } else {
     localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    //}
   };
 
   return (
@@ -161,7 +125,6 @@ const ProductPage: React.FC = () => {
         <Col span={8} className="description">
           <Card className="description-block">
             <div dangerouslySetInnerHTML={{ __html: `${description}` }}></div>
-            {/* <div >{`Size: ${size}`}</div> */}
           </Card>
         </Col>
         <Col span={8} className="price">
