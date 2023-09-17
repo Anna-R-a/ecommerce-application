@@ -158,6 +158,7 @@ const CartList = () => {
             deleteCart().then(() => {
               localStorage.removeItem("activeCart");
               setProductList([]);
+              setTotalPrice(0);
             });
           }
           if (localStorage.getItem("cart-customer")) {
