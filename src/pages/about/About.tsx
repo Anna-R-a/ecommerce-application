@@ -18,8 +18,7 @@ const data = [
     key: "anna",
     href: "https://github.com/Anna-R-a",
     title: "Hanna Ratnikava",
-    description:
-      "Believe in yourself and everything will work out!",
+    description: "Believe in yourself and everything will work out!",
     content:
       "I'm a lecturer at the Belarusian State University of Transport. My way into programming started in November 2022 with Stage 0 in RS School. At the beginning I hadn't any knowledge in JavaScript, CSS or HTML. Sometimes it was hard, and other times it was very hard, but it was always interesting to get new knowledge and to learn frontend step by step. I realize, the knowledge I've got during this time is just the tip of the frontend iceberg.",
     country: "Homiel",
@@ -95,25 +94,29 @@ const AboutPage: React.FC = () => {
         <h2>Technology Stack</h2>
       </Divider>
       <div className="text">
-        <Space direction="horizontal" size="large" style={{ flexWrap: "wrap", justifyContent: "center" }}>
+        <Space
+          direction="horizontal"
+          size="large"
+          style={{ flexWrap: "wrap", justifyContent: "center" }}
+        >
           <Badge.Ribbon text="Front-end" color="#92bfc1">
             <Card title=" " size="small" className="card__stack">
-            <Tag>HTML5</Tag>
-            <Tag>CSS 3</Tag>
-            <Tag>TypeScript</Tag>
-            <Tag>React 18.2</Tag>
+              <Tag>HTML5</Tag>
+              <Tag>CSS 3</Tag>
+              <Tag>TypeScript</Tag>
+              <Tag>React 18.2</Tag>
             </Card>
           </Badge.Ribbon>
           <Badge.Ribbon text="Libraries" color="#5f9ea0">
             <Card title=" " size="small" className="card__stack">
-            <Tag>Ant Design</Tag>
-            <Tag>Moment</Tag>
-            <Tag>Jest</Tag>
+              <Tag>Ant Design</Tag>
+              <Tag>Moment</Tag>
+              <Tag>Jest</Tag>
             </Card>
           </Badge.Ribbon>
           <Badge.Ribbon text="Back-end" color="#3c7375">
             <Card title=" " size="small" className="card__stack">
-            <Tag>commercetools.com</Tag>
+              <Tag>commercetools.com</Tag>
             </Card>
           </Badge.Ribbon>
         </Space>

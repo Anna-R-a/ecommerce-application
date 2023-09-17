@@ -45,7 +45,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : []
+    context ? context.lineItems : [],
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
@@ -104,22 +104,31 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              }
+              },
             );
           }
         };
 
         const removeProduct = () => {
           removeProductFromCart(record.key).then(() => {
+            if(productsList.length === 1){
+              localStorage.removeItem('activeCart')
+            }
             setVersion((prev) => prev + 1);
           });
         };
 
         return (
           <Space size="small">
-            <Button onClick={increseCount} className="button_default">+</Button>
-            <Button onClick={decreseCount} className="button_default">-</Button>
-            <Button onClick={removeProduct} className="button_default">delete</Button>
+            <Button onClick={increseCount} className="button_default">
+              +
+            </Button>
+            <Button onClick={decreseCount} className="button_default">
+              -
+            </Button>
+            <Button onClick={removeProduct} className="button_default">
+              delete
+            </Button>
           </Space>
         );
       },
@@ -147,7 +156,7 @@ const CartList = () => {
         setContext(res.body);
       });
     }
-  }, [context, setContext, version]);
+  }, [version]);
 
   return (
     <Table
@@ -181,20 +190,6 @@ const CartList = () => {
               setProductList([]);
               setTotalPrice(0);
               setContext(null);
-            });
-          }
-          if (localStorage.getItem("cart-customer")) {
-            deleteCart().then(() => {
-              createCart()
-                .then((res) => {
-                  localStorage.setItem(
-                    "cart-customer",
-                    JSON.stringify(res.body)
-                  );
-                })
-                .then(() => {
-                  setVersion((prev) => prev + 1);
-                });
             });
           }
           setIsModalOpen(false);

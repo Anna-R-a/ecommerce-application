@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
   const [cart, setCart] = useState<LineItem[]>(
     context ? context.lineItems : [],
   );
-    //const [, setContext] = useContext(Context);
+  //const [, setContext] = useContext(Context);
   // const activeCart = localStorage.getItem("activeCart");
   // const cartCustomer = localStorage.getItem("cart-customer");
   // const productsOnCart = cartCustomer
@@ -125,7 +125,7 @@ const ProductPage: React.FC = () => {
     // if (cartCustomer) {
     //   localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
     // } else {
-      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
     //}
   };
 
