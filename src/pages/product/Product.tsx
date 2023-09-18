@@ -95,7 +95,6 @@ const ProductPage: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
       <Row>
         <Col span={24}>
           <h1 className="name">{name}</h1>
@@ -142,9 +141,10 @@ const ProductPage: React.FC = () => {
             </div>
             <div className="buttons">
               <Button
+                data-testid="add-button"
                 type="primary"
                 className="button button_remove button_primary"
-                key={`${key}-add`}
+                key={`${key}-remove`}
                 onClick={async () => {
                   await removeItem(lineItemId)
                     .then(() =>
@@ -160,7 +160,7 @@ const ProductPage: React.FC = () => {
               <Button
                 type="primary"
                 className="button button_add button_primary"
-                key={`${key}-remove`}
+                key={`${key}-add`}
                 onClick={async () => {
                   await addItem(id);
                 }}

@@ -24,7 +24,7 @@ describe("client builder", () => {
   };
 
   describe("general", () => {
-    test("should build the client when build method is called", () => {
+    test("should build the client", () => {
       const client = defaultClient(
         httpMiddlewareOptions.host,
         authMiddlewareOptions.credentials,
@@ -44,7 +44,7 @@ describe("client builder", () => {
   });
 
   describe("middlewares", () => {
-    test("should create should create default client", () => {
+    test("should create default client", () => {
       const defaultClientTest = defaultClient(
         httpMiddlewareOptions.host,
         authMiddlewareOptions.credentials,

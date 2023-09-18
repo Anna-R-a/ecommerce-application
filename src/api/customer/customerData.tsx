@@ -6,7 +6,7 @@ export const customerData = {
     id: "some_123_id",
     isEmailVerified: false,
     lastName: "Doe",
-    password: "****aGg=",
+    password: "****aGg=1",
     version: 1,
     createdAt: "2015-07-06T13:22:33.339Z",
     lastModifiedAt: "2015-07-06T13:22:33.339Z",
