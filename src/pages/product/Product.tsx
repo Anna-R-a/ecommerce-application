@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 
 import { Context } from "../../components/context/Context";
 import { notify } from "../../components/notification/notification";
-import { ToastContainer } from "react-toastify";
+
 
 const ProductPage: React.FC = () => {
   const [context, setContext] = useContext(Context);
