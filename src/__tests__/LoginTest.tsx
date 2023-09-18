@@ -17,6 +17,5 @@ describe("Test", () => {
     expect(buttonLog).toBeVisible();
     expect(screen.getByTestId("login-page")).toBeInTheDocument();
     // act(()=> fireEvent.click(buttonLog))
-    
   });
 });

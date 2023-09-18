@@ -12,7 +12,7 @@ describe("Test", () => {
         </BrowserRouter>
       </Context.Provider>,
     );
-    await screen.findByText("No data")
+    await screen.findByText("No data");
     expect(screen.getByText("No data")).toBeInTheDocument();
   });
 });

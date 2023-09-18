@@ -1,8 +1,9 @@
-import { CustomerDraft, createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
+import {
+  CustomerDraft,
+  createApiBuilderFromCtpClient,
+} from "@commercetools/platform-sdk";
 import { customerData } from "../api/customer/customerData";
 import { defaultClient } from "../api/client/createClient";
-
-
 
 require("dotenv").config();
 
@@ -36,31 +37,31 @@ describe("client builder", () => {
     .withHttpMiddleware(httpMiddlewareOptions)
     .withClientCredentialsFlow(authMiddlewareOptions)
     .build();
-const apiRootTest = createApiBuilderFromCtpClient(client).withProjectKey({projectKey})
+  const apiRootTest = createApiBuilderFromCtpClient(client).withProjectKey({
+    projectKey,
+  });
 
-test("should create customer", async () => {
-  const createNewCustomer = async (body: CustomerDraft) => {
-    return apiRootTest
-      .customers()
-      .post({
-        body,
-      
-      })
-      .clientRequest()
-      
-  };
-  const createNewCustomer2 = async (body: CustomerDraft) => {
-    return apiRootTest
-      .customers()
-      .post({
-        body,
-      })
-      .execute()
-  };
-  expect(createNewCustomer2).toBeTruthy()
-  const newCustomer = await createNewCustomer(customerData.customer);
-  expect(newCustomer.body).toBeTruthy()
-  expect(newCustomer.body.firstName).toBe('John')
-  expect(newCustomer.body.email).toBe('johndoe@example.com')
-})
-})
+  test("should create customer", async () => {
+    const createNewCustomer = async (body: CustomerDraft) => {
+      return apiRootTest
+        .customers()
+        .post({
+          body,
+        })
+        .clientRequest();
+    };
+    const createNewCustomer2 = async (body: CustomerDraft) => {
+      return apiRootTest
+        .customers()
+        .post({
+          body,
+        })
+        .execute();
+    };
+    expect(createNewCustomer2).toBeTruthy();
+    const newCustomer = await createNewCustomer(customerData.customer);
+    expect(newCustomer.body).toBeTruthy();
+    expect(newCustomer.body.firstName).toBe("John");
+    expect(newCustomer.body.email).toBe("johndoe@example.com");
+  });
+});

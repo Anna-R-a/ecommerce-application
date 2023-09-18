@@ -27,13 +27,19 @@ function mapToDataType(data: LineItem[]) {
   const result: DataType[] = [];
   data.forEach((product) => {
     const price = product.price.value.centAmount;
-    let priceWithDiscount = '';
-    const discount = product.price.discounted?.value.centAmount
-    if(discount){
-      priceWithDiscount = (discount/100).toFixed(2).toString() + ' $';
-    } 
-    if(product.discountedPricePerQuantity.length){
-      priceWithDiscount = (product.discountedPricePerQuantity[0].discountedPrice.value.centAmount/100).toFixed(2).toString() + ' $';
+    let priceWithDiscount = "";
+    const discount = product.price.discounted?.value.centAmount;
+    if (discount) {
+      priceWithDiscount = (discount / 100).toFixed(2).toString() + " $";
+    }
+    if (product.discountedPricePerQuantity.length) {
+      priceWithDiscount =
+        (
+          product.discountedPricePerQuantity[0].discountedPrice.value
+            .centAmount / 100
+        )
+          .toFixed(2)
+          .toString() + " $";
     }
     result.push({
       key: product.id,
@@ -121,7 +127,8 @@ const CartList = () => {
                 setVersion((prev) => prev + 1);
               },
             );
-          } if (record.count === 1) {
+          }
+          if (record.count === 1) {
             removeProductFromCart(record.key).then(() => {
               if (productsList.length === 1) {
                 localStorage.removeItem("activeCart");
@@ -222,23 +229,23 @@ const CartList = () => {
         };
 
         const applyDiscountCode = (value: string) => {
-          addDiscountToCart(form.getFieldValue("promo-code")).then(()=>{
-            message.success("Promo code applied!");
-            setVersion(prev => prev + 1)
-          }
-          ).catch(()=>{
-            message.error("Promo code not found!");
-          })
-          
+          addDiscountToCart(form.getFieldValue("promo-code"))
+            .then(() => {
+              message.success("Promo code applied!");
+              setVersion((prev) => prev + 1);
+            })
+            .catch(() => {
+              message.error("Promo code not found!");
+            });
         };
 
         const onFailedApplyCode = () => {
           message.error("Promo code not found!");
         };
 
-        const onChange = () =>{
-          setDisabled(false)
-        }
+        const onChange = () => {
+          setDisabled(false);
+        };
 
         return (
           <div className="table-footer">

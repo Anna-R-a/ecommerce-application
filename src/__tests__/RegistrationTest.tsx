@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import Registration from "../pages/registration/Registration";
 import { Context } from "../components/context/Context";
 
-
 describe("Test", () => {
   test("should render registration page", () => {
     render(

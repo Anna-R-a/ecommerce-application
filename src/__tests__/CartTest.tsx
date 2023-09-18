@@ -3,7 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import { Context } from "../components/context/Context";
 import CartPage from "../pages/cart/Cart";
 
-
 describe("Test", () => {
   test("should render cart page", async () => {
     render(
