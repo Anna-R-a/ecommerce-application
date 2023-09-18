@@ -2,7 +2,7 @@ import { ClientBuilder } from "@commercetools/sdk-client-v2";
 import { httpMiddlewareOptions } from "./createClient";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 
-function getToken() {
+export function getToken() {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) {
     return;

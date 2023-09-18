@@ -29,7 +29,7 @@ export function mapRegDataToRequest(
     streetBilling,
     postcodeBilling,
   } = data;
-  console.log(data);
+
   const addressShipping: BaseAddress = {
     key: "addressShipping",
     country: countryShipping[0],
@@ -81,6 +81,8 @@ export const signInCustomer = async ({ email, password }: MyCustomerSignin) => {
       body: {
         email,
         password,
+        activeCartSignInMode: "MergeWithExistingCustomerCart",
+        updateProductData: true,
       },
     })
     .execute();

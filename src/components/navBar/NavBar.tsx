@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import type { MenuProps } from "antd";
 import { Menu, Button, Drawer } from "antd";
-import { UserOutlined, MenuOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  MenuOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { MenuInfo } from "rc-menu/lib/interface";
+import { Context } from "../context/Context";
 import "./NavBar.css";
 
 const itemsNav: MenuProps["items"] = [
@@ -24,9 +29,12 @@ const itemsNav: MenuProps["items"] = [
     key: "/catalog",
   },
   {
-    label: "About Us",
+    label: (
+      <Link to="/about" className="nav__link">
+        About
+      </Link>
+    ),
     key: "/about",
-    disabled: true,
   },
 ];
 
@@ -60,7 +68,7 @@ const subMenuWithAuth = [
   },
   {
     label: (
-      <Link to="/profile" className="profil">
+      <Link to="/profile" className="profile">
         Profile
       </Link>
     ),
@@ -82,15 +90,17 @@ export const Nav: React.FC = () => {
   );
 };
 
-const handlerLogInOut = (info: MenuInfo) => {
-  const isLogged = localStorage.getItem("isLogged");
-  if (isLogged && info.key === "/login") {
-    localStorage.clear();
-  }
-};
-
 export const UserBar: React.FC = () => {
   const location = useLocation();
+  const [context, setContext] = useContext(Context);
+
+  const handlerLogInOut = (info: MenuInfo) => {
+    const isLogged = localStorage.getItem("isLogged");
+    if (isLogged && info.key === "/login") {
+      localStorage.clear();
+      setContext(null);
+    }
+  };
 
   const itemsUserBar: MenuProps["items"] = [
     {
@@ -104,19 +114,41 @@ export const UserBar: React.FC = () => {
   ];
 
   return (
-    <Menu
-      className="user-bar"
-      mode="horizontal"
-      items={itemsUserBar}
-      selectedKeys={[location.pathname]}
-      onClick={handlerLogInOut}
-    />
+    <div className="user-bar">
+      <Link to={"/cart"}>
+        <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
+        <span className="shoppingCart__count">
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
+        </span>
+      </Link>
+
+      <Menu
+        className="user-bar__navigation"
+        mode="horizontal"
+        items={itemsUserBar}
+        selectedKeys={[location.pathname]}
+        onClick={handlerLogInOut}
+      />
+    </div>
   );
 };
 
 export const NavDrawer: React.FC = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [context, setContext] = useContext(Context);
+
+  const handlerLogInOut = (info: MenuInfo) => {
+    const isLogged = localStorage.getItem("isLogged");
+    if (isLogged && info.key === "/login") {
+      localStorage.clear();
+      setContext(null);
+    }
+  };
 
   const showDrawer = () => {
     setOpen(true);
@@ -143,7 +175,17 @@ export const NavDrawer: React.FC = () => {
   ];
 
   return (
-    <>
+    <div className="user-bar">
+      <Link to={"/cart"}>
+        <ShoppingCartOutlined key="shoppingCart" className="shoppingCart" />
+        <span className="shoppingCart__count">
+          {!context
+            ? 0
+            : context.totalLineItemQuantity
+            ? context.totalLineItemQuantity
+            : 0}
+        </span>
+      </Link>
       <Button
         type="default"
         onClick={showDrawer}
@@ -167,7 +209,7 @@ export const NavDrawer: React.FC = () => {
         />
 
         <Menu
-          className="user-bar"
+          className="user-bar__navigation"
           mode="inline"
           defaultOpenKeys={["SubMenu"]}
           items={itemsUserBar}
@@ -175,6 +217,6 @@ export const NavDrawer: React.FC = () => {
           onClick={onClose}
         />
       </Drawer>
-    </>
+    </div>
   );
 };

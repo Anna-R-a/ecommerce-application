@@ -16,7 +16,6 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
-  getProductPrices,
   getProductType,
   getProductsBySearch,
   getProductsFromCategory,
@@ -47,11 +46,15 @@ type Filter = {
   value: CheckboxOptionType[];
 };
 
+const categoriesArray = (await getCategories()).body.results;
+
 const CatalogPage: React.FC = () => {
   const { keyCatalog } = useParams();
 
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
+
+  const [allCategories] = useState<Category[]>(categoriesArray);
 
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [selectCategory, setSelectCategory] = useState(currentCategory);
@@ -65,99 +68,20 @@ const CatalogPage: React.FC = () => {
   const [filtersCategory, setFiltersCategory] = useState<Filter[]>([]);
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [selectSorting, setSelectSorting] = useState({ name: "", price: "" });
+  const [filtersPrice, setFiltersPrice] = useState<[number, number]>([0, 15]);
 
-  // delete filters when category change
-  useEffect(() => {
-    setTotalFilter([]);
-    setSelectFilters([]);
-  }, [selectCategory]);
-
-  // get Products for display in ListProduct
-  useEffect(() => {
-    // if catalog page
-    if (!keyCatalog) {
-      localStorage.setItem("currentCategory", "");
-      setSelectCategory("");
-      setOpenKeys([""]);
-      //setTotalFilter([]);
-      const allCategoriesID = [
-        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
-        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
-        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
-      ];
-      getProductsFromCategory(allCategoriesID, selectSorting, totalFilter)
-        .then((res) => {
-          setData(res.body.results);
-        })
-        .catch(console.error);
-    } else {
-      // if others pages
-      localStorage.setItem("currentCategory", selectCategory);
-      getProductsFromCategory([selectCategory], selectSorting, totalFilter)
-        .then((res) => {
-          console.log("res", res);
-          setData(res.body.results);
-        })
-        .catch(console.error);
-    }
-  }, [totalFilter, keyCatalog, selectCategory, selectSorting]);
-
-  // get ProductType for display filter on parent categories only
-  useEffect(() => {
-    setTotalFilter([]);
-    setSelectFilters([]);
-    setValuesRanger([0, 15]);
-    if (
-      keyCatalog === "berries" ||
-      keyCatalog === "fruits" ||
-      keyCatalog === "vegetables"
-    ) {
-      getProductType(keyCatalog)
-        .then((res) => {
-          if (res.body.attributes) {
-            getFilterAttribute(res.body.attributes);
-          }
-        })
-        .catch(console.error);
-    } else {
-      setFiltersCategory([]);
-    }
-  }, [keyCatalog]);
-
-  // get Categories for display SiderMenu
-  useEffect(() => {
-    getCategories()
-      .then((res) => {
-        const structureMenu = createStructureMenu(res.body.results);
-        setCategories(structureMenu);
-        structureMenu.forEach((item) => {
-          if (item.key === selectCategory) {
-            setOpenKeys([item.key]);
-          } else {
-            item.children.forEach((child) => {
-              if (child?.key === selectCategory) {
-                setOpenKeys([item.key]);
-              }
-            });
-          }
-        });
-      })
-      .catch(console.error);
-  }, [selectCategory]);
-
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    console.log("keys", keys);
-    if (latestOpenKey) {
-      setOpenKeys([latestOpenKey]);
-      setSelectCategory(latestOpenKey);
-    }
+  const displayTitle = () => {
+    let selectTitleCategory = "";
+    allCategories.forEach((item) => {
+      if (item.id === selectCategory) {
+        selectTitleCategory = item.name.en;
+      }
+    });
+    return selectTitleCategory ? selectTitleCategory : "Catalog";
   };
+  const [titleCategory, setTitleCategory] = useState(displayTitle);
 
-  const onClickMenu = (info: MenuInfo) => {
-    setSelectCategory(info.key);
-  };
-
+  // create Structure Menu by allCategories
   const createStructureMenu = (allCategories: Category[]) => {
     let treeCategories: StructureMenu = [];
     allCategories.forEach((item) => {
@@ -199,6 +123,105 @@ const CatalogPage: React.FC = () => {
     return treeCategories;
   };
 
+  // create Structure Menu
+  useEffect(() => {
+    setCategories(createStructureMenu(allCategories));
+  }, [allCategories]);
+
+  // delete filters when category change
+  useEffect(() => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+  }, [selectCategory]);
+
+  // get Products for display in ListProduct
+  useEffect(() => {
+    // if catalog page
+    if (!keyCatalog) {
+      localStorage.setItem("currentCategory", "");
+      setSelectCategory("");
+      setTitleCategory("Catalog");
+      setOpenKeys([""]);
+      getProductsFromCategory([], selectSorting, totalFilter, filtersPrice)
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
+    } else {
+      // if others pages
+      localStorage.setItem("currentCategory", selectCategory);
+      getProductsFromCategory(
+        [selectCategory],
+        selectSorting,
+        totalFilter,
+        filtersPrice,
+      )
+        .then((res) => {
+          setTitleCategory(displayTitle());
+          setData(res.body.results);
+        })
+        .catch(console.error);
+    }
+  }, [totalFilter, keyCatalog, selectCategory, selectSorting, filtersPrice]);
+
+  // get ProductType for display filter on parent categories only
+  useEffect(() => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+    setFiltersPrice([0, 15]);
+    if (
+      keyCatalog === "berries" ||
+      keyCatalog === "fruits" ||
+      keyCatalog === "vegetables"
+    ) {
+      getProductType(keyCatalog)
+        .then((res) => {
+          if (res.body.attributes) {
+            getFilterAttribute(res.body.attributes);
+          }
+        })
+        .catch(console.error);
+    } else {
+      setFiltersCategory([]);
+    }
+    // set Select Category
+    allCategories.forEach((item) => {
+      if (item.key === keyCatalog) {
+        setSelectCategory(item.id);
+      }
+    });
+  }, [keyCatalog, allCategories]);
+
+  // display SiderMenu with open select category
+  useEffect(() => {
+    const structureMenu = createStructureMenu(allCategories);
+    structureMenu.forEach((item) => {
+      if (item) {
+        if (item.key === selectCategory) {
+          setOpenKeys([item.key]);
+        } else {
+          item.children.forEach((child) => {
+            if (child?.key === selectCategory) {
+              setOpenKeys([item.key]);
+            }
+          });
+        }
+      }
+    });
+  }, [selectCategory, allCategories]);
+
+  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+    if (latestOpenKey) {
+      setOpenKeys([latestOpenKey]);
+      setSelectCategory(latestOpenKey);
+    }
+  };
+
+  const onClickMenu = (info: MenuInfo) => {
+    setSelectCategory(info.key);
+  };
+
   const onFilters = (checkedValues: CheckboxValueType[]) => {
     let nameFilter = "";
     filtersCategory.forEach((item) => {
@@ -208,7 +231,7 @@ const CatalogPage: React.FC = () => {
         }
       });
     });
-    setValuesRanger([0, 15]);
+    //setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
 
@@ -222,9 +245,8 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
-    console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
       ? setTotalFilter([])
       : setTotalFilter([{ name: nameFilter, value: checkedValues }]);
@@ -278,7 +300,12 @@ const CatalogPage: React.FC = () => {
 
   const handleClickName: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: e.key, price: "" });
-    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+    getProductsFromCategory(
+      [selectCategory],
+      selectSorting,
+      totalFilter,
+      filtersPrice,
+    )
       .then((res) => {
         setData(res.body.results);
       })
@@ -287,7 +314,12 @@ const CatalogPage: React.FC = () => {
 
   const handleClickPrice: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: "", price: e.key });
-    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+    getProductsFromCategory(
+      [selectCategory],
+      selectSorting,
+      totalFilter,
+      filtersPrice,
+    )
       .then((res) => {
         setData(res.body.results);
       })
@@ -359,13 +391,16 @@ const CatalogPage: React.FC = () => {
       .catch(console.error);
   };
 
-  const [valuesRanger, setValuesRanger] = useState<[number, number]>([0, 15]);
-
   const Ranger: React.FC = () => {
     const handleChange = (newValues: [number, number]) =>
-      setValuesRanger(newValues);
+      setFiltersPrice(newValues);
     const onAfterChange = (values: [number, number]) => {
-      getProductPrices(values).then((res) => {
+      getProductsFromCategory(
+        [selectCategory],
+        selectSorting,
+        totalFilter,
+        values,
+      ).then((res) => {
         setData(res.body.results);
       });
     };
@@ -379,7 +414,7 @@ const CatalogPage: React.FC = () => {
           defaultValue={[0, 15]}
           min={0}
           max={15}
-          value={valuesRanger}
+          value={filtersPrice}
           onChange={handleChange}
           onAfterChange={onAfterChange}
         />
@@ -390,48 +425,50 @@ const CatalogPage: React.FC = () => {
   const onClearFilters = () => {
     setTotalFilter([]);
     setSelectFilters([]);
-    setValuesRanger([0, 15]);
+    setFiltersPrice([0, 15]);
   };
 
   return (
-    <Layout className="catalog__wrapper">
-      <Sider width={200} className="sider__wrapper">
-        <h2>Farmer Goods</h2>
-        <Menu
-          mode="inline"
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          selectedKeys={[selectCategory]}
-          defaultSelectedKeys={[selectCategory]}
-          defaultOpenKeys={openKeys}
-          className="sider-menu"
-          items={categories}
-          onClick={onClickMenu}
-        />
-        <Filters />
-        <Ranger />
-        <Button
-          type="primary"
-          onClick={onClearFilters}
-          className="button_primary"
-        >
-          Clear
-        </Button>
-      </Sider>
-      <Layout style={{ padding: "0 24px 24px", background: "#fff" }}>
-        <Content
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-            background: "#fff",
-          }}
-        >
-          <SortingAndSearch />
-          <ListProduct data={data} />
-        </Content>
+    <div>
+      <h1>{titleCategory}</h1>
+      <Layout className="catalog__wrapper">
+        <Sider width={200} className="sider__wrapper">
+          <h2>Farmer Goods</h2>
+          <Menu
+            mode="inline"
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            selectedKeys={[selectCategory]}
+            defaultSelectedKeys={[selectCategory]}
+            defaultOpenKeys={openKeys}
+            className="sider-menu"
+            items={categories}
+            onClick={onClickMenu}
+          />
+          <Filters />
+          <Ranger />
+          <Button
+            type="primary"
+            onClick={onClearFilters}
+            className="button_primary"
+          >
+            Clear
+          </Button>
+        </Sider>
+        <Layout style={{ background: "#fff" }}>
+          <Content
+            style={{
+              margin: 0,
+              minHeight: 280,
+              background: "#fff",
+            }}
+          >
+            <SortingAndSearch />
+            <ListProduct data={data} />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

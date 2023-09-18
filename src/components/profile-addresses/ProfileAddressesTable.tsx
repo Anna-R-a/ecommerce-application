@@ -198,6 +198,7 @@ export const ProfileAddressesTable: React.FC = () => {
 
   const AddressesTable = () => (
     <Table
+      scroll={{ x: true }}
       columns={columns}
       dataSource={mapToDataType(customer?.body.addresses || [])}
       expandable={{

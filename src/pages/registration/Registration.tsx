@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { RangePickerProps } from "antd/es/date-picker";
 import {
@@ -29,6 +29,8 @@ import {
 } from "../../api/customer/createCustomer";
 import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
+import { Context } from "../../components/context/Context";
+import { createCart, getActiveCart } from "../../api/cart/cartItems";
 import "./Registration.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -51,6 +53,8 @@ const RegistrationPage: React.FC = () => {
   const [visibilityBilling, setVisibilityBilling] = useState("block");
 
   let navigate = useNavigate();
+
+  const [, setContext] = useContext(Context);
 
   const goHome = () => {
     navigate("/");
@@ -97,9 +101,15 @@ const RegistrationPage: React.FC = () => {
       mapRegDataToRequest(values, [defaultShipping, defaultBilling]),
     )
       .then(() => {
-        signInCustomer(values).then((res) => {
+        signInCustomer(values).then(async (res) => {
+          await createCart();
+          const cartCustomer = (await getActiveCart()).body;
+
           localStorage.setItem("isLogged", "true");
           localStorage.setItem("id", res.body.customer.id);
+          localStorage.setItem("activeCart", JSON.stringify(cartCustomer));
+
+          setContext(cartCustomer);
           notify("Registration Successful!", "success");
           setTimeout(goHome, 1500);
         });
