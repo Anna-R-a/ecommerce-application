@@ -8,7 +8,7 @@ import {
   deleteCart,
   getActiveCart,
   removeProductFromCart,
-  addDiscountToCart
+  addDiscountToCart,
 } from "../../api/cart/cartItems";
 import "./cart-list.css";
 
@@ -136,14 +136,6 @@ const CartList = () => {
               setVersion((prev) => prev + 1);
             });
           }
-          if (record.count === 1) {
-            removeProductFromCart(record.key).then(() => {
-              if (productsList.length === 1) {
-                localStorage.removeItem("activeCart");
-              }
-              setVersion((prev) => prev + 1);
-            });
-          }
         };
 
         const removeProduct = () => {
@@ -236,8 +228,8 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = (value: string) => {
-          addDiscountToCart(form.getFieldValue("promo-code"))
+        const applyDiscountCode = (value: { promoCode: string }) => {
+          addDiscountToCart(form.getFieldValue("promoCode"))
             .then(() => {
               message.success("Promo code applied!");
               setVersion((prev) => prev + 1);
@@ -266,7 +258,7 @@ const CartList = () => {
                 onFinish={applyDiscountCode}
                 onFinishFailed={onFailedApplyCode}
               >
-                <Form.Item name="promo-code">
+                <Form.Item name="promoCode">
                   <Input
                     placeholder="Promo code"
                     className="table-footer__input"
