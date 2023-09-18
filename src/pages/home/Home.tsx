@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Carousel, Card, Col, Row, Divider } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Meta from "antd/es/card/Meta";
@@ -8,6 +8,9 @@ import {
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
 import "./Home.css";
+import ListProduct from "../../components/list-product/ListProduct";
+import { getProductsFromCategory } from "../../api/api";
+import { ProductProjection } from "@commercetools/platform-sdk";
 
 const CarouselHome: React.FC = () => (
   <div className="carousel">
@@ -20,8 +23,8 @@ const CarouselHome: React.FC = () => (
 
 const PromoCode: React.FC = () => (
   <div className="promo__container">
-    <h2 className="promo__title">Want 15% off? Use promo code</h2>
-    <Paragraph copyable={{ text: "autumn2023" }} className="promo-code">
+    <h2 className="promo__title">Want 10% off? Use promo code</h2>
+    <Paragraph copyable className="promo-code">
       autumn2023
     </Paragraph>
   </div>
@@ -60,14 +63,37 @@ const Advantages: React.FC = () => (
 );
 
 const HomePage: React.FC = () => {
+  const [ data, setData ] = useState<ProductProjection[]>([]);
+  const getRandomInt = (max: number) => {
+    return Math.floor(Math.random() * max);
+  }
+
+  useEffect(() => {
+    getProductsFromCategory([], { name: "", price: "" }, [], [0, 15]).then((res) => {
+      const products: ProductProjection[] = res.body.results;
+      const productsHome: ProductProjection[] =  [];
+
+      while (productsHome.length !== 4) {
+        const product = products[getRandomInt(products.length - 1)];
+        if (!productsHome.find(item => item.id === product.id)) {
+          productsHome.push(product);
+        }
+      }
+      setData(productsHome);
+    })
+  }, [])
+
   return (
-    <>
+    <div className="container">
       <CarouselHome />
       <h1>Only FRESH Farmer Goods</h1>
       <Advantages />
       <Divider />
       <PromoCode />
-    </>
+      <Divider />
+      <h2>Our Goods</h2>
+      <ListProduct data={data} />
+    </div>
   );
 };
 

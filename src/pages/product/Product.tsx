@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button, Card, Col, Modal, Row } from "antd";
+import { Button, Card, Col, Modal, Row, message } from "antd";
 import { LineItem, Product } from "@commercetools/platform-sdk";
+import {
+  getProductDetails,
+} from "../../api/api";
 import {
   addProductToCart,
   createCart,
-  getProductDetails,
   removeProductFromCart,
-} from "../../api/api";
+} from "../../api/cart/cartItems";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
-
 import { Context } from "../../components/context/Context";
-import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
 
 const ProductPage: React.FC = () => {
   const [context, setContext] = useContext(Context);
 
   const [cart, setCart] = useState<LineItem[]>(
-    context ? context.lineItems : [],
+    context ? context.lineItems : []
   );
 
   const [productData, setProductData] = useState<Product>();
@@ -148,9 +148,9 @@ const ProductPage: React.FC = () => {
                 onClick={async () => {
                   await removeItem(lineItemId)
                     .then(() =>
-                      notify("Product was removed successful!", "success"),
+                      message.success("Product was removed successful!")
                     )
-                    .catch(() => notify("Removal operation fails", "error"));
+                    .catch(() => message.error("Removal operation fails"));
                 }}
                 disabled={isInCart(id) ? false : true}
               >

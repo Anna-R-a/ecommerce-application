@@ -96,7 +96,7 @@
   user-select: none;
   touch-action: manipulation;
   line-height: 1.5714285714285714;
-  margin: 0;
+  margin: 0px !important;
 }
 
 .promo-code .anticon {

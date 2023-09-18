@@ -28,7 +28,6 @@ export const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
   credentials: {
     clientId: `${process.env.REACT_APP_USER_CTP_CLIENT_ID}`,
     clientSecret: `${process.env.REACT_APP_USER_CTP_CLIENT_SECRET}`,
-    // anonymousId: apiAdmin.CTP_ANONYMOUS_ID,
   },
   scopes: [`${process.env.REACT_APP_USER_CTP_SCOPES}`],
   fetch: fetch,
@@ -41,14 +40,13 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 export const anonymousClient = new ClientBuilder()
-  //.withClientCredentialsFlow(anonymousAuthMiddlewareOptions)
   .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware()
   .build();
 
 export const apiRootAnonymous = createApiBuilderFromCtpClient(
-  anonymousClient,
+  anonymousClient
 ).withProjectKey({
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
 });
