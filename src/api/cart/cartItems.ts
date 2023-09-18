@@ -111,3 +111,25 @@ export const changeQuantityProductInCart = async (
     })
     .execute();
 };
+
+export const addDiscountToCart = async (codeCart: string) => {
+  const tokenClient = getTokenClientByFlow();
+  const activeCart = await getActiveCart();
+
+  return tokenClient
+    .me()
+    .carts()
+    .withId({ ID: activeCart.body.id })
+    .post({
+      body: {
+        version: activeCart.body.version,
+        actions: [
+          {
+            action: "addDiscountCode",
+            code: codeCart,
+          },
+        ],
+      },
+    })
+    .execute();
+};
