@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Card, List } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { LineItem, ProductProjection } from "@commercetools/platform-sdk";
-import { addProductToCart, createCart } from "../../api/api";
+import { addProductToCart, createCart } from "../../api/cart/cartItems";
 import { Context } from "../context/Context";
 import "./ListProduct.css";
 
@@ -87,7 +87,11 @@ const ListProduct: React.FC<Props> = (props: Props) => {
         xl: 4,
         xxl: 4,
       }}
-      pagination={{ position: "bottom", align: "center", pageSize: 12 }}
+      pagination={
+        props.data.length > 12
+          ? { position: "bottom", align: "center", pageSize: 12 }
+          : false
+      }
       dataSource={props.data}
       className="list__products"
       renderItem={(item) => (

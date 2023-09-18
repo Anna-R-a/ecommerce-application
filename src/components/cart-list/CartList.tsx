@@ -8,9 +8,9 @@ import {
   deleteCart,
   getActiveCart,
   removeProductFromCart,
-} from "../../api/api";
+  addDiscountToCart,
+} from "../../api/cart/cartItems";
 import "./cart-list.css";
-import { addDiscountToCart } from "../../api/cart/cartItems";
 
 interface DataType {
   key: string;
@@ -27,13 +27,19 @@ function mapToDataType(data: LineItem[]) {
   const result: DataType[] = [];
   data.forEach((product) => {
     const price = product.price.value.centAmount;
-    let priceWithDiscount = '';
-    const discount = product.price.discounted?.value.centAmount
-    if(discount){
-      priceWithDiscount = (discount/100).toFixed(2).toString() + ' $';
-    } 
-    if(product.discountedPricePerQuantity.length){
-      priceWithDiscount = (product.discountedPricePerQuantity[0].discountedPrice.value.centAmount/100).toFixed(2).toString() + ' $';
+    let priceWithDiscount = "";
+    const discount = product.price.discounted?.value.centAmount;
+    if (discount) {
+      priceWithDiscount = (discount / 100).toFixed(2).toString() + " $";
+    }
+    if (product.discountedPricePerQuantity.length) {
+      priceWithDiscount =
+        (
+          product.discountedPricePerQuantity[0].discountedPrice.value
+            .centAmount / 100
+        )
+          .toFixed(2)
+          .toString() + " $";
     }
     result.push({
       key: product.id,
@@ -53,7 +59,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : [],
+    context ? context.lineItems : []
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
@@ -119,9 +125,10 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              },
+              }
             );
-          } if (record.count === 1) {
+          }
+          if (record.count === 1) {
             removeProductFromCart(record.key).then(() => {
               if (productsList.length === 1) {
                 localStorage.removeItem("activeCart");
@@ -221,24 +228,24 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = (value: string) => {
-          addDiscountToCart(form.getFieldValue("promo-code")).then(()=>{
-            message.success("Promo code applied!");
-            setVersion(prev => prev + 1)
-          }
-          ).catch(()=>{
-            message.error("Promo code not found!");
-          })
-          
+        const applyDiscountCode = (value: { promoCode: string }) => {
+          addDiscountToCart(form.getFieldValue("promoCode"))
+            .then(() => {
+              message.success("Promo code applied!");
+              setVersion((prev) => prev + 1);
+            })
+            .catch(() => {
+              message.error("Promo code not found!");
+            });
         };
 
         const onFailedApplyCode = () => {
           message.error("Promo code not found!");
         };
 
-        const onChange = () =>{
-          setDisabled(false)
-        }
+        const onChange = () => {
+          setDisabled(false);
+        };
 
         return (
           <div className="table-footer">
@@ -251,7 +258,7 @@ const CartList = () => {
                 onFinish={applyDiscountCode}
                 onFinishFailed={onFailedApplyCode}
               >
-                <Form.Item name="promo-code">
+                <Form.Item name="promoCode">
                   <Input
                     placeholder="Promo code"
                     className="table-footer__input"

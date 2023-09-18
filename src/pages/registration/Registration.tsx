@@ -30,7 +30,7 @@ import {
 import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
 import { Context } from "../../components/context/Context";
-import { createCart, getActiveCart } from "../../api/api";
+import { createCart, getActiveCart } from "../../api/cart/cartItems";
 import "./Registration.css";
 import "react-toastify/dist/ReactToastify.css";
 
