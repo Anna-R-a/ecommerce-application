@@ -14,13 +14,8 @@
     border-color: var(--medium-color) !important;
 }
 
-.modal_button{
-    width: 60px;
-    background-color: var(--medium-color);
-}
-
-.modal_button:hover {
-    background-color: var(--light-color) !important;
+.modal_button.button_primary {
+    width: 72px;
 }
 
 .ant-table-wrapper {

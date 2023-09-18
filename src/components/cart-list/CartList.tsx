@@ -50,7 +50,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : []
+    context ? context.lineItems : [],
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
@@ -104,18 +104,18 @@ const CartList = () => {
       title: "Action",
       key: "action",
       render: (_, record) => {
-        const increseCount = () => {
+        const increaseCount = () => {
           changeQuantityProductInCart(record.key, record.count + 1).then(() => {
             setVersion((prev) => prev + 1);
           });
         };
 
-        const decreseCount = () => {
+        const decreaseCount = () => {
           if (record.count > 1) {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              }
+              },
             );
           }
         };
@@ -131,10 +131,10 @@ const CartList = () => {
 
         return (
           <Space size="small">
-            <Button onClick={increseCount} className="button_default">
+            <Button onClick={increaseCount} className="button_default">
               +
             </Button>
-            <Button onClick={decreseCount} className="button_default">
+            <Button onClick={decreaseCount} className="button_default">
               -
             </Button>
             <Button onClick={removeProduct} className="button_default">
@@ -182,8 +182,8 @@ const CartList = () => {
         };
 
         const showAddOrder = () => {
-          message.success('The order has been created!');
-        }
+          message.success("The order has been created!");
+        };
 
         const handleOk = () => {
           if (localStorage.getItem("activeCart")) {
@@ -201,15 +201,14 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const onFinish = () => {
+        const applyDiscountCode = () => {
           console.log("form", form.getFieldValue("promo-code"));
-          message.success('Promo code applied!');
+          message.success("Promo code applied!");
         };
 
-        const onFinishFailed = () => {
-          message.error('Promo code not found!');
+        const onFailedApplyCode = () => {
+          message.error("Promo code not found!");
         };
-
 
         return (
           <div className="table-footer">
@@ -218,18 +217,23 @@ const CartList = () => {
                 form={form}
                 className="table-footer__promo"
                 layout="horizontal"
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
+                onFinish={applyDiscountCode}
+                onFinishFailed={onFailedApplyCode}
               >
-                <Form.Item
-                  name="promo-code"
-                >
-                  <Input placeholder="Promo code" className="table-footer__input" />
+                <Form.Item name="promo-code">
+                  <Input
+                    placeholder="Promo code"
+                    className="table-footer__input"
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Space>
-                    <Button type="primary" htmlType="submit" className="button_primary">
-                    Apply promo code
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="button_primary"
+                    >
+                      Apply promo code
                     </Button>
                   </Space>
                 </Form.Item>
@@ -259,7 +263,8 @@ const CartList = () => {
                 open={isModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                okButtonProps={{ className: "modal_button" }}
+                okButtonProps={{ className: "modal_button button_primary" }}
+                cancelButtonProps={{ className: "button_default" }}
               >
                 <p>Do you really want to empty the cart?</p>
               </Modal>
