@@ -3,17 +3,52 @@
 }
 
 .empty-cart-text{
-    text-align: center;
-    max-width: 450px;
+    margin: 0 auto;
+    max-width: 350px;
     height: 150px;
-    font-size: 30px;
+    font-size: 2.6rem;
 }
 
-.modal_button{
-    width: 60px;
-    background-color: var(--medium-color);
+.button_default:hover {
+    color: var(--medium-color) !important;
+    border-color: var(--medium-color) !important;
 }
 
-.modal_button:hover {
-    background-color: var(--light-color) !important;
+.modal_button.button_primary {
+    width: 72px;
+}
+
+.ant-table-wrapper {
+    width: 100%;
+}
+
+.table-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.table-footer__promo,
+.table-footer__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.table-footer__promo .ant-form-item {
+    margin: 0;
+}
+
+.table-footer__input {
+    width: 250px;
+}
+
+.table-footer__promo .table-footer__input:focus,
+.table-footer__promo .table-footer__input:hover,
+.table-footer__promo .ant-input-affix-wrapper-focused,
+.table-footer__promo .table-footer__input.ant-select-selector:focus{
+  border-color: var(--medium-color);
 }

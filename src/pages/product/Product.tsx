@@ -4,7 +4,6 @@ import { LineItem, Product } from "@commercetools/platform-sdk";
 import {
   addProductToCart,
   createCart,
-  getActiveCart,
   getProductDetails,
   removeProductFromCart,
 } from "../../api/api";
@@ -18,6 +17,12 @@ import { notify } from "../../components/notification/notification";
 import { ToastContainer } from "react-toastify";
 
 const ProductPage: React.FC = () => {
+  const [context, setContext] = useContext(Context);
+
+  const [cart, setCart] = useState<LineItem[]>(
+    context ? context.lineItems : [],
+  );
+
   const [productData, setProductData] = useState<Product>();
   const { key } = useParams();
 
@@ -66,50 +71,26 @@ const ProductPage: React.FC = () => {
     : 0;
   const discount = Math.ceil((1 - priceDiscounted / price) * 100);
 
-  const [, setContext] = useContext(Context);
-  const activeCart = localStorage.getItem("activeCart");
-  const cartCustomer = localStorage.getItem("cart-customer");
-  const productsOnCart = cartCustomer
-    ? JSON.parse(cartCustomer).lineItems
-    : activeCart
-    ? JSON.parse(activeCart).lineItems
-    : [];
-  const [cart, setCart] = useState<LineItem[]>(productsOnCart);
-
   const isInCart = (id: string) => {
     return cart.find((item) => item.productId === id);
   };
   const lineItemId = isInCart(id)?.id!;
 
   const addItem = async (productId: string) => {
-    if (!activeCart && !cartCustomer) {
+    if (!context) {
       await createCart();
     }
-    const fullCart = await addProductToCart(productId).then(() =>
-      getActiveCart(),
-    );
+    const fullCart = await addProductToCart(productId);
     setCart(fullCart.body.lineItems);
-    setContext(fullCart.body.totalLineItemQuantity);
-
-    if (cartCustomer) {
-      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    } else {
-      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    }
+    setContext(fullCart.body);
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
   };
 
   const removeItem = async (lineItemId: string) => {
-    const fullCart = await removeProductFromCart(lineItemId).then(() =>
-      getActiveCart(),
-    );
+    const fullCart = await removeProductFromCart(lineItemId);
     setCart(fullCart.body.lineItems);
-    setContext(fullCart.body.totalLineItemQuantity);
-
-    if (cartCustomer) {
-      localStorage.setItem("cart-customer", JSON.stringify(fullCart.body));
-    } else {
-      localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
-    }
+    setContext(fullCart.body);
+    localStorage.setItem("activeCart", JSON.stringify(fullCart.body));
   };
 
   return (
@@ -144,7 +125,6 @@ const ProductPage: React.FC = () => {
         <Col span={8} className="description">
           <Card className="description-block">
             <div dangerouslySetInnerHTML={{ __html: `${description}` }}></div>
-            {/* <div >{`Size: ${size}`}</div> */}
           </Card>
         </Col>
         <Col span={8} className="price">
@@ -163,7 +143,7 @@ const ProductPage: React.FC = () => {
             <div className="buttons">
               <Button
                 type="primary"
-                className="button button_remove"
+                className="button button_remove button_primary"
                 key={`${key}-add`}
                 onClick={async () => {
                   await removeItem(lineItemId)
@@ -179,7 +159,7 @@ const ProductPage: React.FC = () => {
 
               <Button
                 type="primary"
-                className="button button_add"
+                className="button button_add button_primary"
                 key={`${key}-remove`}
                 onClick={async () => {
                   await addItem(id);
