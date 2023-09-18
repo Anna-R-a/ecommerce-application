@@ -10,6 +10,7 @@ import {
   removeProductFromCart,
 } from "../../api/api";
 import "./cart-list.css";
+import { addDiscountToCart } from "../../api/cart/cartItems";
 
 interface DataType {
   key: string;
@@ -17,31 +18,33 @@ interface DataType {
   image: string;
   count: number;
   price: string;
-  discount: string;
   totalPrice: string;
   productKey: string;
+  discountPrice: string;
 }
 
 function mapToDataType(data: LineItem[]) {
   const result: DataType[] = [];
   data.forEach((product) => {
-    const price =
-      product.price.discounted?.value.centAmount ||
-      product.price.value.centAmount;
+    const price = product.price.value.centAmount;
+    let priceWithDiscount = '';
+    const discount = product.price.discounted?.value.centAmount
+    if(discount){
+      priceWithDiscount = (discount/100).toFixed(2).toString() + ' $';
+    } 
+    if(product.discountedPricePerQuantity.length){
+      priceWithDiscount = (product.discountedPricePerQuantity[0].discountedPrice.value.centAmount/100).toFixed(2).toString() + ' $';
+    }
     result.push({
       key: product.id,
       name: product.name.en,
       image: product.variant.images?.[0].url || "",
       count: product.quantity,
-      price: `$\u00A0${(price / 100).toFixed(2).toString()}`,
-      discount: product.price.discounted
-        ? (100 - (price / product.price.value.centAmount) * 100).toString() +
-          "\u00A0%"
-        : "",
-      totalPrice: `$\u00A0${(product.totalPrice.centAmount / 100)
-        .toFixed(2)
-        .toString()}`,
+      price: (price / 100).toFixed(2).toString() + " $",
+      totalPrice:
+        (product.totalPrice.centAmount / 100).toFixed(2).toString() + " $",
       productKey: product.productKey || "",
+      discountPrice: priceWithDiscount,
     });
   });
   return result;
@@ -56,6 +59,7 @@ const CartList = () => {
   const [version, setVersion] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [disabled, setDisabled] = useState(true);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -91,9 +95,9 @@ const CartList = () => {
       key: "price",
     },
     {
-      title: "Discount",
-      dataIndex: "discount",
-      key: "discount",
+      title: "Price with Discount",
+      dataIndex: "discountPrice",
+      key: "discountPrice",
     },
     {
       title: "Total price",
@@ -117,6 +121,13 @@ const CartList = () => {
                 setVersion((prev) => prev + 1);
               },
             );
+          } if (record.count === 1) {
+            removeProductFromCart(record.key).then(() => {
+              if (productsList.length === 1) {
+                localStorage.removeItem("activeCart");
+              }
+              setVersion((prev) => prev + 1);
+            });
           }
         };
 
@@ -158,6 +169,7 @@ const CartList = () => {
 
   return (
     <Table
+      pagination={false}
       scroll={{ x: true }}
       locale={{
         emptyText: (
@@ -182,6 +194,14 @@ const CartList = () => {
         };
 
         const showAddOrder = () => {
+          if (localStorage.getItem("activeCart")) {
+            deleteCart().then(() => {
+              localStorage.removeItem("activeCart");
+              setProductList([]);
+              setTotalPrice(0);
+              setContext(null);
+            });
+          }
           message.success("The order has been created!");
         };
 
@@ -201,19 +221,30 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = () => {
-          console.log("form", form.getFieldValue("promo-code"));
-          message.success("Promo code applied!");
+        const applyDiscountCode = (value: string) => {
+          addDiscountToCart(form.getFieldValue("promo-code")).then(()=>{
+            message.success("Promo code applied!");
+            setVersion(prev => prev + 1)
+          }
+          ).catch(()=>{
+            message.error("Promo code not found!");
+          })
+          
         };
 
         const onFailedApplyCode = () => {
           message.error("Promo code not found!");
         };
 
+        const onChange = () =>{
+          setDisabled(false)
+        }
+
         return (
           <div className="table-footer">
             <div className="table-footer__promo">
               <Form
+                onChange={onChange}
                 form={form}
                 className="table-footer__promo"
                 layout="horizontal"
@@ -232,6 +263,7 @@ const CartList = () => {
                       type="primary"
                       htmlType="submit"
                       className="button_primary"
+                      disabled={disabled}
                     >
                       Apply promo code
                     </Button>
