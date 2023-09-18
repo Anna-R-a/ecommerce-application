@@ -14,7 +14,7 @@ export const getProductsFromCategory = async (
   categoryId: string[],
   sorting: { name: string; price: string },
   filter: { name: string; value: CheckboxValueType[] }[],
-  [key1, key2]: [number, number]
+  [key1, key2]: [number, number],
 ) => {
   const sortingOptions = [];
   const allCategoriesID = [
@@ -36,7 +36,7 @@ export const getProductsFromCategory = async (
     filterOptions.push(...filterAttributes);
   }
   filterOptions.push(
-    `variants.price.centAmount:range (${key1 * 100} to ${key2 * 100})`
+    `variants.price.centAmount:range (${key1 * 100} to ${key2 * 100})`,
   );
 
   sorting.name

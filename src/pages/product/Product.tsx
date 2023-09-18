@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Col, Modal, Row, message } from "antd";
 import { LineItem, Product } from "@commercetools/platform-sdk";
-import {
-  getProductDetails,
-} from "../../api/api";
+import { getProductDetails } from "../../api/api";
 import {
   addProductToCart,
   createCart,
@@ -20,7 +18,7 @@ const ProductPage: React.FC = () => {
   const [context, setContext] = useContext(Context);
 
   const [cart, setCart] = useState<LineItem[]>(
-    context ? context.lineItems : []
+    context ? context.lineItems : [],
   );
 
   const [productData, setProductData] = useState<Product>();
@@ -148,7 +146,7 @@ const ProductPage: React.FC = () => {
                 onClick={async () => {
                   await removeItem(lineItemId)
                     .then(() =>
-                      message.success("Product was removed successful!")
+                      message.success("Product was removed successful!"),
                     )
                     .catch(() => message.error("Removal operation fails"));
                 }}

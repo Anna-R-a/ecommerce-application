@@ -63,25 +63,27 @@ const Advantages: React.FC = () => (
 );
 
 const HomePage: React.FC = () => {
-  const [ data, setData ] = useState<ProductProjection[]>([]);
+  const [data, setData] = useState<ProductProjection[]>([]);
   const getRandomInt = (max: number) => {
     return Math.floor(Math.random() * max);
-  }
+  };
 
   useEffect(() => {
-    getProductsFromCategory([], { name: "", price: "" }, [], [0, 15]).then((res) => {
-      const products: ProductProjection[] = res.body.results;
-      const productsHome: ProductProjection[] =  [];
+    getProductsFromCategory([], { name: "", price: "" }, [], [0, 15]).then(
+      (res) => {
+        const products: ProductProjection[] = res.body.results;
+        const productsHome: ProductProjection[] = [];
 
-      while (productsHome.length !== 4) {
-        const product = products[getRandomInt(products.length - 1)];
-        if (!productsHome.find(item => item.id === product.id)) {
-          productsHome.push(product);
+        while (productsHome.length !== 4) {
+          const product = products[getRandomInt(products.length - 1)];
+          if (!productsHome.find((item) => item.id === product.id)) {
+            productsHome.push(product);
+          }
         }
-      }
-      setData(productsHome);
-    })
-  }, [])
+        setData(productsHome);
+      },
+    );
+  }, []);
 
   return (
     <div className="container">

@@ -88,7 +88,7 @@ export const removeProductFromCart = async (lineItemId: string) => {
 
 export const changeQuantityProductInCart = async (
   productId: string,
-  quantity: number
+  quantity: number,
 ) => {
   const tokenClient = getTokenClientByFlow();
   const activeCart = await getActiveCart();

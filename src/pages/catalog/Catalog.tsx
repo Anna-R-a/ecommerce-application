@@ -154,7 +154,7 @@ const CatalogPage: React.FC = () => {
         [selectCategory],
         selectSorting,
         totalFilter,
-        filtersPrice
+        filtersPrice,
       )
         .then((res) => {
           setTitleCategory(displayTitle());
@@ -245,7 +245,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     checkedValues.length === 0
       ? setTotalFilter([])
@@ -304,7 +304,7 @@ const CatalogPage: React.FC = () => {
       [selectCategory],
       selectSorting,
       totalFilter,
-      filtersPrice
+      filtersPrice,
     )
       .then((res) => {
         setData(res.body.results);
@@ -318,7 +318,7 @@ const CatalogPage: React.FC = () => {
       [selectCategory],
       selectSorting,
       totalFilter,
-      filtersPrice
+      filtersPrice,
     )
       .then((res) => {
         setData(res.body.results);
@@ -399,7 +399,7 @@ const CatalogPage: React.FC = () => {
         [selectCategory],
         selectSorting,
         totalFilter,
-        values
+        values,
       ).then((res) => {
         setData(res.body.results);
       });
