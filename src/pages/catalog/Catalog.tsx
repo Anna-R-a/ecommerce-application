@@ -392,7 +392,7 @@ const CatalogPage: React.FC = () => {
   };
 
   return (
-    <Layout className="catalog__wrapper">
+    <Layout className="catalog__wrapper" data-testid="catalog-page">
       <Sider width={200} className="sider__wrapper">
         <h2>Farmer Goods</h2>
         <Menu
