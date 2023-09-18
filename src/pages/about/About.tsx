@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import Meta from "antd/es/card/Meta";
 import photoNastya from "./../../assets/nastya.jpg";
 import photoAnna from "./../../assets/anna.jpg";
+import photoSergey from "./../../assets/sergey.png";
 import "./About.css";
 
 const data = [
@@ -45,15 +46,14 @@ const data = [
     href: "https://github.com/SergeyVolkov03",
     title: "Sergey Volkov",
     description:
-      "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+      "You can do absolutely anything, the boundaries are in your head",
     content:
-      "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently. We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+      "I have graduated from the Minsk radiotechnical college with a degree of an electronics technician. And I also have graduated from the Minsk Institute of Management with a degree of a manager. I've always been interested in something new and in programming you can create anything at all. I like the fact that programming is a clear set of instructions, which at the same time gives you unlimited space for implementation. I have chosen front-end because I had a basic knowledge of HTML, and I have been learning JavaScript. I was happy to find the Rolling Scopes course on the internet, and to be able to catch it in time for its start in December. Today I am able to create a website using HTML, CSS, javascript and typescript and make the website adaptive. Moreover, I am able to create small applications using React.",
     country: "Minsk",
     role: "Coder",
     code: "11 Pull Requests",
     task: "Development environment configuration, Registration, Profile and Basket Page",
-    photo:
-      "https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png",
+    photo: photoSergey,
   },
 ];
 

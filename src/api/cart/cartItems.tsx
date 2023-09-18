@@ -26,3 +26,29 @@ export const removeProductFromCart = async (lineItemId: string) => {
     })
     .execute();
 };
+
+export const addDiscountToCart = async (codeCart: string) => {
+  const tokenLoggedClient = getTokenClient();
+  const tokenClient = tokenLoggedClient ? tokenLoggedClient : apiRootAnonymous;
+
+  const activeCart = await getActiveCart();
+  const cartId = activeCart.body.id;
+  const cartVersion = activeCart.body.version;
+
+  return tokenClient
+    .me()
+    .carts()
+    .withId({ ID: cartId })
+    .post({
+      body: {
+        version: cartVersion,
+        actions: [
+          {
+            action: "addDiscountCode",
+            code: codeCart,
+          },
+        ],
+      },
+    })
+    .execute();
+};

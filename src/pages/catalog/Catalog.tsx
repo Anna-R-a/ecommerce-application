@@ -47,11 +47,15 @@ type Filter = {
   value: CheckboxOptionType[];
 };
 
+const categoriesArray = (await getCategories()).body.results;
+
 const CatalogPage: React.FC = () => {
   const { keyCatalog } = useParams();
 
   const currentCategoryLS = localStorage.getItem("currentCategory");
   const currentCategory = currentCategoryLS ? currentCategoryLS : "";
+
+  const [allCategories] = useState<Category[]>(categoriesArray);
 
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
   const [selectCategory, setSelectCategory] = useState(currentCategory);
@@ -66,96 +70,7 @@ const CatalogPage: React.FC = () => {
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [selectSorting, setSelectSorting] = useState({ name: "", price: "" });
 
-  // delete filters when category change
-  useEffect(() => {
-    setTotalFilter([]);
-    setSelectFilters([]);
-  }, [selectCategory]);
-
-  // get Products for display in ListProduct
-  useEffect(() => {
-    // if catalog page
-    if (!keyCatalog) {
-      localStorage.setItem("currentCategory", "");
-      setSelectCategory("");
-      setOpenKeys([""]);
-      //setTotalFilter([]);
-      const allCategoriesID = [
-        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
-        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
-        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
-      ];
-      getProductsFromCategory(allCategoriesID, selectSorting, totalFilter)
-        .then((res) => {
-          setData(res.body.results);
-        })
-        .catch(console.error);
-    } else {
-      // if others pages
-      localStorage.setItem("currentCategory", selectCategory);
-      getProductsFromCategory([selectCategory], selectSorting, totalFilter)
-        .then((res) => {
-          setData(res.body.results);
-        })
-        .catch(console.error);
-    }
-  }, [totalFilter, keyCatalog, selectCategory, selectSorting]);
-
-  // get ProductType for display filter on parent categories only
-  useEffect(() => {
-    setTotalFilter([]);
-    setSelectFilters([]);
-    setValuesRanger([0, 15]);
-    if (
-      keyCatalog === "berries" ||
-      keyCatalog === "fruits" ||
-      keyCatalog === "vegetables"
-    ) {
-      getProductType(keyCatalog)
-        .then((res) => {
-          if (res.body.attributes) {
-            getFilterAttribute(res.body.attributes);
-          }
-        })
-        .catch(console.error);
-    } else {
-      setFiltersCategory([]);
-    }
-  }, [keyCatalog]);
-
-  // get Categories for display SiderMenu
-  useEffect(() => {
-    getCategories()
-      .then((res) => {
-        const structureMenu = createStructureMenu(res.body.results);
-        setCategories(structureMenu);
-        structureMenu.forEach((item) => {
-          if (item.key === selectCategory) {
-            setOpenKeys([item.key]);
-          } else {
-            item.children.forEach((child) => {
-              if (child?.key === selectCategory) {
-                setOpenKeys([item.key]);
-              }
-            });
-          }
-        });
-      })
-      .catch(console.error);
-  }, [selectCategory]);
-
-  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-    if (latestOpenKey) {
-      setOpenKeys([latestOpenKey]);
-      setSelectCategory(latestOpenKey);
-    }
-  };
-
-  const onClickMenu = (info: MenuInfo) => {
-    setSelectCategory(info.key);
-  };
-
+  // create Structure Menu by allCategories
   const createStructureMenu = (allCategories: Category[]) => {
     let treeCategories: StructureMenu = [];
     allCategories.forEach((item) => {
@@ -197,6 +112,103 @@ const CatalogPage: React.FC = () => {
     return treeCategories;
   };
 
+  // create Structure Menu
+  useEffect(() => {
+    setCategories(createStructureMenu(allCategories));
+  }, [allCategories]);
+
+  // delete filters when category change
+  useEffect(() => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+  }, [selectCategory]);
+
+  // get Products for display in ListProduct
+  useEffect(() => {
+    // if catalog page
+    if (!keyCatalog) {
+      localStorage.setItem("currentCategory", "");
+      setSelectCategory("");
+      setOpenKeys([""]);
+      const allCategoriesID = [
+        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
+        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
+        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
+      ];
+      getProductsFromCategory(allCategoriesID, selectSorting, totalFilter)
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
+    } else {
+      // if others pages
+      localStorage.setItem("currentCategory", selectCategory);
+      getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+        .then((res) => {
+          setData(res.body.results);
+        })
+        .catch(console.error);
+    }
+  }, [totalFilter, keyCatalog, selectCategory, selectSorting]);
+
+  // get ProductType for display filter on parent categories only
+  useEffect(() => {
+    setTotalFilter([]);
+    setSelectFilters([]);
+    setValuesRanger([0, 15]);
+    if (
+      keyCatalog === "berries" ||
+      keyCatalog === "fruits" ||
+      keyCatalog === "vegetables"
+    ) {
+      getProductType(keyCatalog)
+        .then((res) => {
+          if (res.body.attributes) {
+            getFilterAttribute(res.body.attributes);
+          }
+        })
+        .catch(console.error);
+    } else {
+      setFiltersCategory([]);
+    }
+    // set Select Category
+    allCategories.forEach((item) => {
+      if (item.key === keyCatalog) {
+        setSelectCategory(item.id);
+      }
+    });
+  }, [keyCatalog, allCategories]);
+
+  // display SiderMenu with open select category
+  useEffect(() => {
+    const structureMenu = createStructureMenu(allCategories);
+    structureMenu.forEach((item) => {
+      if (item) {
+        if (item.key === selectCategory) {
+          setOpenKeys([item.key]);
+        } else {
+          item.children.forEach((child) => {
+            if (child?.key === selectCategory) {
+              setOpenKeys([item.key]);
+            }
+          });
+        }
+      }
+    });
+  }, [selectCategory, allCategories]);
+
+  const onOpenChange: MenuProps["onOpenChange"] = (keys) => {
+    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
+    if (latestOpenKey) {
+      setOpenKeys([latestOpenKey]);
+      setSelectCategory(latestOpenKey);
+    }
+  };
+
+  const onClickMenu = (info: MenuInfo) => {
+    setSelectCategory(info.key);
+  };
+
   const onFilters = (checkedValues: CheckboxValueType[]) => {
     let nameFilter = "";
     filtersCategory.forEach((item) => {
@@ -220,7 +232,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
