@@ -429,7 +429,6 @@ const CatalogPage: React.FC = () => {
   };
 
   return (
-
     <div>
       <h1>{titleCategory}</h1>
       <Layout className="catalog__wrapper">

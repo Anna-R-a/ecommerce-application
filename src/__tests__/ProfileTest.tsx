@@ -6,7 +6,6 @@ import { ProfileAddressesTable } from "../components/profile-addresses/ProfileAd
 import { ProfilePasswordForm } from "../components/profile-password/ProfilePasswordForm";
 import { ProfileGeneralForm } from "../components/profile-general/ProfileGeneralForm";
 
-
 describe("Test", () => {
   test("should render profile page", () => {
     render(
@@ -33,17 +32,15 @@ describe("Test", () => {
       </Context.Provider>,
     );
 
-    await screen.findByRole("button", { name: /add new address/i })
+    await screen.findByRole("button", { name: /add new address/i });
     const btnAdd = screen.getByRole("button", { name: /add new address/i });
     expect(btnAdd).toBeVisible();
     expect(btnAdd).toBeInTheDocument();
-   
-    
-    const street = screen.getByText( /street/i );
+
+    const street = screen.getByText(/street/i);
     expect(street).toBeVisible();
     expect(street).toBeInTheDocument();
   });
-
 
   test("should render profile password", () => {
     render(
@@ -54,10 +51,12 @@ describe("Test", () => {
       </Context.Provider>,
     );
     expect(screen.getByText("Save new password")).toBeInTheDocument();
-    const buttonSave = screen.getByRole("button", { name: /Save new password/i });
+    const buttonSave = screen.getByRole("button", {
+      name: /Save new password/i,
+    });
     expect(buttonSave).toBeVisible();
     expect(buttonSave).toBeDisabled();
-    const label = screen.getByLabelText( /Confirm Password/i );
+    const label = screen.getByLabelText(/Confirm Password/i);
     expect(label).toBeInTheDocument();
   });
 
@@ -70,9 +69,7 @@ describe("Test", () => {
       </Context.Provider>,
     );
 
-    const label = screen.getByLabelText( /First Name/i );
+    const label = screen.getByLabelText(/First Name/i);
     expect(label).toBeInTheDocument();
-
   });
-
 });

@@ -13,8 +13,6 @@ import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
 import { Context } from "../../components/context/Context";
 
-
-
 const ProductPage: React.FC = () => {
   const [context, setContext] = useContext(Context);
 
@@ -146,9 +144,7 @@ const ProductPage: React.FC = () => {
                 key={`${key}-remove`}
                 onClick={async () => {
                   await removeItem(lineItemId)
-                    .then(() =>
-                      message.success("Product was removed!"),
-                    )
+                    .then(() => message.success("Product was removed!"))
                     .catch(() => message.error("Removal operation fails"));
                 }}
                 disabled={isInCart(id) ? false : true}

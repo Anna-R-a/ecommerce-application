@@ -13,8 +13,10 @@ describe("Test", () => {
       </Context.Provider>,
     );
     expect(screen.getByText("Add to Cart")).toBeInTheDocument();
-    const buttonAdd = await screen.findByRole("button", { name: /Add to Cart/i });
+    const buttonAdd = await screen.findByRole("button", {
+      name: /Add to Cart/i,
+    });
     expect(buttonAdd).toBeVisible();
-    fireEvent.click(buttonAdd)
+    fireEvent.click(buttonAdd);
   });
 });

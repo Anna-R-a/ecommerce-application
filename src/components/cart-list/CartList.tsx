@@ -59,7 +59,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : []
+    context ? context.lineItems : [],
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
@@ -104,6 +104,9 @@ const CartList = () => {
       title: "Price with Discount",
       dataIndex: "discountPrice",
       key: "discountPrice",
+      render: (_, record) => {
+        return <b>{record.discountPrice}</b>;
+      },
     },
     {
       title: "Total price",
@@ -125,7 +128,7 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              }
+              },
             );
           }
           if (record.count === 1) {
@@ -228,10 +231,8 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-
         const applyDiscountCode = (value: { promoCode: string }) => {
           addDiscountToCart(form.getFieldValue("promoCode"))
-
             .then(() => {
               message.success("Promo code applied!");
               setVersion((prev) => prev + 1);

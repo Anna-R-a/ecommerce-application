@@ -14,8 +14,10 @@ describe("Test", () => {
     );
 
     expect(screen.getByText("Clear cart")).toBeInTheDocument();
-    const buttonClear =await screen.findByRole("button", { name: /Clear cart/i });
+    const buttonClear = await screen.findByRole("button", {
+      name: /Clear cart/i,
+    });
     expect(buttonClear).toBeVisible();
-    fireEvent.click(buttonClear)
+    fireEvent.click(buttonClear);
   });
 });
