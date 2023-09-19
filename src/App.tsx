@@ -15,7 +15,7 @@ import CartPage from "./pages/cart/Cart";
 import AboutPage from "./pages/about/About";
 import { useState } from "react";
 import { Context } from "./components/context/Context";
-import { getActiveCart } from "./api/api";
+import { getActiveCart } from "./api/cart/cartItems";
 import "./App.css";
 
 const activeCart = localStorage.getItem("activeCart")

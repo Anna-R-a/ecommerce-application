@@ -8,9 +8,9 @@ import {
   deleteCart,
   getActiveCart,
   removeProductFromCart,
-} from "../../api/api";
+  addDiscountToCart,
+} from "../../api/cart/cartItems";
 import "./cart-list.css";
-import { addDiscountToCart } from "../../api/cart/cartItems";
 
 interface DataType {
   key: string;
@@ -59,7 +59,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : [],
+    context ? context.lineItems : []
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [version, setVersion] = useState(0);
@@ -125,7 +125,7 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              },
+              }
             );
           }
           if (record.count === 1) {
@@ -228,8 +228,10 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = (value: string) => {
-          addDiscountToCart(form.getFieldValue("promo-code"))
+
+        const applyDiscountCode = (value: { promoCode: string }) => {
+          addDiscountToCart(form.getFieldValue("promoCode"))
+
             .then(() => {
               message.success("Promo code applied!");
               setVersion((prev) => prev + 1);
@@ -258,7 +260,7 @@ const CartList = () => {
                 onFinish={applyDiscountCode}
                 onFinishFailed={onFailedApplyCode}
               >
-                <Form.Item name="promo-code">
+                <Form.Item name="promoCode">
                   <Input
                     placeholder="Promo code"
                     className="table-footer__input"

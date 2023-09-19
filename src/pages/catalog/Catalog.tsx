@@ -16,7 +16,6 @@ import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ListProduct from "../../components/list-product/ListProduct";
 import {
   getCategories,
-  getProductPrices,
   getProductType,
   getProductsBySearch,
   getProductsFromCategory,
@@ -69,6 +68,18 @@ const CatalogPage: React.FC = () => {
   const [filtersCategory, setFiltersCategory] = useState<Filter[]>([]);
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [selectSorting, setSelectSorting] = useState({ name: "", price: "" });
+  const [filtersPrice, setFiltersPrice] = useState<[number, number]>([0, 15]);
+
+  const displayTitle = () => {
+    let selectTitleCategory = "";
+    allCategories.forEach((item) => {
+      if (item.id === selectCategory) {
+        selectTitleCategory = item.name.en;
+      }
+    });
+    return selectTitleCategory ? selectTitleCategory : "Catalog";
+  };
+  const [titleCategory, setTitleCategory] = useState(displayTitle);
 
   // create Structure Menu by allCategories
   const createStructureMenu = (allCategories: Category[]) => {
@@ -129,13 +140,9 @@ const CatalogPage: React.FC = () => {
     if (!keyCatalog) {
       localStorage.setItem("currentCategory", "");
       setSelectCategory("");
+      setTitleCategory("Catalog");
       setOpenKeys([""]);
-      const allCategoriesID = [
-        "241d5c5d-f8cc-45be-866f-14af2c0c150c",
-        "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
-        "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
-      ];
-      getProductsFromCategory(allCategoriesID, selectSorting, totalFilter)
+      getProductsFromCategory([], selectSorting, totalFilter, filtersPrice)
         .then((res) => {
           setData(res.body.results);
         })
@@ -143,19 +150,25 @@ const CatalogPage: React.FC = () => {
     } else {
       // if others pages
       localStorage.setItem("currentCategory", selectCategory);
-      getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+      getProductsFromCategory(
+        [selectCategory],
+        selectSorting,
+        totalFilter,
+        filtersPrice,
+      )
         .then((res) => {
+          setTitleCategory(displayTitle());
           setData(res.body.results);
         })
         .catch(console.error);
     }
-  }, [totalFilter, keyCatalog, selectCategory, selectSorting]);
+  }, [totalFilter, keyCatalog, selectCategory, selectSorting, filtersPrice]);
 
   // get ProductType for display filter on parent categories only
   useEffect(() => {
     setTotalFilter([]);
     setSelectFilters([]);
-    setValuesRanger([0, 15]);
+    setFiltersPrice([0, 15]);
     if (
       keyCatalog === "berries" ||
       keyCatalog === "fruits" ||
@@ -218,7 +231,7 @@ const CatalogPage: React.FC = () => {
         }
       });
     });
-    setValuesRanger([0, 15]);
+    //setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
 
@@ -234,7 +247,6 @@ const CatalogPage: React.FC = () => {
     nameFilter: string,
     checkedValues: CheckboxValueType[],
   ) => {
-    console.log("nameFilter checkedValues", nameFilter, checkedValues);
     checkedValues.length === 0
       ? setTotalFilter([])
       : setTotalFilter([{ name: nameFilter, value: checkedValues }]);
@@ -288,7 +300,12 @@ const CatalogPage: React.FC = () => {
 
   const handleClickName: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: e.key, price: "" });
-    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+    getProductsFromCategory(
+      [selectCategory],
+      selectSorting,
+      totalFilter,
+      filtersPrice,
+    )
       .then((res) => {
         setData(res.body.results);
       })
@@ -297,7 +314,12 @@ const CatalogPage: React.FC = () => {
 
   const handleClickPrice: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: "", price: e.key });
-    getProductsFromCategory([selectCategory], selectSorting, totalFilter)
+    getProductsFromCategory(
+      [selectCategory],
+      selectSorting,
+      totalFilter,
+      filtersPrice,
+    )
       .then((res) => {
         setData(res.body.results);
       })
@@ -369,13 +391,16 @@ const CatalogPage: React.FC = () => {
       .catch(console.error);
   };
 
-  const [valuesRanger, setValuesRanger] = useState<[number, number]>([0, 15]);
-
   const Ranger: React.FC = () => {
     const handleChange = (newValues: [number, number]) =>
-      setValuesRanger(newValues);
+      setFiltersPrice(newValues);
     const onAfterChange = (values: [number, number]) => {
-      getProductPrices(values).then((res) => {
+      getProductsFromCategory(
+        [selectCategory],
+        selectSorting,
+        totalFilter,
+        values,
+      ).then((res) => {
         setData(res.body.results);
       });
     };
@@ -389,7 +414,7 @@ const CatalogPage: React.FC = () => {
           defaultValue={[0, 15]}
           min={0}
           max={15}
-          value={valuesRanger}
+          value={filtersPrice}
           onChange={handleChange}
           onAfterChange={onAfterChange}
         />
@@ -400,47 +425,51 @@ const CatalogPage: React.FC = () => {
   const onClearFilters = () => {
     setTotalFilter([]);
     setSelectFilters([]);
-    setValuesRanger([0, 15]);
+    setFiltersPrice([0, 15]);
   };
 
   return (
-    <Layout className="catalog__wrapper" data-testid="catalog-page">
-      <Sider width={200} className="sider__wrapper">
-        <h2>Farmer Goods</h2>
-        <Menu
-          mode="inline"
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          selectedKeys={[selectCategory]}
-          defaultSelectedKeys={[selectCategory]}
-          defaultOpenKeys={openKeys}
-          className="sider-menu"
-          items={categories}
-          onClick={onClickMenu}
-        />
-        <Filters />
-        <Ranger />
-        <Button
-          type="primary"
-          onClick={onClearFilters}
-          className="button_primary"
-        >
-          Clear
-        </Button>
-      </Sider>
-      <Layout style={{ background: "#fff" }}>
-        <Content
-          style={{
-            margin: 0,
-            minHeight: 280,
-            background: "#fff",
-          }}
-        >
-          <SortingAndSearch />
-          <ListProduct data={data} />
-        </Content>
+
+    <div>
+      <h1>{titleCategory}</h1>
+      <Layout className="catalog__wrapper">
+        <Sider width={200} className="sider__wrapper">
+          <h2>Farmer Goods</h2>
+          <Menu
+            mode="inline"
+            openKeys={openKeys}
+            onOpenChange={onOpenChange}
+            selectedKeys={[selectCategory]}
+            defaultSelectedKeys={[selectCategory]}
+            defaultOpenKeys={openKeys}
+            className="sider-menu"
+            items={categories}
+            onClick={onClickMenu}
+          />
+          <Filters />
+          <Ranger />
+          <Button
+            type="primary"
+            onClick={onClearFilters}
+            className="button_primary"
+          >
+            Clear
+          </Button>
+        </Sider>
+        <Layout style={{ background: "#fff" }}>
+          <Content
+            style={{
+              margin: 0,
+              minHeight: 280,
+              background: "#fff",
+            }}
+          >
+            <SortingAndSearch />
+            <ListProduct data={data} />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 
