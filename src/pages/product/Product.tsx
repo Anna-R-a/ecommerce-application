@@ -12,7 +12,6 @@ import "./Product.css";
 import { Carousel } from "react-responsive-carousel";
 import { useParams } from "react-router-dom";
 import { Context } from "../../components/context/Context";
-import { ToastContainer } from "react-toastify";
 
 const ProductPage: React.FC = () => {
   const [context, setContext] = useContext(Context);
@@ -93,7 +92,6 @@ const ProductPage: React.FC = () => {
 
   return (
     <>
-      <ToastContainer />
       <Row>
         <Col span={24}>
           <h1 className="name">{name}</h1>
@@ -140,14 +138,13 @@ const ProductPage: React.FC = () => {
             </div>
             <div className="buttons">
               <Button
+                data-testid="add-button"
                 type="primary"
                 className="button button_remove button_primary"
-                key={`${key}-add`}
+                key={`${key}-remove`}
                 onClick={async () => {
                   await removeItem(lineItemId)
-                    .then(() =>
-                      message.success("Product was removed successful!"),
-                    )
+                    .then(() => message.success("Product was removed!"))
                     .catch(() => message.error("Removal operation fails"));
                 }}
                 disabled={isInCart(id) ? false : true}
@@ -158,7 +155,7 @@ const ProductPage: React.FC = () => {
               <Button
                 type="primary"
                 className="button button_add button_primary"
-                key={`${key}-remove`}
+                key={`${key}-add`}
                 onClick={async () => {
                   await addItem(id);
                 }}

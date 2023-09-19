@@ -4,7 +4,7 @@ import { Button } from "antd";
 
 const NotFoundPage = () => {
   return (
-    <div className="container__notfound">
+    <div className="container__notfound" data-testid="not-found-page">
       <h1 className="notFound">
         The page you are looking for <div className="select">not found</div>
       </h1>

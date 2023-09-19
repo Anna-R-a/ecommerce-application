@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className="container" data-testid="login-page">
       <ToastContainer />
       <h1>Log In</h1>
       <Form

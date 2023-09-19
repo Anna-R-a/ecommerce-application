@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Nav, NavDrawer, UserBar } from "../navBar/NavBar";
 import "./Header.css";
 
-const Logo: React.FC = () => {
+export const Logo: React.FC = () => {
   return (
-    <div className="logo">
+    <div className="logo" data-testid="logo-link">
       <Link to="/" className="logo__link">
         <span className="logo__icon"></span>
         FRESH
@@ -44,8 +44,8 @@ export const Header = () => {
     );
   }
   return (
-    <header className="header" data-testid="header">
-      <div className="wrapper">
+    <header className="header">
+      <div className="wrapper" data-testid="header">
         <Logo />
         <Nav />
         <UserBar />

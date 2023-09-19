@@ -14,7 +14,7 @@ import "./NavBar.css";
 const itemsNav: MenuProps["items"] = [
   {
     label: (
-      <Link to="/" className="nav__link">
+      <Link to="/" className="nav__link" data-testid="home-link">
         Home
       </Link>
     ),
@@ -22,7 +22,7 @@ const itemsNav: MenuProps["items"] = [
   },
   {
     label: (
-      <Link to="/catalog" className="nav__link">
+      <Link to="/catalog" className="nav__link" data-testid="catalog-link">
         Catalog
       </Link>
     ),
@@ -30,7 +30,7 @@ const itemsNav: MenuProps["items"] = [
   },
   {
     label: (
-      <Link to="/about" className="nav__link">
+      <Link to="/about" className="nav__link" data-testid="about-link">
         About
       </Link>
     ),

@@ -81,7 +81,7 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 
 const AboutPage: React.FC = () => {
   return (
-    <div className="container">
+    <div className="container" data-testid="about-page">
       <h1>About Us</h1>
       <h2>Our Project</h2>
       <div className="text">

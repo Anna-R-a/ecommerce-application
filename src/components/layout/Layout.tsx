@@ -8,7 +8,7 @@ export const PageLayout = () => {
   return (
     <>
       <Header />
-      <main className="main">
+      <main className="main" data-testid="main">
         <div className="wrapper">
           <Breadcrumbs />
           <Outlet />
