@@ -221,6 +221,7 @@ const CartList = () => {
               localStorage.removeItem("activeCart");
               setProductList([]);
               setTotalPrice(0);
+              setTotalPriceWithoutDiscount(0);
               setContext(null);
             });
           }
@@ -233,6 +234,7 @@ const CartList = () => {
               localStorage.removeItem("activeCart");
               setProductList([]);
               setTotalPrice(0);
+              setTotalPriceWithoutDiscount(0);
               setContext(null);
             });
           }
