@@ -30,7 +30,7 @@ export const getTokenClient = () => {
     .withLoggerMiddleware()
     .build();
 
-    console.log("tokenClient", tokenClient);
+  console.log("tokenClient", tokenClient);
 
   const apiTokenClient = createApiBuilderFromCtpClient(
     tokenClient,

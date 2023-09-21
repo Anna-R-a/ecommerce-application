@@ -155,7 +155,7 @@ const CatalogPage: React.FC = () => {
       selectSorting,
       totalFilter,
       filtersPrice,
-      currentPage
+      currentPage,
     )
       .then((res) => {
         setData(res.body);
@@ -247,7 +247,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[]
+    checkedValues: CheckboxValueType[],
   ) => {
     checkedValues.length === 0
       ? setTotalFilter([])
@@ -382,7 +382,7 @@ const CatalogPage: React.FC = () => {
         selectSorting,
         totalFilter,
         values,
-        currentPage
+        currentPage,
       ).then((res) => {
         if (res) {
           setData(res.body);

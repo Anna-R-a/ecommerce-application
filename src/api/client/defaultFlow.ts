@@ -5,8 +5,6 @@ import {
 } from "@commercetools/sdk-client-v2";
 import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
 
-
-
 export const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: `${process.env.REACT_APP_USER_CTP_AUTH_URL}`,
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
