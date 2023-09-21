@@ -59,7 +59,7 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : []
+    context ? context.lineItems : [],
   );
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = useState(0);
@@ -126,7 +126,7 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              }
+              },
             );
           }
           if (record.count === 1) {
