@@ -30,6 +30,8 @@ export const getTokenClient = () => {
     .withLoggerMiddleware()
     .build();
 
+    console.log("tokenClient", tokenClient);
+
   const apiTokenClient = createApiBuilderFromCtpClient(
     tokenClient,
   ).withProjectKey({
@@ -38,3 +40,43 @@ export const getTokenClient = () => {
 
   return apiTokenClient;
 };
+
+// export function getRefreshToken() {
+//   const accessToken = localStorage.getItem("accessToken");
+//   if (!accessToken) {
+//     return;
+//   }
+
+//   try {
+//     const { refreshToken } = JSON.parse(accessToken);
+//     console.log(refreshToken.split(":")[1]);
+//     return refreshToken.split(":")[1];
+//   } catch (e) {
+//     return;
+//   }
+// }
+
+// export const getRefreshTokenClient = () => {
+//   const refreshToken = getRefreshToken();
+
+//   if (!refreshToken) {
+//     return;
+//   }
+
+//   const refreshOptions = {
+//     ...authMiddlewareOptions,
+//     refreshToken,
+//   };
+
+//   const refreshClient = new ClientBuilder()
+//   .withRefreshTokenFlow(refreshOptions)
+//   .withHttpMiddleware(httpMiddlewareOptions)
+//   .withLoggerMiddleware()
+//   .build();
+
+//   return createApiBuilderFromCtpClient(
+//     refreshClient
+//   ).withProjectKey({
+//     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
+//   });
+// }

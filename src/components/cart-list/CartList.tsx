@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Form, Input, Modal, Space, Table, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { LineItem } from "@commercetools/platform-sdk";
+import { ClientResponse, LineItem } from "@commercetools/platform-sdk";
 import { Context } from "../context/Context";
 import {
   changeQuantityProductInCart,
@@ -104,6 +104,7 @@ const CartList = () => {
       title: "Price with Discount",
       dataIndex: "discountPrice",
       key: "discountPrice",
+      render: (text) => <span className="discount-price">{text}</span>,
     },
     {
       title: "Total price",
@@ -166,7 +167,7 @@ const CartList = () => {
 
   React.useEffect(() => {
     if (context) {
-      getActiveCart().then((res: any) => {
+      getActiveCart().then((res: ClientResponse) => {
         setTotalPrice(res.body.totalPrice.centAmount);
         setProductList(res.body.lineItems);
         setContext(res.body);

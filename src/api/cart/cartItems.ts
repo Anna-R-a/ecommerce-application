@@ -21,8 +21,20 @@ export const createCart = async () => {
 };
 
 export const getActiveCart = async () => {
-  const tokenClient = getTokenClientByFlow();
+  let tokenClient = getTokenClientByFlow();
+  // try {
+  //   //const tokenClient = getTokenClientByFlow();
+  //   console.log("tokenClient2", tokenClient);
 
+  //   tokenClient.me().activeCart().get().execute();
+  // } catch (e) {
+  //   console.log("e", e);
+  //   const refreshTokenClient = getRefreshTokenClient();
+  //   console.log("refreshTokenClient", refreshTokenClient);
+  //   tokenClient = refreshTokenClient ? refreshTokenClient : apiRootAnonymous;
+  //   console.log("tokenClient", tokenClient);
+  //   //return tokenClient.me().activeCart().get().execute();
+  // }
   return tokenClient.me().activeCart().get().execute();
 };
 

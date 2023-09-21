@@ -183,3 +183,8 @@ main.ant-layout-content {
   padding: 0;
   width: auto;
 }
+
+.ant-pagination {
+  display: flex;
+  justify-content: center;
+}

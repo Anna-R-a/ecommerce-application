@@ -52,3 +52,7 @@
 .table-footer__promo .table-footer__input.ant-select-selector:focus{
   border-color: var(--medium-color);
 }
+
+.discount-price {
+    font-weight: 700;
+}

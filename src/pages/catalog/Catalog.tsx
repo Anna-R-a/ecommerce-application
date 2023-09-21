@@ -9,8 +9,9 @@ import {
   Space,
   Input,
   Slider,
+  Pagination,
 } from "antd";
-import type { CheckboxOptionType, MenuProps } from "antd";
+import type { CheckboxOptionType, MenuProps, PaginationProps } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import ListProduct from "../../components/list-product/ListProduct";
@@ -24,7 +25,7 @@ import { MenuInfo } from "rc-menu/lib/interface";
 import {
   AttributeDefinition,
   Category,
-  ProductProjection,
+  ProductProjectionPagedSearchResponse,
 } from "@commercetools/platform-sdk";
 import "./Catalog.css";
 
@@ -51,15 +52,20 @@ const categoriesArray = (await getCategories()).body.results;
 const CatalogPage: React.FC = () => {
   const { keyCatalog } = useParams();
 
-  const currentCategoryLS = localStorage.getItem("currentCategory");
-  const currentCategory = currentCategoryLS ? currentCategoryLS : "";
-
   const [allCategories] = useState<Category[]>(categoriesArray);
-
   const [categories, setCategories] = useState<MenuProps["items"]>([]);
+
+  const currentCategory = () => {
+    let category = "";
+    allCategories.forEach((item) => {
+      if (item.key === keyCatalog) category = item.id;
+    });
+    return category;
+  };
   const [selectCategory, setSelectCategory] = useState(currentCategory);
-  const [openKeys, setOpenKeys] = useState<string[]>([currentCategory]);
-  const [data, setData] = useState<ProductProjection[]>([]);
+  const [openKeys, setOpenKeys] = useState<string[]>([currentCategory()]);
+
+  const [data, setData] = useState<ProductProjectionPagedSearchResponse>();
 
   const [totalFilter, setTotalFilter] = useState<
     { name: string; value: CheckboxValueType[] }[]
@@ -69,6 +75,7 @@ const CatalogPage: React.FC = () => {
   const [selectFilters, setSelectFilters] = useState<CheckboxValueType[]>([]);
   const [selectSorting, setSelectSorting] = useState({ name: "", price: "" });
   const [filtersPrice, setFiltersPrice] = useState<[number, number]>([0, 15]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const displayTitle = () => {
     let selectTitleCategory = "";
@@ -77,7 +84,7 @@ const CatalogPage: React.FC = () => {
         selectTitleCategory = item.name.en;
       }
     });
-    return selectTitleCategory ? selectTitleCategory : "Catalog";
+    return selectTitleCategory ? selectTitleCategory : "CATALOG";
   };
   const [titleCategory, setTitleCategory] = useState(displayTitle);
 
@@ -128,47 +135,49 @@ const CatalogPage: React.FC = () => {
     setCategories(createStructureMenu(allCategories));
   }, [allCategories]);
 
-  // delete filters when category change
-  useEffect(() => {
-    setTotalFilter([]);
-    setSelectFilters([]);
-  }, [selectCategory]);
-
   // get Products for display in ListProduct
   useEffect(() => {
-    // if catalog page
+    // set Select Category
+    allCategories.forEach((item) => {
+      if (item.key === keyCatalog) {
+        setSelectCategory(item.id);
+      }
+    });
     if (!keyCatalog) {
-      localStorage.setItem("currentCategory", "");
       setSelectCategory("");
-      setTitleCategory("Catalog");
       setOpenKeys([""]);
-      getProductsFromCategory([], selectSorting, totalFilter, filtersPrice)
-        .then((res) => {
-          setData(res.body.results);
-        })
-        .catch(console.error);
-    } else {
-      // if others pages
-      localStorage.setItem("currentCategory", selectCategory);
-      getProductsFromCategory(
-        [selectCategory],
-        selectSorting,
-        totalFilter,
-        filtersPrice,
-      )
-        .then((res) => {
-          setTitleCategory(displayTitle());
-          setData(res.body.results);
-        })
-        .catch(console.error);
     }
-  }, [totalFilter, keyCatalog, selectCategory, selectSorting, filtersPrice]);
+    // set Title Page
+    setTitleCategory(keyCatalog?.toLocaleUpperCase() || "CATALOG");
+    // get Products List
+    getProductsFromCategory(
+      [selectCategory],
+      selectSorting,
+      totalFilter,
+      filtersPrice,
+      currentPage
+    )
+      .then((res) => {
+        setData(res.body);
+      })
+      .catch(console.error);
+  }, [
+    totalFilter,
+    keyCatalog,
+    selectCategory,
+    selectSorting,
+    filtersPrice,
+    currentPage,
+    allCategories,
+  ]);
 
-  // get ProductType for display filter on parent categories only
   useEffect(() => {
+    // delete filters when category change
     setTotalFilter([]);
     setSelectFilters([]);
     setFiltersPrice([0, 15]);
+    setCurrentPage(1);
+    // get ProductType for display filter on parent categories only
     if (
       keyCatalog === "berries" ||
       keyCatalog === "fruits" ||
@@ -184,13 +193,7 @@ const CatalogPage: React.FC = () => {
     } else {
       setFiltersCategory([]);
     }
-    // set Select Category
-    allCategories.forEach((item) => {
-      if (item.key === keyCatalog) {
-        setSelectCategory(item.id);
-      }
-    });
-  }, [keyCatalog, allCategories]);
+  }, [keyCatalog]);
 
   // display SiderMenu with open select category
   useEffect(() => {
@@ -231,7 +234,6 @@ const CatalogPage: React.FC = () => {
         }
       });
     });
-    //setValuesRanger([0, 15]);
     handlerFilter(nameFilter, checkedValues);
   };
 
@@ -245,7 +247,7 @@ const CatalogPage: React.FC = () => {
 
   const handlerFilter = (
     nameFilter: string,
-    checkedValues: CheckboxValueType[],
+    checkedValues: CheckboxValueType[]
   ) => {
     checkedValues.length === 0
       ? setTotalFilter([])
@@ -300,30 +302,10 @@ const CatalogPage: React.FC = () => {
 
   const handleClickName: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: e.key, price: "" });
-    getProductsFromCategory(
-      [selectCategory],
-      selectSorting,
-      totalFilter,
-      filtersPrice,
-    )
-      .then((res) => {
-        setData(res.body.results);
-      })
-      .catch(console.error);
   };
 
   const handleClickPrice: MenuProps["onClick"] = (e) => {
     setSelectSorting({ name: "", price: e.key });
-    getProductsFromCategory(
-      [selectCategory],
-      selectSorting,
-      totalFilter,
-      filtersPrice,
-    )
-      .then((res) => {
-        setData(res.body.results);
-      })
-      .catch(console.error);
   };
 
   const SortingAndSearch: React.FC = () => {
@@ -385,7 +367,7 @@ const CatalogPage: React.FC = () => {
     getProductsBySearch(value)
       .then((res) => {
         if (res) {
-          setData(res.body.results);
+          setData(res.body);
         }
       })
       .catch(console.error);
@@ -400,8 +382,11 @@ const CatalogPage: React.FC = () => {
         selectSorting,
         totalFilter,
         values,
+        currentPage
       ).then((res) => {
-        setData(res.body.results);
+        if (res) {
+          setData(res.body);
+        }
       });
     };
 
@@ -426,6 +411,10 @@ const CatalogPage: React.FC = () => {
     setTotalFilter([]);
     setSelectFilters([]);
     setFiltersPrice([0, 15]);
+  };
+
+  const onChange: PaginationProps["onChange"] = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -464,7 +453,14 @@ const CatalogPage: React.FC = () => {
             }}
           >
             <SortingAndSearch />
-            <ListProduct data={data} />
+            <ListProduct data={data?.results} />
+            <Pagination
+              hideOnSinglePage
+              pageSize={12}
+              current={currentPage}
+              onChange={onChange}
+              total={data?.total}
+            />
           </Content>
         </Layout>
       </Layout>
