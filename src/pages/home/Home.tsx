@@ -82,7 +82,7 @@ const HomePage: React.FC = () => {
 
           setData(productsHome);
         }
-      }
+      },
     );
   }, []);
 

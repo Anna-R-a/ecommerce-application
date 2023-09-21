@@ -59,9 +59,10 @@ function mapToDataType(data: LineItem[]) {
 const CartList = () => {
   const [context, setContext] = useContext(Context);
   const [productsList, setProductList] = useState<LineItem[]>(
-    context ? context.lineItems : [],
+    context ? context.lineItems : []
   );
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = useState(0);
   const [version, setVersion] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -104,7 +105,6 @@ const CartList = () => {
       title: "Price with Discount",
       dataIndex: "discountPrice",
       key: "discountPrice",
-      render: (text) => <span className="discount-price">{text}</span>,
     },
     {
       title: "Total price",
@@ -126,7 +126,7 @@ const CartList = () => {
             changeQuantityProductInCart(record.key, record.count - 1).then(
               () => {
                 setVersion((prev) => prev + 1);
-              },
+              }
             );
           }
           if (record.count === 1) {
@@ -165,10 +165,24 @@ const CartList = () => {
     },
   ];
 
+  const getTotalPriceWithoutDiscount = (productsOnCart: LineItem[]) => {
+    let totalPriceWithoutDiscount: number = 0;
+    productsOnCart.forEach((item) => {
+      if (item.variant.prices) {
+        const priceWithoutDiscount = item.variant.prices[0]?.value.centAmount;
+        const count = item.quantity;
+        totalPriceWithoutDiscount += priceWithoutDiscount * count;
+      }
+    });
+    setTotalPriceWithoutDiscount(+(totalPriceWithoutDiscount / 100).toFixed(2));
+  };
+
   React.useEffect(() => {
     if (context) {
       getActiveCart().then((res: ClientResponse) => {
-        setTotalPrice(res.body.totalPrice.centAmount);
+        const totalPrice: number = res.body.totalPrice.centAmount;
+        setTotalPrice(+(totalPrice / 100).toFixed(2));
+        getTotalPriceWithoutDiscount(res.body.lineItems);
         setProductList(res.body.lineItems);
         setContext(res.body);
       });
@@ -229,7 +243,7 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = (value: { promoCode: string }) => {
+        const applyDiscountCode = (_value: { promoCode: string }) => {
           addDiscountToCart(form.getFieldValue("promoCode"))
             .then(() => {
               message.success("Promo code applied!");
@@ -279,8 +293,20 @@ const CartList = () => {
                 </Form.Item>
               </Form>
             </div>
-            <p style={{ fontSize: 18 }}>
-              Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
+            <p className="total-price">
+              Total Sum: {totalPrice} $
+              <span className="price-without-discount">
+                {totalPriceWithoutDiscount - totalPrice
+                  ? `${totalPriceWithoutDiscount} $`
+                  : ""}
+              </span>
+            </p>
+            <p className="sum-discount">
+              {totalPriceWithoutDiscount - totalPrice
+                ? `Our discount: ${(
+                    totalPriceWithoutDiscount - totalPrice
+                  ).toFixed(2)} $`
+                : ""}
             </p>
             <div className="table-footer__action">
               <Button

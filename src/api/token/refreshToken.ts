@@ -11,7 +11,10 @@ type RefreshAuthMiddlewareOptions = {
   tokenCache?: TokenCache;
   scopes?: Array<string>;
   oauthUri?: string;
-  fetch?: (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
+  fetch?: (
+    input: RequestInfo | URL,
+    init?: RequestInit | undefined,
+  ) => Promise<Response>;
 };
 
 export const options: RefreshAuthMiddlewareOptions = {

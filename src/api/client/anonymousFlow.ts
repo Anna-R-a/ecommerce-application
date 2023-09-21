@@ -18,7 +18,7 @@ type AnonymousAuthMiddlewareOptions = {
   oauthUri?: string;
   fetch?: (
     input: RequestInfo | URL,
-    init?: RequestInit | undefined
+    init?: RequestInit | undefined,
   ) => Promise<Response>;
   tokenCache?: TokenCache;
 };
@@ -49,7 +49,7 @@ export const anonymousClient = new ClientBuilder()
   .build();
 
 export const apiRootAnonymous = createApiBuilderFromCtpClient(
-  anonymousClient
+  anonymousClient,
 ).withProjectKey({
   projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
 });
