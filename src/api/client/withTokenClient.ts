@@ -67,14 +67,12 @@ export const getRefreshTokenClient = () => {
   };
 
   const refreshClient = new ClientBuilder()
-  .withRefreshTokenFlow(refreshOptions)
-  .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware()
-  .build();
+    .withRefreshTokenFlow(refreshOptions)
+    .withHttpMiddleware(httpMiddlewareOptions)
+    .withLoggerMiddleware()
+    .build();
 
-  return createApiBuilderFromCtpClient(
-    refreshClient
-  ).withProjectKey({
+  return createApiBuilderFromCtpClient(refreshClient).withProjectKey({
     projectKey: `${process.env.REACT_APP_USER_CTP_PROJECT_KEY}`,
   });
-}
+};
