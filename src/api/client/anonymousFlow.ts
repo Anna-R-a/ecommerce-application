@@ -16,7 +16,10 @@ type AnonymousAuthMiddlewareOptions = {
   };
   scopes?: Array<string>;
   oauthUri?: string;
-  fetch?: any;
+  fetch?: (
+    input: RequestInfo | URL,
+    init?: RequestInit | undefined,
+  ) => Promise<Response>;
   tokenCache?: TokenCache;
 };
 

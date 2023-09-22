@@ -8,7 +8,7 @@ import { Context } from "../context/Context";
 import "./ListProduct.css";
 
 const { Meta } = Card;
-type Props = { data: ProductProjection[] };
+type Props = { data: ProductProjection[] | undefined };
 
 const ListProduct: React.FC<Props> = (props: Props) => {
   const [context, setContext] = useContext(Context);
@@ -87,11 +87,6 @@ const ListProduct: React.FC<Props> = (props: Props) => {
         xl: 4,
         xxl: 4,
       }}
-      pagination={
-        props.data.length > 12
-          ? { position: "bottom", align: "center", pageSize: 12 }
-          : false
-      }
       dataSource={props.data}
       className="list__products"
       renderItem={(item) => (

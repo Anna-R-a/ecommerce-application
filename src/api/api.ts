@@ -15,6 +15,7 @@ export const getProductsFromCategory = async (
   sorting: { name: string; price: string },
   filter: { name: string; value: CheckboxValueType[] }[],
   [key1, key2]: [number, number],
+  currentPage: number,
 ) => {
   const sortingOptions = [];
   const allCategoriesID = [
@@ -22,19 +23,23 @@ export const getProductsFromCategory = async (
     "fcf30caa-46ad-4ac8-b859-3fc0395b791c",
     "1836bc07-4722-42e4-a8cf-5ad943e8da0b",
   ];
+
   const filterOptions =
-    categoryId.length !== 0
+    +categoryId.join("") !== 0
       ? [`categories.id:"${categoryId.join('","')}"`]
       : [`categories.id:"${allCategoriesID.join('","')}"`];
+
   const filterAttributes = filter.map((item) => {
     if (item.value.length > 0) {
       return `variants.attributes.${item.name}.key:"${item.value.join('","')}"`;
     }
     return ``;
   });
+
   if (filter.length > 0) {
     filterOptions.push(...filterAttributes);
   }
+
   filterOptions.push(
     `variants.price.centAmount:range (${key1 * 100} to ${key2 * 100})`,
   );
@@ -43,14 +48,17 @@ export const getProductsFromCategory = async (
     ? sortingOptions.push(`name.en ${sorting.name}`)
     : sorting.price
     ? sortingOptions.push(`price ${sorting.price}`)
-    : sortingOptions.push("createdAt asc");
+    : sortingOptions.push("id asc");
+
+  const countProductsPerPage = 12;
 
   return apiRootClient
     .productProjections()
     .search()
     .get({
       queryArgs: {
-        limit: 100,
+        limit: countProductsPerPage,
+        offset: (currentPage - 1) * countProductsPerPage,
         filter: filterOptions,
         sort: sortingOptions,
       },

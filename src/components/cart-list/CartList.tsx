@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Form, Input, Modal, Space, Table, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { LineItem } from "@commercetools/platform-sdk";
+import { ClientResponse, LineItem } from "@commercetools/platform-sdk";
 import { Context } from "../context/Context";
 import {
   changeQuantityProductInCart,
@@ -62,6 +62,7 @@ const CartList = () => {
     context ? context.lineItems : [],
   );
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPriceWithoutDiscount, setTotalPriceWithoutDiscount] = useState(0);
   const [version, setVersion] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -167,10 +168,24 @@ const CartList = () => {
     },
   ];
 
+  const getTotalPriceWithoutDiscount = (productsOnCart: LineItem[]) => {
+    let totalPriceWithoutDiscount: number = 0;
+    productsOnCart.forEach((item) => {
+      if (item.variant.prices) {
+        const priceWithoutDiscount = item.variant.prices[0]?.value.centAmount;
+        const count = item.quantity;
+        totalPriceWithoutDiscount += priceWithoutDiscount * count;
+      }
+    });
+    setTotalPriceWithoutDiscount(+(totalPriceWithoutDiscount / 100).toFixed(2));
+  };
+
   React.useEffect(() => {
     if (context) {
-      getActiveCart().then((res: any) => {
-        setTotalPrice(res.body.totalPrice.centAmount);
+      getActiveCart().then((res: ClientResponse) => {
+        const totalPrice: number = res.body.totalPrice.centAmount;
+        setTotalPrice(+(totalPrice / 100).toFixed(2));
+        getTotalPriceWithoutDiscount(res.body.lineItems);
         setProductList(res.body.lineItems);
         setContext(res.body);
       });
@@ -209,6 +224,7 @@ const CartList = () => {
               localStorage.removeItem("activeCart");
               setProductList([]);
               setTotalPrice(0);
+              setTotalPriceWithoutDiscount(0);
               setContext(null);
             });
           }
@@ -221,6 +237,7 @@ const CartList = () => {
               localStorage.removeItem("activeCart");
               setProductList([]);
               setTotalPrice(0);
+              setTotalPriceWithoutDiscount(0);
               setContext(null);
             });
           }
@@ -231,7 +248,7 @@ const CartList = () => {
           setIsModalOpen(false);
         };
 
-        const applyDiscountCode = (value: { promoCode: string }) => {
+        const applyDiscountCode = (_value: { promoCode: string }) => {
           addDiscountToCart(form.getFieldValue("promoCode"))
             .then(() => {
               message.success("Promo code applied!");
@@ -281,8 +298,20 @@ const CartList = () => {
                 </Form.Item>
               </Form>
             </div>
-            <p style={{ fontSize: 18 }}>
-              Total Sum: {(totalPrice / 100).toFixed(2).toString()} $
+            <p className="total-price">
+              Total Sum: {totalPrice} $
+              <span className="price-without-discount">
+                {totalPriceWithoutDiscount - totalPrice
+                  ? `${totalPriceWithoutDiscount} $`
+                  : ""}
+              </span>
+            </p>
+            <p className="sum-discount">
+              {totalPriceWithoutDiscount - totalPrice
+                ? `Your discount: ${(
+                    totalPriceWithoutDiscount - totalPrice
+                  ).toFixed(2)} $`
+                : ""}
             </p>
             <div className="table-footer__action">
               <Button

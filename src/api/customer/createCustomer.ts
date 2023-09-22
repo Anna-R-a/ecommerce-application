@@ -51,7 +51,7 @@ export function mapRegDataToRequest(
     firstName,
     lastName,
     password,
-    dateOfBirth: dateOfBirth.toISOString().split("T")[0],
+    dateOfBirth: dateOfBirth.format().split("T")[0],
     addresses: [addressShipping, addressBilling],
     shippingAddresses: [0],
     defaultShippingAddress: defaultAddresses[0].defaultShippingAddresses

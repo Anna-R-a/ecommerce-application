@@ -69,7 +69,7 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    getProductsFromCategory([], { name: "", price: "" }, [], [0, 15]).then(
+    getProductsFromCategory([], { name: "", price: "" }, [], [0, 15], 1).then(
       (res) => {
         const products: ProductProjection[] = res.body.results;
         const productsHome: ProductProjection[] = [];
@@ -79,8 +79,9 @@ const HomePage: React.FC = () => {
           if (!productsHome.find((item) => item.id === product.id)) {
             productsHome.push(product);
           }
+
+          setData(productsHome);
         }
-        setData(productsHome);
       },
     );
   }, []);

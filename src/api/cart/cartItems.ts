@@ -1,4 +1,7 @@
-import { getTokenClient } from "../client/withTokenClient";
+import {
+  getRefreshTokenClient,
+  getTokenClient,
+} from "../client/withTokenClient";
 import { apiRootAnonymous } from "../client/anonymousFlow";
 
 const getTokenClientByFlow = () => {
@@ -21,9 +24,16 @@ export const createCart = async () => {
 };
 
 export const getActiveCart = async () => {
-  const tokenClient = getTokenClientByFlow();
-
-  return tokenClient.me().activeCart().get().execute();
+  try {
+    let tokenClient = getTokenClientByFlow();
+    return tokenClient.me().activeCart().get().execute();
+  } catch (e) {
+    const refreshTokenClient = getRefreshTokenClient();
+    let tokenClient = refreshTokenClient
+      ? refreshTokenClient
+      : apiRootAnonymous;
+    return tokenClient.me().activeCart().get().execute();
+  }
 };
 
 export const deleteCart = async () => {

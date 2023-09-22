@@ -70,7 +70,7 @@ export const ProfileGeneralForm: React.FC = () => {
         },
         {
           action: "setDateOfBirth",
-          dateOfBirth: values.dateOfBirth.toISOString().split("T")[0],
+          dateOfBirth: values.dateOfBirth.format().split("T")[0],
         },
         {
           action: "changeEmail",
