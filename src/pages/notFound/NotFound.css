@@ -1,0 +1,60 @@
+.container__notfound {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  height: 80vh;
+  background: url("./../../assets/notFound.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  min-height: 450px;
+}
+
+h1.notFound {
+  color: var(--background-color);
+  font-size: 4rem;
+  text-align: end;
+  margin: 30px;
+}
+
+h1.notFound .select {
+  color: var(--secondary-color);
+  font-size: 9rem;
+}
+
+.not-found__button.button_primary {
+  margin: 30px;
+  background-color: var(--secondary-color);
+}
+
+.not-found__button.button_primary:hover {
+  color: var(--secondary-color)!important;
+  background-color: var(--background-color) !important;
+}
+
+@media (max-width: 970px) {
+  h1.notFound {
+    font-size: 3.5rem;
+  }
+  h1.notFound .select {
+    font-size: 7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    background-position: -20px;
+  }
+  h1.notFound {
+    font-size: 2.2rem;
+    margin: 15px;
+  }
+  h1.notFound .select {
+    font-size: 4rem;
+  }
+  .not-found__button.button_primary {
+    margin: 15px;
+  }
+}

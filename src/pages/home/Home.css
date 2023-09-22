@@ -1,0 +1,104 @@
+.carousel {
+  width: 100%;
+}
+
+.carousel__home {
+  height: 260px;
+}
+
+.carousel__home.slide_1 {
+  background: url("./../../assets/slide_1.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.carousel__home.slide_2 {
+  background: url("./../../assets/slide_2.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 970px) {
+  .carousel__home {
+    height: 160px;
+    color: #fff;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel__home {
+    height: 250px;
+  }
+}
+
+@media (max-width: 450px) {
+  .carousel__home.slide_1,
+  .carousel__home.slide_2 {
+    background-position: -45px;
+    height: 200px;
+  }
+}
+
+.navigation__home {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.navigation__home .button_primary {
+  width: 250px;
+}
+
+.advantages__row {
+  justify-content: center;
+}
+
+.advantages__col {
+  min-width: 300px !important;
+}
+
+.advantages__card {
+  box-shadow: none !important;
+}
+
+.promo__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo__title {
+  color: var(--secondary-color);
+  padding-right: 20px;
+}
+
+.promo-code {
+  color: var(--dark-color);
+  font-size: 14px;
+  height: 32px;
+  padding: 4px 15px;
+  border-radius: 6px;
+  border: 1px dashed transparent;
+  background-color: #ffffff;
+  border-color: var(--text-secondary-color);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+  border-style: dashed;
+  outline: none;
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: center;
+  background-image: none;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  line-height: 1.5714285714285714;
+  margin: 0px !important;
+}
+
+.promo-code .anticon {
+  color: var(--secondary-color);
+}
