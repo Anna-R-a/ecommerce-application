@@ -47,7 +47,6 @@ export function getRefreshToken() {
 
   try {
     const { refreshToken } = JSON.parse(accessToken);
-    console.log(refreshToken.split(":")[1]);
     return refreshToken.split(":")[1];
   } catch (e) {
     return;

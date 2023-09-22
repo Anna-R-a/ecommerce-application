@@ -34,41 +34,28 @@ The browser bar will display the localhost:3000 main page.
 
 In the project directory, you can run:
 
-### `npm start`
-
+#### `npm start`
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-
-### `npm test`
-
+#### `npm test`
 Launches the test runner in the interactive watch mode.
 
-### `npm run build`
-
+#### `npm run build`
 Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
 The build is minified and the filenames include the hashes.
 
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
+#### `npm run eject`
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**\
 If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-
-### `npm run format`
-
+#### `npm run format`
 Automatically formats and fixes code in your project
 
-
-### `npm run lint`
-
+#### `npm run lint`
 Statically analyzes your code to quickly find problems
 
-
-### `npm run prepare`
-
+#### `npm run prepare`
  Initialize Husky to manage Git hooks, automating tasks such as code formatting and linting checks during the commit process
 
