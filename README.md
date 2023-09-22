@@ -14,11 +14,10 @@ Front-end:
 Libraries:
 - Ant Design,
 - Moment,
-- Jest.
+- Testing Library (Jest Dom, React, User Event).
 
 Back-end:
 - commercetools.com
-- SDKs
 
 ## Getting Started with App
 

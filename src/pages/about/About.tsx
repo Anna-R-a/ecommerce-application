@@ -111,13 +111,12 @@ const AboutPage: React.FC = () => {
             <Card title=" " size="small" className="card__stack">
               <Tag>Ant Design</Tag>
               <Tag>Moment</Tag>
-              <Tag>Jest</Tag>
+              <Tag>Testing Library</Tag>
             </Card>
           </Badge.Ribbon>
           <Badge.Ribbon text="Back-end" color="#3c7375">
             <Card title=" " size="small" className="card__stack">
               <Tag>commercetools.com</Tag>
-              <Tag>SDKs</Tag>
             </Card>
           </Badge.Ribbon>
         </Space>
