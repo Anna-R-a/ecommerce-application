@@ -305,7 +305,7 @@ const CartList = () => {
             </p>
             <p className="sum-discount">
               {totalPriceWithoutDiscount - totalPrice
-                ? `Our discount: ${(
+                ? `Your discount: ${(
                     totalPriceWithoutDiscount - totalPrice
                   ).toFixed(2)} $`
                 : ""}

@@ -117,6 +117,7 @@ const AboutPage: React.FC = () => {
           <Badge.Ribbon text="Back-end" color="#3c7375">
             <Card title=" " size="small" className="card__stack">
               <Tag>commercetools.com</Tag>
+              <Tag>SDKs</Tag>
             </Card>
           </Badge.Ribbon>
         </Space>

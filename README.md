@@ -5,14 +5,20 @@ The store gives an opportunity to register a new user, choose healthy GMO-free p
 Since a healthy lifestyle is now an integral part of modern people, farm products are in great demand.
 
 ## The Technology Stack
-The front-end: 
-- HTML5, 
+Front-end:
+- HTML5,
 - CSS 3,
-- TypeScript, 
-- React 18.2.
+- TypeScript,
+- React 18.2 (React Router Dom, React Toastify, Hooks).
 
-The back-end: 
+Libraries:
+- Ant Design,
+- Moment,
+- Jest.
+
+Back-end:
 - commercetools.com
+- SDKs
 
 ## Getting Started with App
 

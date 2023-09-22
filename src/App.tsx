@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PageLayout } from "./components/layout/Layout";
 import {
@@ -13,7 +14,6 @@ import NotFoundPage from "./pages/notFound/NotFound";
 import ProductPage from "./pages/product/Product";
 import CartPage from "./pages/cart/Cart";
 import AboutPage from "./pages/about/About";
-import { useState } from "react";
 import { Context } from "./components/context/Context";
 import { getActiveCart } from "./api/cart/cartItems";
 import "./App.css";
